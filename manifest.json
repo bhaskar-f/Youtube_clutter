@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Declutter Clone",
+  "version": "1.0",
+  "description": "Hide distracting elements from YouTube like Unhook",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icons/icon48.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
