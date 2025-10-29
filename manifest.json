@@ -1,20 +1,34 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Declutter Clone",
-  "version": "1.0",
-  "description": "Hide distracting elements from YouTube like Unhook",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "name": "YouTube Declutter",
+  "version": "2.6",
+  "description": "Hide Shorts, comments, home feed, sidebar, and visible ads on YouTube.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": ["*://*.youtube.com/*", "*://*.googlevideo.com/*"],
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "48": "icons/icon48.png"
-    }
+    "default_popup": "popup.html"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "youtube_ads",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
   },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
+      "css": ["instantHide.css"],
       "js": ["contentScript.js"],
-      "run_at": "document_idle"
+      "run_at": "document_start"
     }
   ]
 }

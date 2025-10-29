@@ -1,13 +1,46 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="popup.css" />
+    <style>
+      body {
+        width: 200px;
+        padding: 10px;
+        font-family: Arial;
+      }
+      label {
+        display: flex;
+        align-items: center;
+        margin: 8px 0;
+        cursor: pointer;
+      }
+      input {
+        margin-right: 8px;
+      }
+    </style>
   </head>
   <body>
-    <h3>YouTube Declutter</h3>
-    <label><input type="checkbox" id="hideHome" /> Hide Home Feed</label><br />
-    <label><input type="checkbox" id="hideSidebar" /> Hide Sidebar</label><br />
-    <label><input type="checkbox" id="hideComments" /> Hide Comments</label>
+    <h3 style="margin-top: 0">YouTube Declutter</h3>
+
+    <label>
+      <input type="checkbox" id="hideHome" />
+      Hide Home Feed
+    </label>
+
+    <label>
+      <input type="checkbox" id="hideSidebar" />
+      Hide Sidebar
+    </label>
+
+    <label>
+      <input type="checkbox" id="hideComments" />
+      Hide Comments
+    </label>
+
+    <label>
+      <input type="checkbox" id="hideShorts" />
+      Hide Shorts
+    </label>
+
     <script src="popup.js"></script>
   </body>
 </html>
