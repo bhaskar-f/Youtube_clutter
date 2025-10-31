@@ -1,0 +1,18 @@
+body {
+  font-family: Arial, sans-serif;
+  min-width: 240px;
+  background: #fff;
+  color: #222;
+  padding: 10px;
+}
+
+h1 {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#toggles label {
+  display: block;
+  padding: 5px 0;
+}

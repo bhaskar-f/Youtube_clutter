@@ -36,11 +36,6 @@ html.declutter-hide-header ytd-masthead > #container {
 .declutter-hide-chipbar
   ytd-feed-filter-chip-bar-renderer.style-scope.ytd-rich-grid-renderer {
   display: none !important;
-  /* visibility: hidden !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important; */
 }
 
 .declutter-hide-chipbar #frosted-glass.with-chipbar.ytd-app {
@@ -51,6 +46,27 @@ html.declutter-hide-header ytd-masthead > #container {
 .declutter-hide-sidebar #secondary,
 .declutter-hide-comments #comments {
   display: none !important;
+}
+
+/* Explore (Sidebar + Mini Sidebar + Link) */
+body.declutter-hide-explore
+  ytd-guide-entry-renderer:has(a[href*="/feed/explore"]),
+body.declutter-hide-explore
+  ytd-guide-section-renderer:has(
+    ytd-guide-entry-renderer a[href*="/feed/explore"]
+  ),
+body.declutter-hide-explore
+  ytd-mini-guide-entry-renderer
+  a[href*="/feed/explore"],
+body.declutter-hide-explore a[href*="/feed/explore"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
 }
 
 /* Shorts */
