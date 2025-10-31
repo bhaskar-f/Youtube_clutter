@@ -1,5 +1,5 @@
 // ======================================================
-// YouTube Declutter – Robust contentScript (Explore fixed)
+// YouTube Declutter – Robust contentScript (with Video Page Features)
 // Expects popup to send: chrome.tabs.sendMessage(tabId, { setting: id, value });
 // ======================================================
 
@@ -12,6 +12,13 @@ let settings = {
   hideShorts: false,
   hideChipBar: false,
   hideExplore: false,
+  // NEW VIDEO PAGE FEATURES
+  hideVideoDescription: false,
+  hideChannelInfo: false,
+  hideEngagementButtons: false,
+  hideSuggestedVideos: false,
+  hideVideoTitle: false,
+  hideMerchShelf: false,
 };
 
 const SETTING_TO_CLASS = {
@@ -22,6 +29,13 @@ const SETTING_TO_CLASS = {
   hideShorts: "declutter-hide-shorts",
   hideChipBar: "declutter-hide-chipbar",
   hideExplore: "declutter-hide-explore",
+  // NEW VIDEO PAGE CLASSES
+  hideVideoDescription: "declutter-hide-video-description",
+  hideChannelInfo: "declutter-hide-channel-info",
+  hideEngagementButtons: "declutter-hide-engagement-buttons",
+  hideSuggestedVideos: "declutter-hide-suggested-videos",
+  hideVideoTitle: "declutter-hide-video-title",
+  hideMerchShelf: "declutter-hide-merch-shelf",
 };
 
 let shortsCleanerInterval = null;

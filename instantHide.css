@@ -41,6 +41,7 @@ html.declutter-hide-header ytd-masthead > #container {
 .declutter-hide-chipbar #frosted-glass.with-chipbar.ytd-app {
   height: 0px;
 }
+
 /* Sidebar and Comments */
 .declutter-hide-sidebar #guide,
 .declutter-hide-sidebar #secondary,
@@ -88,5 +89,62 @@ body.declutter-hide-explore a[href*="/feed/explore"] {
 .declutter-hide-shorts ytd-reel-shelf-renderer.style-scope.ytd-browse,
 .declutter-hide-shorts
   ytd-rich-shelf-renderer.style-scope.ytd-rich-grid-renderer {
+  display: none !important;
+}
+
+/* ======================================================
+   NEW VIDEO PAGE FEATURES
+   ====================================================== */
+
+/* Hide Video Description */
+.declutter-hide-video-description ytd-watch-metadata #description,
+.declutter-hide-video-description
+  ytd-watch-metadata
+  #description-inline-expander,
+.declutter-hide-video-description ytd-text-inline-expander,
+.declutter-hide-video-description #description.ytd-watch-metadata,
+.declutter-hide-video-description ytd-expander#description {
+  display: none !important;
+}
+
+/* Hide Channel Info (Avatar, Name, Subscribe Button) */
+.declutter-hide-channel-info ytd-watch-metadata #owner,
+.declutter-hide-channel-info ytd-video-owner-renderer,
+.declutter-hide-channel-info #owner.ytd-watch-metadata,
+.declutter-hide-channel-info ytd-channel-name {
+  display: none !important;
+}
+
+/* Hide Engagement Buttons (Like, Share, Download, etc.) */
+.declutter-hide-engagement-buttons ytd-watch-metadata #actions,
+.declutter-hide-engagement-buttons ytd-menu-renderer.ytd-watch-metadata,
+.declutter-hide-engagement-buttons #top-level-buttons-computed,
+.declutter-hide-engagement-buttons ytd-segmented-like-dislike-button-renderer,
+.declutter-hide-engagement-buttons #actions.ytd-watch-metadata,
+.declutter-hide-engagement-buttons ytd-button-renderer.ytd-menu-renderer {
+  display: none !important;
+}
+
+/* Hide Suggested/Related Videos (Right Sidebar on Watch Page) */
+.declutter-hide-suggested-videos #related,
+.declutter-hide-suggested-videos ytd-watch-next-secondary-results-renderer,
+.declutter-hide-suggested-videos #secondary.ytd-watch-flexy,
+.declutter-hide-suggested-videos ytd-compact-video-renderer {
+  display: none !important;
+}
+
+/* Hide Video Title */
+.declutter-hide-video-title ytd-watch-metadata h1,
+.declutter-hide-video-title h1.ytd-watch-metadata,
+.declutter-hide-video-title yt-formatted-string.ytd-watch-metadata[is-title],
+.declutter-hide-video-title #title h1 {
+  display: none !important;
+}
+
+/* Hide Merch/Offers Shelf */
+.declutter-hide-merch-shelf ytd-merch-shelf-renderer,
+.declutter-hide-merch-shelf ytd-structured-description-content-renderer,
+.declutter-hide-merch-shelf ytd-video-description-music-section-renderer,
+.declutter-hide-merch-shelf ytd-donation-unavailable-renderer {
   display: none !important;
 }

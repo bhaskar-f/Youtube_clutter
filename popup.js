@@ -1,14 +1,22 @@
-// popup.js — stable version (prevents "Receiving end does not exist")
+// popup.js – stable version with new video page features
 
 function initPopup() {
   const checkboxes = [
+    // Existing features
     "hideHome",
     "hideSidebar",
     "hideComments",
     "hideShorts",
     "hideHeader",
     "hideChipBar",
-    "hideExplore", // NEW
+    "hideExplore",
+    // NEW Video Page Features
+    "hideVideoDescription",
+    "hideChannelInfo",
+    "hideEngagementButtons",
+    "hideSuggestedVideos",
+    "hideVideoTitle",
+    "hideMerchShelf",
   ];
 
   checkboxes.forEach((id) => {
