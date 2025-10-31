@@ -1,12 +1,13 @@
 /* ======================================================
-   YouTube Declutter â€“ Complete Instant Hide CSS
+   YouTube Declutter – Complete Instant Hide CSS
    ====================================================== */
 
-/* Home feed */
+/* Hide Home Feed */
 .declutter-hide-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer {
   display: none !important;
 }
-/* Header / masthead - more robust selectors */
+
+/* Header / Masthead (logo + search bar) */
 body.declutter-hide-header ytd-masthead,
 html.declutter-hide-header ytd-masthead,
 body.declutter-hide-header #masthead,
@@ -16,9 +17,7 @@ html.declutter-hide-header ytd-app #masthead,
 body.declutter-hide-header ytd-masthead#masthead,
 html.declutter-hide-header ytd-masthead#masthead,
 body.declutter-hide-header ytd-masthead > #container,
-html.declutter-hide-header ytd-masthead > #container,
-body.declutter-hide-header div#container.style-scope.ytd-masthead,
-html.declutter-hide-header div#container.style-scope.ytd-masthead {
+html.declutter-hide-header ytd-masthead > #container {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;
@@ -27,22 +26,34 @@ html.declutter-hide-header div#container.style-scope.ytd-masthead {
   overflow: hidden !important;
 }
 
-/* Sidebar, comments */
+/* Chip Bar (topics under header like "All", "Music", etc.) */
+.declutter-hide-chipbar #chips.ytd-feed-filter-chip-bar-renderer,
+.declutter-hide-chipbar ytd-feed-filter-chip-bar-renderer,
+.declutter-hide-chipbar ytd-feed-filter-chip-bar-renderer #chips,
+.declutter-hide-chipbar ytd-chip-cloud-renderer,
+.declutter-hide-chipbar ytd-chip-cloud-chip-renderer,
+.declutter-hide-chipbar .ytd-feed-filter-chip-bar-renderer,
+.declutter-hide-chipbar
+  ytd-feed-filter-chip-bar-renderer.style-scope.ytd-rich-grid-renderer {
+  display: none !important;
+  /* visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important; */
+}
+
+.declutter-hide-chipbar #frosted-glass.with-chipbar.ytd-app {
+  height: 0px;
+}
+/* Sidebar and Comments */
 .declutter-hide-sidebar #guide,
 .declutter-hide-sidebar #secondary,
 .declutter-hide-comments #comments {
   display: none !important;
 }
 
-/* Header/Navbar - YouTube masthead (logo, search bar, buttons) */
-.declutter-hide-header #masthead,
-.declutter-hide-header ytd-masthead,
-.declutter-hide-header #container {
-  display: none !important;
-}
-/* ========================================================
-   SHORTS - Complete Removal (All Contexts)
-   ======================================================== */
+/* Shorts */
 .declutter-hide-shorts ytd-reel-shelf-renderer,
 .declutter-hide-shorts ytd-reel-item-renderer,
 .declutter-hide-shorts ytd-reel-video-renderer,

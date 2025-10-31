@@ -7,6 +7,7 @@ function initPopup() {
     "hideComments",
     "hideShorts",
     "hideHeader",
+    "hideChipBar",
   ];
 
   checkboxes.forEach((id) => {

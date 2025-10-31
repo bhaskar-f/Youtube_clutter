@@ -8,6 +8,7 @@ let settings = {
   hideSidebar: false,
   hideComments: false,
   hideShorts: false,
+  hideChipBar: false, // new
   // hideAds: false,
 };
 
@@ -27,6 +28,8 @@ function applyHiding() {
   if (!body) return;
 
   body.classList.toggle("declutter-hide-home", settings.hideHome);
+  body.classList.toggle("declutter-hide-chipbar", settings.hideChipBar);
+
   body.classList.toggle("declutter-hide-sidebar", settings.hideSidebar);
   body.classList.toggle("declutter-hide-comments", settings.hideComments);
   body.classList.toggle("declutter-hide-shorts", settings.hideShorts);
