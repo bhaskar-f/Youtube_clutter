@@ -1,18 +1,204 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+:root {
+  --yt-red: #ff0000;
+  --yt-gray: #181818;
+  --yt-dark: #0f0f0f;
+  --border: #303030;
+  --radius: 10px;
+  --transition: 0.25s ease;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  min-width: 240px;
+  font-family: "Roboto", sans-serif;
+  width: 360px;
+  margin: 0;
+  background: var(--yt-dark);
+  color: #fff;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--yt-gray);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.yt-red {
+  color: var(--yt-red);
+}
+
+/* THEME SWITCH */
+.theme-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.theme-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: #ccc;
+  border-radius: var(--radius);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.theme-btn.active {
+  background: var(--yt-red);
+  color: #fff;
+  border-color: var(--yt-red);
+}
+
+/* CONTENT */
+.content {
+  padding: 14px;
+}
+
+h2 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: var(--yt-red);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* LABELS */
+label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--yt-gray);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  transition: background var(--transition);
+  gap: 6px;
+}
+
+label:hover {
+  background: #242424;
+}
+
+label i.material-icons-outlined {
+  color: var(--yt-red);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+label span {
+  flex: 1;
+  text-align: left;
+}
+
+/* CHECKBOX TOGGLES */
+input[type="checkbox"] {
+  appearance: none;
+  width: 34px;
+  height: 18px;
+  border-radius: 18px;
+  background: #444;
+  position: relative;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: #ccc;
+  border-radius: 50%;
+  transition: all var(--transition);
+}
+
+input[type="checkbox"]:checked {
+  background: var(--yt-red);
+}
+
+input[type="checkbox"]:checked::before {
+  left: 18px;
   background: #fff;
-  color: #222;
-  padding: 10px;
 }
 
-h1 {
-  font-size: 16px;
+/* FOOTER */
+footer {
   text-align: center;
-  margin-bottom: 10px;
+  font-size: 0.8rem;
+  color: #999;
+  padding: 8px;
+  border-top: 1px solid var(--border);
 }
 
-#toggles label {
-  display: block;
-  padding: 5px 0;
+/* LIGHT MODE */
+body.dark-mode {
+  background: #f9f9f9;
+  color: #111;
+}
+
+body.dark-mode .header,
+body.dark-mode label {
+  background: #fff;
+  color: #000;
+  border-color: #ccc;
+}
+
+body.dark-mode .theme-btn {
+  color: #555;
+  border-color: #ccc;
+}
+
+body.dark-mode .theme-btn.active {
+  background: var(--yt-red);
+  color: #fff;
+  border-color: var(--yt-red);
+}
+
+body.dark-mode h2 {
+  color: #c00;
+}
+/* Light theme */
+body.light-mode {
+  background: #f9f9f9;
+  color: #111;
+}
+body.light-mode .header,
+body.light-mode label {
+  background: #fff;
+  color: #000;
+  border-color: #ccc;
+}
+body.light-mode .theme-btn {
+  color: #555;
+  border-color: #ccc;
+}
+body.light-mode .theme-btn.active {
+  background: var(--yt-red);
+  color: #fff;
+  border-color: var(--yt-red);
 }

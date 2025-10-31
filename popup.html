@@ -1,82 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Declutter</title>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="popup.css" />
-    <style>
-      body {
-        width: 200px;
-        padding: 10px;
-        font-family: Arial;
-      }
-      label {
-        display: flex;
-        align-items: center;
-        margin: 8px 0;
-        cursor: pointer;
-      }
-      input {
-        margin-right: 8px;
-      }
-    </style>
   </head>
+
   <body>
-    <h3 style="margin-top: 0">YouTube Declutter</h3>
+    <header class="header">
+      <h1><span class="yt-red">YouTube</span> Declutter</h1>
 
-    <label>
-      <input type="checkbox" id="hideHeader" />
-      Hide Header
-    </label>
+      <div class="theme-buttons">
+        <button id="lightMode" class="theme-btn">
+          <span class="material-icons-outlined">light_mode</span>
+        </button>
+        <button id="darkMode" class="theme-btn">
+          <span class="material-icons-outlined">dark_mode</span>
+        </button>
+      </div>
+    </header>
 
-    <label>
-      <input type="checkbox" id="hideHome" />
-      Hide Home Feed
-    </label>
-    <label>
-      <input type="checkbox" id="hideChipBar" />
-      Hide Chip Bar
-    </label>
+    <main class="content">
+      <section>
+        <h2>General</h2>
+        <div class="grid">
+          <label
+            ><i class="material-icons-outlined">home</i
+            ><span>Hide Home Feed</span><input type="checkbox" id="hideHome"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">view_sidebar</i
+            ><span>Hide Sidebar</span><input type="checkbox" id="hideSidebar"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">comment</i
+            ><span>Hide Comments</span><input type="checkbox" id="hideComments"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">smart_display</i
+            ><span>Hide Shorts</span><input type="checkbox" id="hideShorts"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">menu</i><span>Hide Header</span
+            ><input type="checkbox" id="hideHeader"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">tune</i
+            ><span>Hide Chip Bar</span><input type="checkbox" id="hideChipBar"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">explore</i
+            ><span>Hide Explore</span><input type="checkbox" id="hideExplore"
+          /></label>
+        </div>
+      </section>
 
-    <label>
-      <input type="checkbox" id="hideSidebar" />
-      Hide Sidebar
-    </label>
-    <label><input type="checkbox" id="hideExplore" /> Hide Explore</label>
-    <label>
-      <input type="checkbox" id="hideComments" />
-      Hide Comments
-    </label>
+      <section>
+        <h2>Video Page</h2>
+        <div class="grid">
+          <label
+            ><i class="material-icons-outlined">description</i
+            ><span>Hide Video Description</span
+            ><input type="checkbox" id="hideVideoDescription"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">account_circle</i
+            ><span>Hide Channel Info</span
+            ><input type="checkbox" id="hideChannelInfo"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">favorite_border</i
+            ><span>Hide Engagement Buttons</span
+            ><input type="checkbox" id="hideEngagementButtons"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">queue_play_next</i
+            ><span>Hide Suggested Videos</span
+            ><input type="checkbox" id="hideSuggestedVideos"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">title</i
+            ><span>Hide Video Title</span
+            ><input type="checkbox" id="hideVideoTitle"
+          /></label>
+          <label
+            ><i class="material-icons-outlined">storefront</i
+            ><span>Hide Merch Shelf</span
+            ><input type="checkbox" id="hideMerchShelf"
+          /></label>
+        </div>
+      </section>
+    </main>
 
-    <label>
-      <input type="checkbox" id="hideShorts" />
-      Hide Shorts
-    </label>
-    <!-- Add this section to your popup.html after the existing checkboxes -->
+    <footer>
+      <p>v5.0 • YouTube decluttered ❤️</p>
+    </footer>
 
-    <h3>Video Page Controls</h3>
-    <label>
-      <input type="checkbox" id="hideVideoDescription" />
-      Hide Video Description
-    </label>
-    <label>
-      <input type="checkbox" id="hideChannelInfo" />
-      Hide Channel Info (Avatar & Subscribe)
-    </label>
-    <label>
-      <input type="checkbox" id="hideEngagementButtons" />
-      Hide Engagement Buttons (Like/Share/etc)
-    </label>
-    <label>
-      <input type="checkbox" id="hideSuggestedVideos" />
-      Hide Suggested Videos
-    </label>
-    <label>
-      <input type="checkbox" id="hideVideoTitle" />
-      Hide Video Title
-    </label>
-    <label>
-      <input type="checkbox" id="hideMerchShelf" />
-      Hide Merch/Offers Shelf
-    </label>
     <script src="popup.js"></script>
+    <!-- independent theme switcher -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const body = document.body;
+        const lightBtn = document.getElementById("lightMode");
+        const darkBtn = document.getElementById("darkMode");
+
+        if (!lightBtn || !darkBtn) {
+          console.error("Theme buttons not found!");
+          return;
+        }
+
+        // Load saved theme
+        chrome.storage.local.get("themeMode", ({ themeMode }) => {
+          applyTheme(themeMode || "dark");
+        });
+
+        lightBtn.onclick = () => setTheme("light");
+        darkBtn.onclick = () => setTheme("dark");
+
+        function setTheme(mode) {
+          chrome.storage.local.set({ themeMode: mode });
+          applyTheme(mode);
+        }
+
+        function applyTheme(mode) {
+          body.classList.toggle("dark-mode", mode === "dark");
+          body.classList.toggle("light-mode", mode === "light");
+
+          darkBtn.classList.toggle("active", mode === "dark");
+          lightBtn.classList.toggle("active", mode === "light");
+        }
+      });
+    </script>
   </body>
 </html>
