@@ -43,7 +43,7 @@
    ======================================================== */
 
 /* Feed & Display Ads */
-.declutter-hide-ads ytd-ad-slot-renderer,
+/* .declutter-hide-ads ytd-ad-slot-renderer,
 .declutter-hide-ads ytd-promoted-sparkles-web-renderer,
 .declutter-hide-ads ytd-display-ad-renderer,
 .declutter-hide-ads ytd-promoted-sparkles-text-search-renderer,
@@ -63,10 +63,10 @@
   margin: 0 !important;
   padding: 0 !important;
   pointer-events: none !important;
-}
+} */
 
 /* Video Player Ads - Instant Hide */
-.declutter-hide-ads #player-ads,
+/* .declutter-hide-ads #player-ads,
 .declutter-hide-ads .ytp-ad-module,
 .declutter-hide-ads .ytp-ad-player-overlay,
 .declutter-hide-ads .ytp-ad-player-overlay-instream-info,
@@ -91,10 +91,10 @@
   height: 0 !important;
   width: 0 !important;
   pointer-events: none !important;
-}
+} */
 
 /* Masthead & Banner Ads */
-.declutter-hide-ads #masthead-ad,
+/* .declutter-hide-ads #masthead-ad,
 .declutter-hide-ads
   ytd-rich-item-renderer.ytd-rich-grid-renderer:has(ytd-display-ad-renderer),
 .declutter-hide-ads ytd-statement-banner-renderer,
@@ -105,10 +105,10 @@
   height: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
-}
+} */
 
 /* Ad containers and spacing */
-.declutter-hide-ads ytd-rich-item-renderer:has(ytd-ad-slot-renderer),
+/* .declutter-hide-ads ytd-rich-item-renderer:has(ytd-ad-slot-renderer),
 .declutter-hide-ads ytd-rich-section-renderer:has(ytd-ad-slot-renderer),
 .declutter-hide-ads ytd-rich-grid-row:has(ytd-ad-slot-renderer:only-child),
 .declutter-hide-ads
@@ -117,10 +117,10 @@
   margin: 0 !important;
   padding: 0 !important;
   height: 0 !important;
-}
+} */
 
 /* Ad-related attributes and IDs */
-.declutter-hide-ads [id*="ad-slot"],
+/* .declutter-hide-ads [id*="ad-slot"],
 .declutter-hide-ads [id*="ad-container"],
 .declutter-hide-ads [id*="player-ads"],
 .declutter-hide-ads [class*="ad-showing"],
@@ -135,36 +135,36 @@
   width: 0 !important;
   opacity: 0 !important;
   pointer-events: none !important;
-}
+} */
 
 /* Companion ads (sidebar) */
-.declutter-hide-ads #companion,
+/* .declutter-hide-ads #companion,
 .declutter-hide-ads #companion-ad,
 .declutter-hide-ads ytd-merch-shelf-renderer:has([class*="ad"]),
 .declutter-hide-ads ytd-video-secondary-info-renderer:has([class*="ad"]) {
   display: none !important;
-}
+} */
 
 /* Overlay and popup ads */
-.declutter-hide-ads ytd-popup-container:has([class*="ad"]),
+/* .declutter-hide-ads ytd-popup-container:has([class*="ad"]),
 .declutter-hide-ads ytd-mealbar-promo-renderer,
 .declutter-hide-ads tp-yt-paper-dialog:has([class*="ad"]),
 .declutter-hide-ads
   ytd-engagement-panel-section-list-renderer[target-id*="ad"] {
   display: none !important;
   visibility: hidden !important;
-}
+} */
 
 /* Ad badges and markers */
-.declutter-hide-ads .ytd-badge-supported-renderer:has-text("Ad"),
+/* .declutter-hide-ads .ytd-badge-supported-renderer:has-text("Ad"),
 .declutter-hide-ads .badge[style-target="HOST"]:has-text("Ad"),
 .declutter-hide-ads [title*="Advertisement"],
 .declutter-hide-ads [aria-label*="Sponsored"] {
   display: none !important;
-}
+} */
 
 /* iframe ads from ad networks */
-.declutter-hide-ads iframe[src*="doubleclick"],
+/* .declutter-hide-ads iframe[src*="doubleclick"],
 .declutter-hide-ads iframe[src*="googlesyndication"],
 .declutter-hide-ads iframe[src*="/pagead/"],
 .declutter-hide-ads iframe[src*="googleads"],
@@ -174,43 +174,43 @@
   visibility: hidden !important;
   height: 0 !important;
   width: 0 !important;
-}
+} */
 
 /* Premium/Music upsell ads */
-.declutter-hide-ads ytd-statement-banner-renderer,
+/* .declutter-hide-ads ytd-statement-banner-renderer,
 .declutter-hide-ads ytd-mealbar-promo-renderer,
 .declutter-hide-ads
   ytd-popup-container:has(ytd-single-action-engagement-panel-renderer) {
   display: none !important;
-}
+} */
 
 /* Ad-related spacing prevention */
-.declutter-hide-ads ytd-rich-grid-renderer,
+/* .declutter-hide-ads ytd-rich-grid-renderer,
 .declutter-hide-ads ytd-item-section-renderer {
   transition: none !important;
-}
+} */
 
 /* Prevent layout shifts from hidden ads */
-.declutter-hide-ads ytd-app {
+/* .declutter-hide-ads ytd-app {
   --ytd-ad-spacing: 0 !important;
-}
+} */
 
 /* Survey and promotional content */
-.declutter-hide-ads ytd-survey-renderer,
+/* .declutter-hide-ads ytd-survey-renderer,
 .declutter-hide-ads ytd-statement-banner-renderer[has-donate-button] {
   display: none !important;
   height: 0 !important;
   margin: 0 !important;
-}
+} */
 
 /* Shopping ads */
-.declutter-hide-ads ytd-product-details-drawer-renderer,
+/* .declutter-hide-ads ytd-product-details-drawer-renderer,
 .declutter-hide-ads ytd-shopping-shelf-renderer[is-ad] {
   display: none !important;
-}
+} */
 
 /* Reel/Story ads */
-.declutter-hide-ads ytd-reel-shelf-renderer:has([class*="ad"]),
+/* .declutter-hide-ads ytd-reel-shelf-renderer:has([class*="ad"]),
 .declutter-hide-ads ytd-story-renderer[is-ad] {
   display: none !important;
-}
+} */

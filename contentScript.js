@@ -7,9 +7,10 @@ let settings = {
   hideSidebar: false,
   hideComments: false,
   hideShorts: false,
-  hideAds: false,
+  // hideAds: false,
 };
 
+let shortsCleanerInterval = null;
 // ------------------------------------------------------
 // Utility
 // ------------------------------------------------------
@@ -33,6 +34,10 @@ function applyHiding() {
   if (settings.hideShorts) {
     removeShortsBlocks();
     interceptShortsNavigation();
+    startShortsCleaner();
+  } else {
+    stopShortsCleaner();
+    restoreShorts();
   }
 
   // Always remove Explore (or make optional if you prefer)
@@ -49,23 +54,19 @@ function removeShortsBlocks() {
       "ytd-rich-shelf-renderer[is-shorts]",
       "ytd-reel-item-renderer",
       "ytd-reel-video-renderer",
-      "ytd-rich-item-renderer a[href*='/shorts/']",
+      "ytd-rich-item-renderer:has(a[href*='/shorts/'])",
+      "ytd-grid-video-renderer:has(a[href*='/shorts/'])",
       "a[href*='/shorts/']",
       "tp-yt-paper-tab[tab-title='Shorts']",
       "ytd-guide-entry-renderer[title='Shorts']",
       "ytd-mini-guide-entry-renderer[aria-label='Shorts']",
-      "grid-shelf-view-model",
     ];
 
     // remove known Shorts elements
     selectors.forEach((sel) => {
       document.querySelectorAll(sel).forEach((el) => {
-        if (
-          el.tagName.toLowerCase() === "grid-shelf-view-model" &&
-          !/shorts/i.test(el.innerText.trim().split("\n")[0])
-        )
-          return; // skip non-Shorts shelves
-        el.remove();
+        el.style.display = "none";
+        el.setAttribute("data-declutter-hidden", "true");
       });
     });
 
@@ -75,12 +76,28 @@ function removeShortsBlocks() {
       .forEach((shelf) => {
         const title = shelf.querySelector("h2 span, h2");
         if (title && title.textContent.trim().toLowerCase() === "shorts") {
-          shelf.remove();
+          shelf.style.display = "none";
+          shelf.setAttribute("data-declutter-hidden", "true");
         }
         // also catch shelves containing only Shorts thumbnails
         const hasShortsThumbs = shelf.querySelector("a[href*='/shorts/']");
-        if (hasShortsThumbs) shelf.remove();
+        if (hasShortsThumbs) {
+          shelf.style.display = "none";
+          shelf.setAttribute("data-declutter-hidden", "true");
+        }
       });
+
+    // Handle grid-shelf-view-model in main content
+    document.querySelectorAll("grid-shelf-view-model").forEach((shelf) => {
+      const title = shelf.querySelector("h2 span, h2");
+      const titleText = title ? title.textContent.trim().toLowerCase() : "";
+      const hasShortsThumbs = shelf.querySelector("a[href*='/shorts/']");
+
+      if (titleText === "shorts" || hasShortsThumbs) {
+        shelf.style.display = "none";
+        shelf.setAttribute("data-declutter-hidden", "true");
+      }
+    });
 
     // clean inside shadow roots (for lazy-loaded sections)
     document.querySelectorAll("*").forEach((el) => {
@@ -93,12 +110,56 @@ function removeShortsBlocks() {
             (title && title.textContent.trim().toLowerCase() === "shorts") ||
             shelf.querySelector("a[href*='/shorts/']")
           ) {
-            shelf.remove();
+            shelf.style.display = "none";
+            shelf.setAttribute("data-declutter-hidden", "true");
           }
         });
     });
   } catch (err) {
     console.warn("[declutter] removeShortsBlocks error:", err);
+  }
+}
+
+// ------------------------------------------------------
+// Restore Shorts (when toggle is unchecked)
+// ------------------------------------------------------
+function restoreShorts() {
+  try {
+    // Restore all hidden shorts elements
+    document.querySelectorAll("[data-declutter-hidden]").forEach((el) => {
+      el.style.display = "";
+      el.removeAttribute("data-declutter-hidden");
+    });
+
+    // Check shadow roots too
+    document.querySelectorAll("*").forEach((el) => {
+      if (!el.shadowRoot) return;
+      el.shadowRoot
+        .querySelectorAll("[data-declutter-hidden]")
+        .forEach((shelf) => {
+          shelf.style.display = "";
+          shelf.removeAttribute("data-declutter-hidden");
+        });
+    });
+  } catch (err) {
+    console.warn("[declutter] restoreShorts error:", err);
+  }
+}
+
+// ------------------------------------------------------
+// Start/Stop Shorts Cleaner Interval
+// ------------------------------------------------------
+function startShortsCleaner() {
+  if (shortsCleanerInterval) return; // Already running
+  shortsCleanerInterval = setInterval(() => {
+    if (settings.hideShorts) removeShortsBlocks();
+  }, 1500);
+}
+
+function stopShortsCleaner() {
+  if (shortsCleanerInterval) {
+    clearInterval(shortsCleanerInterval);
+    shortsCleanerInterval = null;
   }
 }
 

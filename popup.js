@@ -1,13 +1,7 @@
 // popup.js — stable version (prevents "Receiving end does not exist")
 
 function initPopup() {
-  const checkboxes = [
-    "hideHome",
-    "hideSidebar",
-    "hideComments",
-    "hideShorts",
-    "hideAds",
-  ];
+  const checkboxes = ["hideHome", "hideSidebar", "hideComments", "hideShorts"];
 
   checkboxes.forEach((id) => {
     const el = document.getElementById(id);
