@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YouTube Declutter",
-  "version": "3.0",
+  "version": "3.1",
   "description": "Hide Shorts, comments, home feed, sidebar, and visible ads on YouTube.",
   "permissions": [
     "storage",
@@ -14,15 +14,7 @@
   "action": {
     "default_popup": "popup.html"
   },
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "youtube_ads",
-        "enabled": true,
-        "path": "rules.json"
-      }
-    ]
-  },
+
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],

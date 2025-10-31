@@ -6,6 +6,26 @@
 .declutter-hide-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer {
   display: none !important;
 }
+/* Header / masthead - more robust selectors */
+body.declutter-hide-header ytd-masthead,
+html.declutter-hide-header ytd-masthead,
+body.declutter-hide-header #masthead,
+html.declutter-hide-header #masthead,
+body.declutter-hide-header ytd-app #masthead,
+html.declutter-hide-header ytd-app #masthead,
+body.declutter-hide-header ytd-masthead#masthead,
+html.declutter-hide-header ytd-masthead#masthead,
+body.declutter-hide-header ytd-masthead > #container,
+html.declutter-hide-header ytd-masthead > #container,
+body.declutter-hide-header div#container.style-scope.ytd-masthead,
+html.declutter-hide-header div#container.style-scope.ytd-masthead {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
 
 /* Sidebar, comments */
 .declutter-hide-sidebar #guide,
@@ -14,6 +34,12 @@
   display: none !important;
 }
 
+/* Header/Navbar - YouTube masthead (logo, search bar, buttons) */
+.declutter-hide-header #masthead,
+.declutter-hide-header ytd-masthead,
+.declutter-hide-header #container {
+  display: none !important;
+}
 /* ========================================================
    SHORTS - Complete Removal (All Contexts)
    ======================================================== */
@@ -37,180 +63,3 @@
   ytd-rich-shelf-renderer.style-scope.ytd-rich-grid-renderer {
   display: none !important;
 }
-
-/* ========================================================
-   ADS - Instant Visual Hide (Backup for JavaScript Blocker)
-   ======================================================== */
-
-/* Feed & Display Ads */
-/* .declutter-hide-ads ytd-ad-slot-renderer,
-.declutter-hide-ads ytd-promoted-sparkles-web-renderer,
-.declutter-hide-ads ytd-display-ad-renderer,
-.declutter-hide-ads ytd-promoted-sparkles-text-search-renderer,
-.declutter-hide-ads ytd-promoted-video-renderer,
-.declutter-hide-ads ytd-statement-banner-renderer,
-.declutter-hide-ads ytd-banner-promo-renderer,
-.declutter-hide-ads ytd-in-feed-ad-layout-renderer,
-.declutter-hide-ads ytd-action-companion-ad-renderer,
-.declutter-hide-ads ytd-companion-slot-renderer,
-.declutter-hide-ads ytd-ad-break-service-renderer,
-.declutter-hide-ads ytd-search-ad-renderer {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  height: 0 !important;
-  width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  pointer-events: none !important;
-} */
-
-/* Video Player Ads - Instant Hide */
-/* .declutter-hide-ads #player-ads,
-.declutter-hide-ads .ytp-ad-module,
-.declutter-hide-ads .ytp-ad-player-overlay,
-.declutter-hide-ads .ytp-ad-player-overlay-instream-info,
-.declutter-hide-ads .ytp-ad-text,
-.declutter-hide-ads .ytp-ad-preview-container,
-.declutter-hide-ads .ytp-ad-progress-list,
-.declutter-hide-ads .ytp-ad-image-overlay,
-.declutter-hide-ads .ytp-ad-overlay-container,
-.declutter-hide-ads .ytp-ad-text-overlay,
-.declutter-hide-ads .ytp-ad-overlay-slot,
-.declutter-hide-ads .ytp-ad-overlay-image,
-.declutter-hide-ads .ytp-ad-skip-ad-slot,
-.declutter-hide-ads .ytp-ad-button,
-.declutter-hide-ads .ytp-ad-skip-button-container,
-.declutter-hide-ads .video-ads,
-.declutter-hide-ads .ytp-ad-preview-text,
-.declutter-hide-ads .ytp-ad-preview-image,
-.declutter-hide-ads .ytp-ad-player-overlay-skip-button {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  height: 0 !important;
-  width: 0 !important;
-  pointer-events: none !important;
-} */
-
-/* Masthead & Banner Ads */
-/* .declutter-hide-ads #masthead-ad,
-.declutter-hide-ads
-  ytd-rich-item-renderer.ytd-rich-grid-renderer:has(ytd-display-ad-renderer),
-.declutter-hide-ads ytd-statement-banner-renderer,
-.declutter-hide-ads ytd-brand-video-shelf-renderer[is-advertisement],
-.declutter-hide-ads ytd-brand-video-singleton-renderer[is-advertisement] {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-} */
-
-/* Ad containers and spacing */
-/* .declutter-hide-ads ytd-rich-item-renderer:has(ytd-ad-slot-renderer),
-.declutter-hide-ads ytd-rich-section-renderer:has(ytd-ad-slot-renderer),
-.declutter-hide-ads ytd-rich-grid-row:has(ytd-ad-slot-renderer:only-child),
-.declutter-hide-ads
-  ytd-item-section-renderer:has(ytd-ad-slot-renderer:only-child) {
-  display: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  height: 0 !important;
-} */
-
-/* Ad-related attributes and IDs */
-/* .declutter-hide-ads [id*="ad-slot"],
-.declutter-hide-ads [id*="ad-container"],
-.declutter-hide-ads [id*="player-ads"],
-.declutter-hide-ads [class*="ad-showing"],
-.declutter-hide-ads [class*="ad-interrupting"],
-.declutter-hide-ads [class*="ad-rendering"],
-.declutter-hide-ads [data-ad-slot],
-.declutter-hide-ads [data-ad-details],
-.declutter-hide-ads [aria-label*="Advertisement"] {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  width: 0 !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-} */
-
-/* Companion ads (sidebar) */
-/* .declutter-hide-ads #companion,
-.declutter-hide-ads #companion-ad,
-.declutter-hide-ads ytd-merch-shelf-renderer:has([class*="ad"]),
-.declutter-hide-ads ytd-video-secondary-info-renderer:has([class*="ad"]) {
-  display: none !important;
-} */
-
-/* Overlay and popup ads */
-/* .declutter-hide-ads ytd-popup-container:has([class*="ad"]),
-.declutter-hide-ads ytd-mealbar-promo-renderer,
-.declutter-hide-ads tp-yt-paper-dialog:has([class*="ad"]),
-.declutter-hide-ads
-  ytd-engagement-panel-section-list-renderer[target-id*="ad"] {
-  display: none !important;
-  visibility: hidden !important;
-} */
-
-/* Ad badges and markers */
-/* .declutter-hide-ads .ytd-badge-supported-renderer:has-text("Ad"),
-.declutter-hide-ads .badge[style-target="HOST"]:has-text("Ad"),
-.declutter-hide-ads [title*="Advertisement"],
-.declutter-hide-ads [aria-label*="Sponsored"] {
-  display: none !important;
-} */
-
-/* iframe ads from ad networks */
-/* .declutter-hide-ads iframe[src*="doubleclick"],
-.declutter-hide-ads iframe[src*="googlesyndication"],
-.declutter-hide-ads iframe[src*="/pagead/"],
-.declutter-hide-ads iframe[src*="googleads"],
-.declutter-hide-ads iframe[id*="ad"],
-.declutter-hide-ads iframe[name*="ad"] {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  width: 0 !important;
-} */
-
-/* Premium/Music upsell ads */
-/* .declutter-hide-ads ytd-statement-banner-renderer,
-.declutter-hide-ads ytd-mealbar-promo-renderer,
-.declutter-hide-ads
-  ytd-popup-container:has(ytd-single-action-engagement-panel-renderer) {
-  display: none !important;
-} */
-
-/* Ad-related spacing prevention */
-/* .declutter-hide-ads ytd-rich-grid-renderer,
-.declutter-hide-ads ytd-item-section-renderer {
-  transition: none !important;
-} */
-
-/* Prevent layout shifts from hidden ads */
-/* .declutter-hide-ads ytd-app {
-  --ytd-ad-spacing: 0 !important;
-} */
-
-/* Survey and promotional content */
-/* .declutter-hide-ads ytd-survey-renderer,
-.declutter-hide-ads ytd-statement-banner-renderer[has-donate-button] {
-  display: none !important;
-  height: 0 !important;
-  margin: 0 !important;
-} */
-
-/* Shopping ads */
-/* .declutter-hide-ads ytd-product-details-drawer-renderer,
-.declutter-hide-ads ytd-shopping-shelf-renderer[is-ad] {
-  display: none !important;
-} */
-
-/* Reel/Story ads */
-/* .declutter-hide-ads ytd-reel-shelf-renderer:has([class*="ad"]),
-.declutter-hide-ads ytd-story-renderer[is-ad] {
-  display: none !important;
-} */

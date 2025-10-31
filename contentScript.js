@@ -3,6 +3,7 @@
 // ======================================================
 
 let settings = {
+  hideHeader: false,
   hideHome: false,
   hideSidebar: false,
   hideComments: false,
@@ -29,7 +30,12 @@ function applyHiding() {
   body.classList.toggle("declutter-hide-sidebar", settings.hideSidebar);
   body.classList.toggle("declutter-hide-comments", settings.hideComments);
   body.classList.toggle("declutter-hide-shorts", settings.hideShorts);
-  body.classList.toggle("declutter-hide-ads", settings.hideAds);
+  // Ensure class exists both on <body> and <html> for robustness
+  document.body.classList.toggle("declutter-hide-header", settings.hideHeader);
+  document.documentElement.classList.toggle(
+    "declutter-hide-header",
+    settings.hideHeader
+  );
 
   if (settings.hideShorts) {
     removeShortsBlocks();
@@ -38,6 +44,20 @@ function applyHiding() {
   } else {
     stopShortsCleaner();
     restoreShorts();
+  }
+
+  if (settings.hideHeader) {
+    const mast = document.querySelector("ytd-masthead, #masthead");
+    if (mast) {
+      mast.style.display = "none";
+      mast.setAttribute("data-declutter-hidden", "true");
+    }
+  } else {
+    // restore
+    document.querySelectorAll("[data-declutter-hidden]").forEach((el) => {
+      el.style.display = "";
+      el.removeAttribute("data-declutter-hidden");
+    });
   }
 
   // Always remove Explore (or make optional if you prefer)
