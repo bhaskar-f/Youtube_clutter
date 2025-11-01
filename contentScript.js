@@ -180,6 +180,142 @@ function removeShortsBlocks() {
         // ignore selector failures
       }
     });
+
+    // ========== NEW: SEARCH RESULTS SHORTS REMOVAL (ALL FORMATS) ==========
+
+    // 1. Target grid-shelf-view-model elements (Shorts carousels)
+    try {
+      document.querySelectorAll("grid-shelf-view-model").forEach((shelf) => {
+        const hasShortsThumbs = shelf.querySelector("a[href*='/shorts/']");
+        const hasShortsLockup = shelf.querySelector(
+          "ytm-shorts-lockup-view-model"
+        );
+        const hasReelEndpoint = shelf.querySelector(".reel-item-endpoint");
+        const header = shelf.querySelector(
+          "h2 span, h2, .yt-shelf-header-layout__title span"
+        );
+        const headerText = header
+          ? header.textContent.trim().toLowerCase()
+          : "";
+
+        if (
+          hasShortsThumbs ||
+          hasShortsLockup ||
+          hasReelEndpoint ||
+          headerText.includes("shorts")
+        ) {
+          if (!shelf.hasAttribute("data-declutter-shorts-hidden")) {
+            shelf.setAttribute(
+              "data-declutter-shorts-original-display",
+              shelf.style.display || ""
+            );
+            shelf.style.display = "none";
+            shelf.setAttribute("data-declutter-shorts-hidden", "true");
+          }
+        }
+      });
+    } catch (e) {
+      // ignore
+    }
+
+    // 2. Target individual Shorts videos in search results (ytd-video-renderer)
+    try {
+      document.querySelectorAll("ytd-video-renderer").forEach((video) => {
+        // Check if it has a Shorts badge overlay
+        const hasShortsOverlay = video.querySelector(
+          'ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"]'
+        );
+        // Check if thumbnail link points to /shorts/
+        const shortsLink = video.querySelector('a[href*="/shorts/"]');
+
+        if (hasShortsOverlay || shortsLink) {
+          if (!video.hasAttribute("data-declutter-shorts-hidden")) {
+            video.setAttribute(
+              "data-declutter-shorts-original-display",
+              video.style.display || ""
+            );
+            video.style.display = "none";
+            video.setAttribute("data-declutter-shorts-hidden", "true");
+          }
+        }
+      });
+    } catch (e) {
+      // ignore
+    }
+
+    // 3. Target ytm-shorts-lockup-view-model elements
+    try {
+      document
+        .querySelectorAll(
+          "ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2"
+        )
+        .forEach((lockup) => {
+          if (!lockup.hasAttribute("data-declutter-shorts-hidden")) {
+            lockup.setAttribute(
+              "data-declutter-shorts-original-display",
+              lockup.style.display || ""
+            );
+            lockup.style.display = "none";
+            lockup.setAttribute("data-declutter-shorts-hidden", "true");
+          }
+        });
+    } catch (e) {
+      // ignore
+    }
+
+    // 4. Target reel-item-endpoint links
+    try {
+      document
+        .querySelectorAll(
+          "a.reel-item-endpoint, .shortsLockupViewModelHostEndpoint"
+        )
+        .forEach((link) => {
+          if (!link.hasAttribute("data-declutter-shorts-hidden")) {
+            link.setAttribute(
+              "data-declutter-shorts-original-display",
+              link.style.display || ""
+            );
+            link.style.display = "none";
+            link.setAttribute("data-declutter-shorts-hidden", "true");
+          }
+        });
+    } catch (e) {
+      // ignore
+    }
+
+    // 5. Legacy: Target ytd-reel-shelf-renderer
+    try {
+      document.querySelectorAll("ytd-reel-shelf-renderer").forEach((reel) => {
+        if (!reel.hasAttribute("data-declutter-shorts-hidden")) {
+          reel.setAttribute(
+            "data-declutter-shorts-original-display",
+            reel.style.display || ""
+          );
+          reel.style.display = "none";
+          reel.setAttribute("data-declutter-shorts-hidden", "true");
+        }
+      });
+    } catch (e) {
+      // ignore
+    }
+
+    // 6. Legacy: Target ytd-reel-item-renderer
+    try {
+      document.querySelectorAll("ytd-reel-item-renderer").forEach((item) => {
+        if (!item.hasAttribute("data-declutter-shorts-hidden")) {
+          item.setAttribute(
+            "data-declutter-shorts-original-display",
+            item.style.display || ""
+          );
+          item.style.display = "none";
+          item.setAttribute("data-declutter-shorts-hidden", "true");
+        }
+      });
+    } catch (e) {
+      // ignore
+    }
+
+    // ========== END SEARCH RESULTS FIX ==========
   } catch (e) {
     console.warn("[declutter] removeShortsBlocks error:", e);
   }

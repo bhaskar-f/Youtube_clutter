@@ -39,7 +39,11 @@ html.declutter-hide-header ytd-masthead > #container {
 }
 
 .declutter-hide-chipbar #frosted-glass.with-chipbar.ytd-app {
-  height: 0px;
+  height: 70px;
+}
+/* .declutter-hide-chipbar ytd-search-header-renderer #chip-bar, */
+.declutter-hide-chipbar #scroll-container.yt-chip-cloud-renderer {
+  display: none !important;
 }
 
 /* Sidebar and Comments */
@@ -70,7 +74,11 @@ body.declutter-hide-explore a[href*="/feed/explore"] {
   pointer-events: none !important;
 }
 
-/* Shorts */
+/* ======================================================
+   SHORTS - Complete Removal (All Contexts)
+   ====================================================== */
+
+/* Basic Shorts Elements */
 .declutter-hide-shorts ytd-reel-shelf-renderer,
 .declutter-hide-shorts ytd-reel-item-renderer,
 .declutter-hide-shorts ytd-reel-video-renderer,
@@ -91,6 +99,72 @@ body.declutter-hide-explore a[href*="/feed/explore"] {
   ytd-rich-shelf-renderer.style-scope.ytd-rich-grid-renderer {
   display: none !important;
 }
+
+/* ========== NEW: SEARCH RESULTS SHORTS REMOVAL ========== */
+
+/* Target grid-shelf-view-model (new YouTube layout for Shorts in search) */
+.declutter-hide-shorts grid-shelf-view-model {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Target the parent container in #contents */
+.declutter-hide-shorts #contents > grid-shelf-view-model {
+  display: none !important;
+}
+
+/* Target ytm-shorts-lockup-view-model elements */
+.declutter-hide-shorts ytm-shorts-lockup-view-model,
+.declutter-hide-shorts ytm-shorts-lockup-view-model-v2 {
+  display: none !important;
+}
+
+/* Target reel-item-endpoint links */
+.declutter-hide-shorts a.reel-item-endpoint,
+.declutter-hide-shorts .shortsLockupViewModelHostEndpoint {
+  display: none !important;
+}
+
+/* NEW: Target individual Shorts videos in search results (ytd-video-renderer with Shorts badge) */
+.declutter-hide-shorts
+  ytd-video-renderer:has(
+    ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"]
+  ),
+.declutter-hide-shorts ytd-video-renderer:has(a[href*="/shorts/"]) {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Legacy Shorts elements */
+.declutter-hide-shorts ytd-reel-shelf-renderer {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Hide reel items */
+.declutter-hide-shorts ytd-reel-item-renderer {
+  display: none !important;
+}
+
+/* ========== END SEARCH RESULTS FIX ========== */
 
 /* ======================================================
    NEW VIDEO PAGE FEATURES
