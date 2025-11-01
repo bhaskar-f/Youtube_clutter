@@ -9,6 +9,7 @@
   --transition: 0.25s ease;
 }
 
+/* Default Dark Mode */
 body {
   font-family: "Roboto", sans-serif;
   width: 360px;
@@ -56,6 +57,11 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition);
+  padding: 0;
+}
+
+.theme-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .theme-btn.active {
@@ -72,7 +78,7 @@ body {
 h2 {
   font-size: 0.9rem;
   text-transform: uppercase;
-  color: var(--yt-red);
+  color: #fff;
   border-bottom: 1px solid var(--border);
   padding-bottom: 4px;
   margin-bottom: 8px;
@@ -96,6 +102,7 @@ label {
   font-size: 0.85rem;
   transition: background var(--transition);
   gap: 6px;
+  cursor: pointer;
 }
 
 label:hover {
@@ -103,7 +110,7 @@ label:hover {
 }
 
 label i.material-icons-outlined {
-  color: var(--yt-red);
+  color: #fff;
   font-size: 18px;
   flex-shrink: 0;
 }
@@ -123,6 +130,7 @@ input[type="checkbox"] {
   position: relative;
   cursor: pointer;
   transition: background var(--transition);
+  flex-shrink: 0;
 }
 
 input[type="checkbox"]::before {
@@ -155,50 +163,72 @@ footer {
   border-top: 1px solid var(--border);
 }
 
-/* LIGHT MODE */
-body.dark-mode {
-  background: #f9f9f9;
-  color: #111;
-}
-
-body.dark-mode .header,
-body.dark-mode label {
-  background: #fff;
-  color: #000;
-  border-color: #ccc;
-}
-
-body.dark-mode .theme-btn {
-  color: #555;
-  border-color: #ccc;
-}
-
-body.dark-mode .theme-btn.active {
-  background: var(--yt-red);
-  color: #fff;
-  border-color: var(--yt-red);
-}
-
-body.dark-mode h2 {
-  color: #c00;
-}
-/* Light theme */
+/* =============================================
+   LIGHT MODE STYLES
+   ============================================= */
 body.light-mode {
   background: #f9f9f9;
   color: #111;
 }
-body.light-mode .header,
+
+body.light-mode .header {
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+body.light-mode .header h1 {
+  color: #111;
+}
+
 body.light-mode label {
   background: #fff;
-  color: #000;
-  border-color: #ccc;
+  color: #111;
+  border: 1px solid #e0e0e0;
 }
+
+body.light-mode label:hover {
+  background: #f5f5f5;
+}
+
 body.light-mode .theme-btn {
   color: #555;
-  border-color: #ccc;
+  border-color: #e0e0e0;
 }
+
+body.light-mode .theme-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
 body.light-mode .theme-btn.active {
   background: var(--yt-red);
   color: #fff;
   border-color: var(--yt-red);
+}
+
+body.light-mode h2 {
+  color: black;
+  border-bottom-color: #e0e0e0;
+}
+body.light-mode label i.material-icons-outlined {
+  color: black;
+}
+body.light-mode input[type="checkbox"] {
+  background: #ddd;
+}
+
+body.light-mode input[type="checkbox"]::before {
+  background: #635f5f;
+}
+
+body.light-mode input[type="checkbox"]:checked {
+  background: var(--yt-red);
+}
+
+body.light-mode input[type="checkbox"]:checked::before {
+  background: #fff;
+}
+
+body.light-mode footer {
+  color: #666;
+  border-top-color: #e0e0e0;
 }

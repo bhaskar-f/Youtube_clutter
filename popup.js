@@ -56,6 +56,53 @@ function initPopup() {
       });
     });
   });
+  // Initialize theme toggle
+  initThemeToggle();
+}
+
+function initThemeToggle() {
+  const body = document.body;
+  const lightBtn = document.getElementById("lightMode");
+  const darkBtn = document.getElementById("darkMode");
+
+  if (!lightBtn || !darkBtn) {
+    console.error("[popup] Theme buttons not found!");
+    return;
+  }
+
+  // Load saved theme preference
+  chrome.storage.sync.get("themeMode", (data) => {
+    const mode = data.themeMode || "dark";
+    applyTheme(mode);
+  });
+
+  // Theme button click handlers
+  lightBtn.addEventListener("click", () => {
+    setTheme("light");
+  });
+
+  darkBtn.addEventListener("click", () => {
+    setTheme("dark");
+  });
+
+  function setTheme(mode) {
+    chrome.storage.sync.set({ themeMode: mode });
+    applyTheme(mode);
+  }
+
+  function applyTheme(mode) {
+    if (mode === "light") {
+      body.classList.add("light-mode");
+      body.classList.remove("dark-mode");
+      lightBtn.classList.add("active");
+      darkBtn.classList.remove("active");
+    } else {
+      body.classList.remove("light-mode");
+      body.classList.add("dark-mode");
+      darkBtn.classList.add("active");
+      lightBtn.classList.remove("active");
+    }
+  }
 }
 
 // Wait for DOM
