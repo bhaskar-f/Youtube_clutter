@@ -13,7 +13,7 @@
 
   <body class="dark-mode">
     <header class="header">
-      <h1><span class="yt-red">YouTube</span> Declutter</h1>
+      <h1><span class="yt-red">YouTube</span> Edu</h1>
 
       <div class="theme-buttons">
         <button id="lightMode" class="theme-btn" title="Light Mode">
@@ -100,6 +100,153 @@
             <span>Hide Merch Shelf</span>
             <input type="checkbox" id="hideMerchShelf" />
           </label>
+        </div>
+      </section>
+
+      <!-- EduTube Section -->
+      <section class="edutube-section">
+        <h2>🎓 EduTube Mode</h2>
+        <div class="edutube-info">
+          <p>
+            Transform YouTube into an educational platform. Uses hybrid
+            filtering: Whitelist → Keywords → YouTube API → Fallback.
+          </p>
+        </div>
+
+        <div class="edutube-toggle">
+          <label class="edutube-main-toggle">
+            <i class="material-icons-outlined">school</i>
+            <span>Enable EduTube Mode</span>
+            <input type="checkbox" id="edutubeEnabled" />
+          </label>
+        </div>
+
+        <div
+          class="edutube-settings"
+          id="edutubeSettings"
+          style="display: none"
+        >
+          <!-- Sensitivity Slider -->
+          <div class="edutube-sensitivity">
+            <label class="sensitivity-label">
+              <span>Filter Sensitivity</span>
+              <span id="sensitivityValue">Balanced</span>
+            </label>
+            <input
+              type="range"
+              id="edutubeSensitivity"
+              min="30"
+              max="80"
+              value="50"
+              step="10"
+            />
+            <div class="sensitivity-labels">
+              <span>Relaxed</span>
+              <span>Balanced</span>
+              <span>Strict</span>
+            </div>
+          </div>
+
+          <!-- API Key Section -->
+          <div class="api-section">
+            <div class="api-header">
+              <span class="api-title">
+                <i class="material-icons-outlined">key</i>
+                YouTube API (Optional)
+              </span>
+              <button
+                class="api-help-btn"
+                id="apiHelpBtn"
+                title="How to get API key"
+              >
+                ?
+              </button>
+            </div>
+
+            <div class="api-help" id="apiHelp" style="display: none">
+              <p><strong>Get FREE YouTube API Key:</strong></p>
+              <ol>
+                <li>
+                  Go to
+                  <a href="https://console.cloud.google.com" target="_blank"
+                    >Google Cloud Console</a
+                  >
+                </li>
+                <li>Create new project</li>
+                <li>Enable "YouTube Data API v3"</li>
+                <li>Create credentials (API key)</li>
+                <li>Paste key below</li>
+              </ol>
+              <p><small>Free tier: 10,000 units/day (~2,000 videos)</small></p>
+            </div>
+
+            <div class="api-input-group">
+              <input
+                type="text"
+                id="youtubeApiKey"
+                placeholder="Enter YouTube API Key (optional)"
+                autocomplete="off"
+              />
+              <button id="saveApiKey" class="api-save-btn">Save</button>
+            </div>
+
+            <div class="api-status" id="apiStatus">
+              <span class="status-indicator" id="apiStatusIndicator">●</span>
+              <span id="apiStatusText">No API key set</span>
+            </div>
+
+            <div class="api-quota" id="apiQuota" style="display: none">
+              <div class="quota-bar-container">
+                <div class="quota-bar" id="quotaBar" style="width: 0%"></div>
+              </div>
+              <div class="quota-text">
+                <span id="quotaUsed">0</span> /
+                <span id="quotaLimit">10,000</span> units used
+                <span class="quota-reset"
+                  >Resets: <span id="quotaReset">--</span></span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="edutube-stats">
+            <div class="stat-item">
+              <span class="stat-value" id="videosHidden">0</span>
+              <span class="stat-label">Videos Hidden</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="videosShown">0</span>
+              <span class="stat-label">Educational Shown</span>
+            </div>
+          </div>
+
+          <!-- Layer Stats -->
+          <details class="layer-stats">
+            <summary>Filter Layer Statistics</summary>
+            <div class="layer-grid">
+              <div class="layer-item">
+                <span class="layer-name">Whitelist</span>
+                <span class="layer-value" id="layerWhitelist">0</span>
+              </div>
+              <div class="layer-item">
+                <span class="layer-name">Blacklist</span>
+                <span class="layer-value" id="layerBlacklist">0</span>
+              </div>
+              <div class="layer-item">
+                <span class="layer-name">Keywords</span>
+                <span class="layer-value" id="layerKeywords">0</span>
+              </div>
+              <div class="layer-item">
+                <span class="layer-name">YouTube API</span>
+                <span class="layer-value" id="layerApi">0</span>
+              </div>
+              <div class="layer-item">
+                <span class="layer-name">Fallback</span>
+                <span class="layer-value" id="layerFallback">0</span>
+              </div>
+            </div>
+          </details>
         </div>
       </section>
     </main>

@@ -222,3 +222,11 @@ body.declutter-hide-explore a[href*="/feed/explore"] {
 .declutter-hide-merch-shelf ytd-donation-unavailable-renderer {
   display: none !important;
 }
+
+/* ======================================================
+   EduTube - Hide Non-Educational Videos
+   ====================================================== */
+.declutter-edutube-active [data-edutube-hidden] {
+  display: none !important;
+  visibility: hidden !important;
+}

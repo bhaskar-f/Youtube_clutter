@@ -1,32 +1,35 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Declutter",
-  "version": "5.0",
-  "description": "Hide Shorts, comments, home feed, sidebar, and visible ads on YouTube.",
-  "permissions": [
-    "storage",
-    "activeTab",
-    "scripting",
-    "tabs",
-    "declarativeNetRequest"
-  ],
-  "host_permissions": ["*://*.youtube.com/*", "*://*.googlevideo.com/*"],
-  "action": {
-    "default_popup": "popup.html"
-  },
+  "name": "YouTube Declutter + EduTube",
+  "version": "5.0.0",
+  "description": "Declutter YouTube and transform it into an educational platform with EduTube mode",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["*://*.youtube.com/*"],
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
-    "64": "icons/icon64.png",
     "128": "icons/icon128.png"
   },
-
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
+      "js": ["youtubeAPIService.js", "edutubeEngine.js", "contentScript.js"],
       "css": ["instantHide.css"],
-      "js": ["contentScript.js"],
-      "run_at": "document_end"
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["youtubeAPIService.js", "edutubeEngine.js"],
+      "matches": ["*://*.youtube.com/*"]
     }
   ]
 }
