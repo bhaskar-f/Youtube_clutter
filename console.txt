@@ -1,0 +1,604 @@
+136Blocked script execution in 'about:blank' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+rr1---sn-q4flrnsk.googlevideo.com/videoplayback?expire=4101925658&ei=YKa41Pc0X_PdokslSauLLE1&ip=31.81.60.2&id=o-AFSq3LuHxPJVHuuuigKB7cWsSfpGPQFgtvUUatPZ2onxS&itag=18&source=youtube&requiressl=yes&mh=X6&mm=362%2C22218%2C06097&mn=pFuhf%2CYuMqH%2C0ussZ&ms=pFuhf%2CYuMqH%2C0ussZ&mv=h&mvi=5&pl=99&initcwndbps=9385213&siu=5&spc=4uRoYjUChDaE29jasaLb_LdWXopfY4inILAX8HsBVFjx&vprv=5&svpuc=5&mime=video%2Fmp4&ns=WqtDO2pvnQ0UxwrUAnj3SUYt&cnr=99&ratebypass=yes&dur=12245967&lmt=5918513547842752&mt=4101925658&fvip=3&c=WEB&txp=9385213&n=eWuow2fZTjf9GWfw&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Csiu%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG:1  Failed to load resource: the server responded with a status of 403 ()
+rr1---sn-q4flrnsk.googlevideo.com/videoplayback?expire=4101925658&ei=YKa41Pc0X_PdokslSauLLE1&ip=31.81.60.2&id=o-AFSq3LuHxPJVHuuuigKB7cWsSfpGPQFgtvUUatPZ2onxS&itag=18&source=youtube&requiressl=yes&mh=X6&mm=362%2C22218%2C06097&mn=pFuhf%2CYuMqH%2C0ussZ&ms=pFuhf%2CYuMqH%2C0ussZ&mv=h&mvi=5&pl=99&ctier=L&initcwndbps=9385213&siu=5&spc=4uRoYjUChDaE29jasaLb_LdWXopfY4inILAX8HsBVFjx&vprv=5&svpuc=5&mime=video%2Fmp4&ns=WqtDO2pvnQ0UxwrUAnj3SUYt&cnr=99&ratebypass=yes&dur=12245967&lmt=5918513547842752&mt=4101925658&fvip=3&c=WEB&txp=9385213&n=eWuow2fZTjf9GWfw&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cctier%2Csiu%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG:1  Failed to load resource: the server responded with a status of 403 ()
+www.google.com/pagead/lvz?evtid=ACd6KtwEwvjjGp9mFqLvlLHEHDa36CGNilY_vOxFxBZQ-QHMIEGxrnNWs2Y0S9raX707h7xIIIZ7O7PTs8ExMclgRBwNlU1lFA&req_ts=1762185409&pg=MainAppBootstrap%3AHome&az=1&sigh=AB9vU40xZG6xs_XRyzDOEEVD_Vv6FTOHHA:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+www.google.co.in/pagead/lvz?evtid=ACd6KtwEwvjjGp9mFqLvlLHEHDa36CGNilY_vOxFxBZQ-QHMIEGxrnNWs2Y0S9raX707h7xIIIZ7O7PTs8ExMclgRBwNlU1lFA&req_ts=1762185409&pg=MainAppBootstrap%3AHome&az=1&sigh=AB9vU40xZG6xs_XRyzDOEEVD_Vv6FTOHHA:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+rr1---sn-q4flrnsk.googlevideo.com/videoplayback?expire=4101925658&ei=YKa41Pc0X_PdokslSauLLE1&ip=31.81.60.2&id=o-AFSq3LuHxPJVHuuuigKB7cWsSfpGPQFgtvUUatPZ2onxS&itag=18&source=youtube&requiressl=yes&mh=X6&mm=362%2C22218%2C06097&mn=pFuhf%2CYuMqH%2C0ussZ&ms=pFuhf%2CYuMqH%2C0ussZ&mv=h&mvi=5&pl=99&initcwndbps=9385213&siu=5&spc=4uRoYjUChDaE29jasaLb_LdWXopfY4inILAX8HsBVFjx&vprv=5&svpuc=5&mime=video%2Fmp4&ns=WqtDO2pvnQ0UxwrUAnj3SUYt&cnr=99&ratebypass=yes&dur=12245967&lmt=5918513547842752&mt=4101925658&fvip=3&c=WEB&txp=9385213&n=eWuow2fZTjf9GWfw&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Csiu%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG:1  Failed to load resource: the server responded with a status of 403 ()
+rr1---sn-q4flrnsk.googlevideo.com/videoplayback?expire=4101925658&ei=YKa41Pc0X_PdokslSauLLE1&ip=31.81.60.2&id=o-AFSq3LuHxPJVHuuuigKB7cWsSfpGPQFgtvUUatPZ2onxS&itag=18&source=youtube&requiressl=yes&mh=X6&mm=362%2C22218%2C06097&mn=pFuhf%2CYuMqH%2C0ussZ&ms=pFuhf%2CYuMqH%2C0ussZ&mv=h&mvi=5&pl=99&ctier=L&initcwndbps=9385213&siu=5&spc=4uRoYjUChDaE29jasaLb_LdWXopfY4inILAX8HsBVFjx&vprv=5&svpuc=5&mime=video%2Fmp4&ns=WqtDO2pvnQ0UxwrUAnj3SUYt&cnr=99&ratebypass=yes&dur=12245967&lmt=5918513547842752&mt=4101925658&fvip=3&c=WEB&txp=9385213&n=eWuow2fZTjf9GWfw&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cctier%2Csiu%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG:1  Failed to load resource: the server responded with a status of 403 ()
+/generate_204?hirYNA:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+rr1---sn-q4flrnsk.googlevideo.com/videoplayback?expire=4101925658&ei=YKa41Pc0X_PdokslSauLLE1&ip=31.81.60.2&id=o-AFSq3LuHxPJVHuuuigKB7cWsSfpGPQFgtvUUatPZ2onxS&itag=18&source=youtube&requiressl=yes&mh=X6&mm=362%2C22218%2C06097&mn=pFuhf%2CYuMqH%2C0ussZ&ms=pFuhf%2CYuMqH%2C0ussZ&mv=h&mvi=5&pl=99&initcwndbps=9385213&siu=5&spc=4uRoYjUChDaE29jasaLb_LdWXopfY4inILAX8HsBVFjx&vprv=5&svpuc=5&mime=video%2Fmp4&ns=WqtDO2pvnQ0UxwrUAnj3SUYt&cnr=99&ratebypass=yes&dur=12245967&lmt=5918513547842752&mt=4101925658&fvip=3&c=WEB&txp=9385213&n=eWuow2fZTjf9GWfw&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Csiu%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG:1  Failed to load resource: the server responded with a status of 403 ()
+rr1---sn-q4flrnsk.googlevideo.com/videoplayback?expire=4101925658&ei=YKa41Pc0X_PdokslSauLLE1&ip=31.81.60.2&id=o-AFSq3LuHxPJVHuuuigKB7cWsSfpGPQFgtvUUatPZ2onxS&itag=18&source=youtube&requiressl=yes&mh=X6&mm=362%2C22218%2C06097&mn=pFuhf%2CYuMqH%2C0ussZ&ms=pFuhf%2CYuMqH%2C0ussZ&mv=h&mvi=5&pl=99&ctier=L&initcwndbps=9385213&siu=5&spc=4uRoYjUChDaE29jasaLb_LdWXopfY4inILAX8HsBVFjx&vprv=5&svpuc=5&mime=video%2Fmp4&ns=WqtDO2pvnQ0UxwrUAnj3SUYt&cnr=99&ratebypass=yes&dur=12245967&lmt=5918513547842752&mt=4101925658&fvip=3&c=WEB&txp=9385213&n=eWuow2fZTjf9GWfw&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cctier%2Csiu%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=bfW5ruAApdvxdgJxixofA40fzVvanEWJW5I6vc4gg4LaKM8zBk8yl19gf7r7j9pct1ZbY9cm9AJnbSQI3nxwJiYAZd11AA6rZ87gbdSpq8eG:1  Failed to load resource: the server responded with a status of 403 ()
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+6The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+/youtubei/v1/log_event?alt=json:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Moon Knight Takes Control of Mjolnir" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Moon Knight Takes Control of Mjolnir
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "audio"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Triumph Scrambler 900 RAW AUDIO - Gorgeous! 😍🔥 #triumph #scrambler
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "I hope to have this kind of superpower." => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): I hope to have this kind of superpower.
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "DON'T Buy a Phone Until You See This!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): DON'T Buy a Phone Until You See This!
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): 2025 HERO XTREME 250R..VS..TVS APACHE RTR310!! DRAG RACE 💥SHOKING RESULT 😱
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): 
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Racing Fans As BLACK FLASH! ⚡️ 💨" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Racing Fans As BLACK FLASH! ⚡️ 💨
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "boxing"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Why "High Guard" is my default #boxing position
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): The Flash Family  VS  Thawne .
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "iphone"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Only ₹2999 मैं iPhone 🤯 Lowest price iPhone 2025 #iphone
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "MuayThai brutal strikes #combat #kickboxing" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): MuayThai brutal strikes #combat #kickboxing
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "season"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Every REUSED Character Model In Invincible | Invincible Season 3 #invincible #co
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "boxing"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Best JAB in Boxing Right Now?
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Stop Overpaying for iPads 😤 This One’s All You Need! 📱🔥" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Stop Overpaying for iPads 😤 This One’s All You Need! 📱🔥
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "mma"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Merab stole Sean O'Malley's jacket #mma
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Boys - Charlize Theron in Dawn of the Seven (S3E1) | Movieclips" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Boys - Charlize Theron in Dawn of the Seven (S3E1) | Movieclips
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Superbon vs. Marat Grigorian | ONE Championship Full Fight
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The New Ubuntu on Mac is EXCELLENT" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The New Ubuntu on Mac is EXCELLENT
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "She's Out Of My League (2010): Most Awkward Moments!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): She's Out Of My League (2010): Most Awkward Moments!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Jake Gyllenhaal's Workout To Get His Ridiculous Road House Body | Train Like | Men's Health" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Jake Gyllenhaal's Workout To Get His Ridiculous Road House Body | Train Like | M
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "teaser"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Doomsday Teaser Leak again? New Black Panther Confirmed? - Roastverse 146
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "My favorite camera is cheaper than your smartphone" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): My favorite camera is cheaper than your smartphone
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] ""No One Likes Overpowered Heroes"" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): "No One Likes Overpowered Heroes"
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): TVS Ntorq 150 vs Yamaha Aerox 155 – The Ultimate Scooter Battle! 🏁
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Aftermath of Donna and Harvey's Kiss | Suits" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Aftermath of Donna and Harvey's Kiss | Suits
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Tom Aspinal vs Ciryl Gane | Highlights | UFC 321 | Main Event | 25th October 202
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The mini smartphones from Japan you've never heard about" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The mini smartphones from Japan you've never heard about
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Lady Gaga - Shallow (Live) WITH BRADLEY COOPER - Full Video - Enigma Vegas Residency" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Lady Gaga - Shallow (Live) WITH BRADLEY COOPER - Full Video - Enigma Vegas Resid
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "review"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Lenovo LOQ i5 13450HX RTX 4050 Review & Comparison with LOQ 7435HS and ASUS TUF 
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Bullseye Fight Scenes | Daredevil" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Bullseye Fight Scenes | Daredevil
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Daredevil a WOLF STUNTS proof of concept" => score: 8
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (8 vs 30): Daredevil a WOLF STUNTS proof of concept
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Alex and Brad - Their Story [The Life List]" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Alex and Brad - Their Story [The Life List]
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Unakkul Naane (2023) – Pritt | Lyric + Extended Version" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Unakkul Naane (2023) – Pritt | Lyric + Extended Version
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Day - 3 | Shrimad Bhagwat Katha Live - Pujya Shri Indresh Ji Maharaj - Unjha G.J 2025" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Day - 3 | Shrimad Bhagwat Katha Live - Pujya Shri Indresh Ji Maharaj - Unjha G.J
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "review"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Cycle Bhi, Motorcycle Bhi😍 Emotorad Ranger Rugged E-Bike Review
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "ufc"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): GREATEST FIGHTS in Every UFC Division! 👊
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "iphone"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): The Most Underrated Flagship That India Missed! *Not iPhone*
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Golusu | Meiyazhagan | Karthi, Arvind Swami | Govind Vasantha | C.Premkumar" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Golusu | Meiyazhagan | Karthi, Arvind Swami | Govind Vasantha | C.Premkumar
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Alexandra Daddario - New Girl S03E20 & S04E07 (2014)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Alexandra Daddario - New Girl S03E20 & S04E07 (2014)
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Marcus Luther vs. Salim Ellis-Bey USA Youth National Championships 2024 SF's (60
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "season"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Reacher vs Paulie | Brutal Final Fight | Reacher Season 3 | CLIP ⚡ 4K
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Stop Wasting Money on Expensive Supplements– Try These Cheap Generic" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Stop Wasting Money on Expensive Supplements– Try These Cheap Generic
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Jenna Rink Confesses Her Feelings to Matt | 13 Going on 30 | HBO Max" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Jenna Rink Confesses Her Feelings to Matt | 13 Going on 30 | HBO Max
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Flirty Justice League" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Flirty Justice League
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "songs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Mix - Samarpan 2 | Medley of Satsang Devotional Songs | Alankaar, Hindu College 
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Most Hated vs Most Loved Superhero Love Interest
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "8 Martial Artists Compete in Self Defense Challenges" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): 8 Martial Artists Compete in Self Defense Challenges
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "So you gonna kiss me now? | Anyone But You Ending Scene" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): So you gonna kiss me now? | Anyone But You Ending Scene
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "comedy"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Charlie goes on a date with a judge 👩‍⚖️ | Two And A Half Men | Comedy Central 
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "I Dressed Up as Dora & Accidently Burnt My Skirt ♨️😭" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): I Dressed Up as Dora & Accidently Burnt My Skirt ♨️😭
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Guerrilla450 in 2026??" => score: -8
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (-8 vs 30): Guerrilla450 in 2026??
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How not to burn CLUTCH PLATES of Bike | SR Motoworld" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): How not to burn CLUTCH PLATES of Bike | SR Motoworld
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "SQL Full Course in Telugu | Complete SQL in 3.5 Hours | Vamsi Bhavani" => score: 43
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (43 vs 30): SQL Full Course in Telugu | Complete SQL in 3.5 Hours | Vamsi Bhavani
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Li and Mia's Story (Karate Kid Legends)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Li and Mia's Story (Karate Kid Legends)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Black belt judoka TERRIFIES jiu jitsu competition" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Black belt judoka TERRIFIES jiu jitsu competition
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "episode"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): The Witcher Season 4 Episode 8 Ending & End Credits: WTF Happened
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "It was never about the hair." => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): It was never about the hair.
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "শিক্ষা চুরি | Gopal Bhar | Best Of Gopal Bhar" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): শিক্ষা চুরি | Gopal Bhar | Best Of Gopal Bhar
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "iphone"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Xiaomi 17 vs. Galaxy S25 vs. Pixel 10 vs. iPhone 17 – Not Even Close!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "My Mix" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): My Mix
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "This Workout Gets You JACKED Like TYSON (Zero Weights)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): This Workout Gets You JACKED Like TYSON (Zero Weights)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "I Played the Forbidden Riff in ALL Guitar Stores (on BASS)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): I Played the Forbidden Riff in ALL Guitar Stores (on BASS)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Real Reason We Don't Ride Zebras" => score: -20
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-20): The Real Reason We Don't Ride Zebras
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "boxing"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): India's first boxing world champion? | Inside Nishant Dev's camp |  Matchroom Bo
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "FydeOS - a De-Googled Version of ChromeOS!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): FydeOS - a De-Googled Version of ChromeOS!
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "unboxing"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): ✦ LAPTOP UNBOXING ✦ aesthetic + genshin + HP 15S | orl
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "film"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): no wonder he became the most terrifying villain in film history
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Mix - Rev. Abinendranath Chakravarty - Ai To Re Sei" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Mix - Rev. Abinendranath Chakravarty - Ai To Re Sei
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Becoming A Rizz-Lord (Steve Carrell, Elizabeth Banks) The 40 Year Old Virgin" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Becoming A Rizz-Lord (Steve Carrell, Elizabeth Banks) The 40 Year Old Virgin
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Riding The Gap of Dunloe at Sunrise | Triumph Scrambler 900 | Raw Exhaust [4K]" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Riding The Gap of Dunloe at Sunrise | Triumph Scrambler 900 | Raw Exhaust [4K]
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "when the director happens to be an expert in CGI" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): when the director happens to be an expert in CGI
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "samsung"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): I Revived The Samsung Galaxy S6 With A Custom ROM
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "New Pulsar NS400 High Speed Mileage Test 😱 | Unexpected Result 🥵|" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): New Pulsar NS400 High Speed Mileage Test 😱 | Unexpected Result 🥵|
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Ones with Joey the Ladies' Man | Friends" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Ones with Joey the Ladies' Man | Friends
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "These Coding Projects Give You An Unfair Advantage" => score: 15
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (15 vs 30): These Coding Projects Give You An Unfair Advantage
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Dispatch Mecha Man Suit Up Scene (2025) 4K ULTRA HD" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Dispatch Mecha Man Suit Up Scene (2025) 4K ULTRA HD
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Mix - তুমি নাথ প্রিয়তম - Tumi Natha Priyatama" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Mix - তুমি নাথ প্রিয়তম - Tumi Natha Priyatama
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How to reset ubuntu on WSL to its initial state" => score: 2
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (2 vs 30): How to reset ubuntu on WSL to its initial state
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Amazing Spider-Man | Peter Tells Gwen That He Is Spider-Man | Full Scene" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Amazing Spider-Man | Peter Tells Gwen That He Is Spider-Man | Full Scene
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "HOW TO STRIKE WITH MAXIMUM POWER - Training with Michael J White" => score: 10
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (10 vs 30): HOW TO STRIKE WITH MAXIMUM POWER - Training with Michael J White
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "RTX 5080 - Marvel's Spider-Man 2 (4K HDR 120FPS) Ray-Tracing ON | MJ Venom - Screem Boss Fight" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): RTX 5080 - Marvel's Spider-Man 2 (4K HDR 120FPS) Ray-Tracing ON | MJ Venom - Scr
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Directors on Directors: Saim Sadiq x Payal Kapadia (with Ranabir Das)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Directors on Directors: Saim Sadiq x Payal Kapadia (with Ranabir Das)
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "movie"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Jerry Maguire: Jerry Meets Ray (MOVIE SCENE) | With Captions
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Sheryians AI Live QnA session" => score: 20
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (20 vs 30): Sheryians AI Live QnA session
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Playing Sam Sulek’s Clash Royale Deck! (I’m huge now)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Playing Sam Sulek’s Clash Royale Deck! (I’m huge now)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "CHAMA! Alex Pereira with the COLDEST walkout at #UFC320 🥶🔥" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): CHAMA! Alex Pereira with the COLDEST walkout at #UFC320 🥶🔥
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "iphone"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): i Bought Broken iPhone 14 Pro Max from OLX !!!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Anna Kisses Will - Notting Hill (1999) | RomComs" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Anna Kisses Will - Notting Hill (1999) | RomComs
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Why this Man K*dnapped 17 kids? | Mumbai Hostage Crisis | Dhruv Rathee" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Why this Man K*dnapped 17 kids? | Mumbai Hostage Crisis | Dhruv Rathee
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "music"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Mix - Music of India
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Sub-Zero - Powers & Fight Scenes (Mortal Kombat Legends)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Sub-Zero - Powers & Fight Scenes (Mortal Kombat Legends)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "When Georgie Met Mandy: Part 1 | Young Sheldon Compilation" => score: 30
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (30 vs 30): When Georgie Met Mandy: Part 1 | Young Sheldon Compilation
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "🔄 Public vs Private IP & NAT Explained | GATE 2026 CN Lecture | KnowledgeGate Live 9PM" => score: 83
+edutubeEngine.js:1131 [EduTube] ✓ Strong Educational (83): 🔄 Public vs Private IP & NAT Explained | GATE 2026 CN Lecture | KnowledgeGate L
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Every Superman in Multiverse Arrives to Save Dying Superman from Darkseid's Wrath" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Every Superman in Multiverse Arrives to Save Dying Superman from Darkseid's Wrat
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] ""Did she kill your family ..."☠️☠️" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): "Did she kill your family ..."☠️☠️
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Flying high, battling Lex Luthor, protecting everything he loves" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Flying high, battling Lex Luthor, protecting everything he loves
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "This Custom Himalayan is So Good It Broke My Rating System 😅" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): This Custom Himalayan is So Good It Broke My Rating System 😅
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "ufc"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Ranking Every 2025 UFC Title Challenger (Tier List)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Complete Financial Roadmap for 20's | 25 lessons covered step by step." => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Complete Financial Roadmap for 20's | 25 lessons covered step by step.
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "bollywood"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Tanmay Bhat & The OG Gang React to SRK’s ICONIC BOLLYWOOD FILMS! 😂🤌 | @tanmayb
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "कौन है वो? तुम्हारा बॉयफ्रेंड है क्या? दीदी ने तो उसके बॉयफ्रेंड पर केस कर दिया। Shyam Singha Roy" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): कौन है वो? तुम्हारा बॉयफ्रेंड है क्या? दीदी ने तो उसके बॉयफ्रेंड पर केस कर दिया।
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Turning my Windows Laptop into a MacBook (for Logic Pro)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Turning my Windows Laptop into a MacBook (for Logic Pro)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Wolverine Getting Pissed Off in all the X-Men Films" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Wolverine Getting Pissed Off in all the X-Men Films
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Ring Ceremony ♥️" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Ring Ceremony ♥️
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Bones - the alter ego of Jon Jones" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Bones - the alter ego of Jon Jones
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Downfall of Ronda Rousey" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Downfall of Ronda Rousey
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "I trained Muay Thai in THAILAND" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): I trained Muay Thai in THAILAND
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Best Laptop DEAL Right Now!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Best Laptop DEAL Right Now!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Avengers: Doomsday Will NOT Fail - Let Me Prove It" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Avengers: Doomsday Will NOT Fail - Let Me Prove It
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Best Mini Smartphones From Japan You've Never Heard About" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Best Mini Smartphones From Japan You've Never Heard About
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Daughter Of A Powerful President Gets A Crush On An Ordinary Guy In School" => score: 20
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (20 vs 30): Daughter Of A Powerful President Gets A Crush On An Ordinary Guy In School
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Optimal Solution for an Old Laptop" => score: 8
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (8 vs 30): Optimal Solution for an Old Laptop
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Netflix Almost Confirmed Henry Cavill & Zack Snyder’s DC Return" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Netflix Almost Confirmed Henry Cavill & Zack Snyder’s DC Return
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "trailer"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Welcome Back SnyderVerse, Dr. Doom Teaser Trailer & Tobey’s Spider-Man 4 | Super
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "ufc"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): The Greatest UFC WALK OFF KNOCKOUTS! 😡
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Daredevil vs Muse - Daredevil: Born Again 1x06 (4K)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Daredevil action scenes from the cartoons Compilation(1996-2025)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Daredevil action scenes from the cartoons Compilation(1996-2025)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "If Apple Made a Windows Laptop…" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): If Apple Made a Windows Laptop…
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "A Star is Born - Shallow Sing-Along (Lady Gaga & Bradley Cooper) | Netflix" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): A Star is Born - Shallow Sing-Along (Lady Gaga & Bradley Cooper) | Netflix
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Jack Della Maddalena vs Belal Muhmammad | FULL FIGHT | VeChain UFC 322
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "comedy"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): pov: you're in love with the receptionist | The Office US | Comedy Bites
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Netflix Is Really Doing It!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Netflix Is Really Doing It!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Man Of Steel | It's Not Worth It | ClipZone: Villains & Heroes" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Man Of Steel | It's Not Worth It | ClipZone: Villains & Heroes
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Spider-Man Suit That Took 20 YEARS To Make..." => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Spider-Man Suit That Took 20 YEARS To Make...
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Jerry Maguire (1996) | You Had Me At Hello | Tom Cruise, Renée Zellweger" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Jerry Maguire (1996) | You Had Me At Hello | Tom Cruise, Renée Zellweger
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Deadshot vs Batman | Suicide Squad
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Moments of Meiyazhagan" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Moments of Meiyazhagan
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "jake peralta being in love with amy santiago for twelve minutes (also tease flirting + jealous jake)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): jake peralta being in love with amy santiago for twelve minutes (also tease flir
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Spider-Man Brand New Day is ALREADY a Masterpiece" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Spider-Man Brand New Day is ALREADY a Masterpiece
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "episode"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Days of Future Smash Part 2: Smashgard | Hulk & The Agents of S.M.A.S.H. S2 E20 
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Wildest Flirting Sketches - Key & Peele" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Wildest Flirting Sketches - Key & Peele
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "NEW BATMAN CHANGES" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): NEW BATMAN CHANGES
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Suryaputra Karna vs Arjun | Destiny’s BIGGEST Battle! 🔥 🏹  | Kurukshetra | Net
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "unboxing"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): MacBook Pro M4 Unboxing
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Ancient One Teaches Doctor Strange About Magic | Doctor Strange | Official Clip" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Ancient One Teaches Doctor Strange About Magic | Doctor Strange | Official C
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "review"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Realme GT8 Pro Review – Realme’s Boldest Flagship Yet!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Batman v Superman: Dawn of Justice | Bruce Wayne Meets Clark Kent at Lex Luthor's Party | | HBO Max" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Batman v Superman: Dawn of Justice | Bruce Wayne Meets Clark Kent at Lex Luthor'
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "HENRY CAVILL WORKOUT MOTIVATION" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): HENRY CAVILL WORKOUT MOTIVATION
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "I Bought A MacBook Under 25,000 INR!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): I Bought A MacBook Under 25,000 INR!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Prison Cleaner Turns Out to be THE WORLD'S TOUGHEST FIGHTER in the RING" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Prison Cleaner Turns Out to be THE WORLD'S TOUGHEST FIGHTER in the RING
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Bruce Wayne & Diana Prince | Justice League" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Bruce Wayne & Diana Prince | Justice League
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Captain America - Fight Moves Compilation(CW included) HD" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Captain America - Fight Moves Compilation(CW included) HD
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "ben & devi being rivals to lovers for 5 minutes straight" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): ben & devi being rivals to lovers for 5 minutes straight
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "lyrics"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Mix - ওগো অসীম তুমি সসীম হয়ে//Ogo Asim Tumi Sasim Hoye lyrics// পূজনীয় অবিন দা
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "shang-chi humor | a guy with a freaking machete for an arm just chopped our bus in half shaun!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): shang-chi humor | a guy with a freaking machete for an arm just chopped our bus 
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Parks & Rec but all the Women WANT Ron | Parks and Recreation" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Parks & Rec but all the Women WANT Ron | Parks and Recreation
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] ""So, you're the one?" (or the moment everyone fell in love with Tom Cruise) | Top Gun | CLIP" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): "So, you're the one?" (or the moment everyone fell in love with Tom Cruise) | To
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "17 Again | Talking to His Ex-Wife as a Teen | ClipZone: For the Girls" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): 17 Again | Talking to His Ex-Wife as a Teen | ClipZone: For the Girls
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "freedom." => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): freedom.
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Why DC Animation Works And Marvel Doesn't" => score: 15
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (15 vs 30): Why DC Animation Works And Marvel Doesn't
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Top 10 Exercises To Build Muscle W/ Chris Bumstead" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Top 10 Exercises To Build Muscle W/ Chris Bumstead
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "You don't sleep with women? | Wonder Woman [+Subtitles]" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): You don't sleep with women? | Wonder Woman [+Subtitles]
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Georgie Being The Ladies Man For 12 minutes Young Sheldon" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Georgie Being The Ladies Man For 12 minutes Young Sheldon
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Mix - Lady Gaga, Bradley Cooper - Shallow (From A Star Is Born/Live From The Oscars)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Mix - Lady Gaga, Bradley Cooper - Shallow (From A Star Is Born/Live From The Osc
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "mma"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Every MMA Gym and its Style Explained (Part One)
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "transformation"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): My 3 Year Boxing Transformation (starting from zero)
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "songs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Mix - AJI BHOJU KAILOI BHOJU || আজি ভজো কাইলৈ ভজো // Hari naam // Satsanga Songs
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "hollywood"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): "Just ****ing do it!" Leonardo DiCaprio, Brad Pitt & Margot Robbie on Tarantino'
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Dexter & Rita’s Relationship Timeline 💕 Dexter | SHOWTIME" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Dexter & Rita’s Relationship Timeline 💕 Dexter | SHOWTIME
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "ufc"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): What If Mike Tyson Was A UFC Fighter 🤯
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Princess Falls in Love With a Knight Who is Secretly a Peasant Pretending to Be Noble" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Princess Falls in Love With a Knight Who is Secretly a Peasant Pretending to Be 
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "From Social Worker To Hostage Taker | The Troubling Story & Message Of Rohit Arya | Akash Banerjee" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): From Social Worker To Hostage Taker | The Troubling Story & Message Of Rohit Ary
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Samuel L. Jackson Breaks Down His Most Iconic Characters" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Samuel L. Jackson Breaks Down His Most Iconic Characters
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How WIFI Actually Works." => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): How WIFI Actually Works.
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How I Learned to Code in 4 Months & Got a Job! (No CS Degree, No Bootcamp)" => score: 20
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (20 vs 30): How I Learned to Code in 4 Months & Got a Job! (No CS Degree, No Bootcamp)
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "track"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Modern Family | Alex’s Competition for Valedictorian Heats Up on the Track
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Ghosted Funny Argument Scene Ft. Chris Evans And Ana De Armas" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Ghosted Funny Argument Scene Ft. Chris Evans And Ana De Armas
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "iphone"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): IPHONE 11 PRO MAX CASHIFY TELUGU !!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Shang-Chi and the Legend of the Ten Rings 8-Minute Preview - Exclusive (2021) | Vudu" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Shang-Chi and the Legend of the Ten Rings 8-Minute Preview - Exclusive (2021) | 
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "episode"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): All Moon Knight Scenes | Moon Knight Episode 6 (4K ULTRA HD)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Dastan & Tamina carrying the enemies to lovers trope on their back" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Dastan & Tamina carrying the enemies to lovers trope on their back
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Learn CSS Flexbox in 20 Minutes (Course)" => score: 43
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (43 vs 30): Learn CSS Flexbox in 20 Minutes (Course)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How To Learn Any Skill So Fast It Feels Illegal" => score: 10
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (10 vs 30): How To Learn Any Skill So Fast It Feels Illegal
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Mix - "jaane Kya Chaahe Mann Baawra" Sing Along | Pyaar Ke Side Effects | Zubeen Garg | Pritam" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Mix - "jaane Kya Chaahe Mann Baawra" Sing Along | Pyaar Ke Side Effects | Zubeen
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "episode"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Shinchan all new episode in hindi | shinchan funny videos #shinchan #old cartoon
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Operating Systems Course for Beginners" => score: 28
+edutubeEngine.js:1223 [EduTube] ⚙️ Adjusted fallback (Relaxed, API off, borderline)
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (28 vs 25): Operating Systems Course for Beginners
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "INDIAN WOMEN'S WORLDCUP CELEBRATION 🏆🔥ROHIT SHARMA EMOTIONAL | WORLDCUP FINAL 2025" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): INDIAN WOMEN'S WORLDCUP CELEBRATION 🏆🔥ROHIT SHARMA EMOTIONAL | WORLDCUP FINAL 
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How to build an Aesthetic Physique (simple guide)" => score: 10
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (10 vs 30): How to build an Aesthetic Physique (simple guide)
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "lyrics"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Lady Gaga - Always Remember Us This Way (Lyrics Video)
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "match highlights"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Al-Nassr FC vs Al-Fayha FC | Roshn Saudi League | 2025/26 | Full Match Highlight
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "storage class in c in hindi | scope and lifetime of storage class in c programming" => score: 50
+edutubeEngine.js:1131 [EduTube] ✓ Strong Educational (50): storage class in c in hindi | scope and lifetime of storage class in c programmi
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Introduction to Computer Organization and Architecture (COA)" => score: 35
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (35 vs 30): Introduction to Computer Organization and Architecture (COA)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "🧠 Factors Affecting Teaching & Aids / EMRS–2025 Teaching Aptitude / KnowledgeGate Live 4:00 PM" => score: 23
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (23 vs 30): 🧠 Factors Affecting Teaching & Aids / EMRS–2025 Teaching Aptitude / KnowledgeGa
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Database Normalization:  First, Second, & Third Normal Form" => score: 10
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (10 vs 30): Database Normalization:  First, Second, & Third Normal Form
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "SRTF with Process Contain CPU and IO Time | Mixed Burst Time Example in Operating System" => score: 33
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (33 vs 30): SRTF with Process Contain CPU and IO Time | Mixed Burst Time Example in Operatin
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How to Master Networking in 14 Minutes" => score: 23
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (23 vs 30): How to Master Networking in 14 Minutes
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Ultimate Full stack web dev roadmap 2026" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Ultimate Full stack web dev roadmap 2026
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "OSI Model : Session Layer Explained in Hindi ll Computer Networks Course" => score: 63
+edutubeEngine.js:1131 [EduTube] ✓ Strong Educational (63): OSI Model : Session Layer Explained in Hindi ll Computer Networks Course
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "iphone"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): I Switched from iPhone to Pixel 10 — Here’s What Shocked Me
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Unakkul Naane | Cover by Anjali" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Unakkul Naane | Cover by Anjali
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The scene that made Michelle Yeoh & Jackie Chan LEGENDS | Full Final Scene 🌀 4K" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The scene that made Michelle Yeoh & Jackie Chan LEGENDS | Full Final Scene 🌀 4K
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "funny moments"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): The Boys Funny Moments Seasons 1-4 | Prime Video
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Dalton’s First Fight at the Road House | Road House | Prime Video" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Dalton’s First Fight at the Road House | Road House | Prime Video
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Islam Makhachev vs Charles Oliveira | Full Fight | UFC 322
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "boxing"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Why Wrestlers FEAR Jack Della Maddalena’s Boxing!
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "season"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Hughie and Starlight's Relationship Season 3 | The Boys | Prime Video
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): #UFC315 Pelea Gratis: JDM vs Burns
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Boys Cameos in Gen V | Prime Video" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Boys Cameos in Gen V | Prime Video
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Demetrious Johnson (USA) vs Adriano Moraes (Brazil) II | KNOCKOUT, MMA fight HD
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "android"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): New Android Laptop in 2025 - Under 20,000 Price Only !
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Annie Officially Joins the Boys | The Boys | Prime Video" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Annie Officially Joins the Boys | The Boys | Prime Video
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Topuria vs Emmett FULL FIGHT BREAKDOWN | Masterclass" => score: 8
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (8 vs 30): Topuria vs Emmett FULL FIGHT BREAKDOWN | Masterclass
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Most Dominant Fighters Explained In 15 Minutes" => score: 8
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (8 vs 30): The Most Dominant Fighters Explained In 15 Minutes
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "movie"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Dalton Vs Knox - Bar Fight Scene | ROAD HOUSE (2024) Movie CLIP 4K
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "gaming"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Best Lenovo LOQ Gaming Laptop Deals 2025 | Festive Sale Offers
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Top 5 Most Brutal Characters in Superhero Genre! | SuperSuper" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Top 5 Most Brutal Characters in Superhero Genre! | SuperSuper
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "boxing"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): When Boxing meets Kung Fu | Karate Kid Legends Best Scenes 🌀 4K
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "season"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Daredevil & Punisher Fight Scenes - Daredevil Born Again Season 1
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "গোপালের বুদ্ধি বনাম মন্ত্রীর চুরি | Gopal’s Clever Plan to Feed the Minister | Fun Time With Gopal" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): গোপালের বুদ্ধি বনাম মন্ত্রীর চুরি | Gopal’s Clever Plan to Feed the Minister | F
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Mix - The Cycle | Meiyazhagan | Karthi, Arvind Swami | Govind Vasantha | C.Premkumar" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Mix - The Cycle | Meiyazhagan | Karthi, Arvind Swami | Govind Vasantha | C.Premk
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "EVERY TOM ASPINALL FINISH 🚨" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): EVERY TOM ASPINALL FINISH 🚨
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "season"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Daredevil Season 2 Recap | Explained in Hindi
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "bhajan"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Mix - AAJI BHOJU KAILOI BHOJU ( আজি ভজো কাইলৈ ভজো ) SATSANG ~ SHYAM CHETRY | SAT
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Superman being HILARIOUSLY ICONIC for 4 minutes straight" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Superman being HILARIOUSLY ICONIC for 4 minutes straight
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "বন ব্যবস্থাপনা | Gopal Bhar | Best Of Gopal Bhar" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): বন ব্যবস্থাপনা | Gopal Bhar | Best Of Gopal Bhar
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The New Undead Iron Fist DOMINATES Daredevil" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The New Undead Iron Fist DOMINATES Daredevil
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Superlek is DANGEROUS 😤🔥 Full Fights with No Commentary  🔇" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Superlek is DANGEROUS 😤🔥 Full Fights with No Commentary  🔇
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Behind the scene of I build a SAAS with AI" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Behind the scene of I build a SAAS with AI
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "gaming"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Not Just a Budget Gaming Laptop! Ft Lenovo LOQ 13450HX RTX 3050 6GB
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Lover-Boy to Action Star ⋮ Shahrukh Khan's King" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Lover-Boy to Action Star ⋮ Shahrukh Khan's King
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Prime Conor McGregor." => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Prime Conor McGregor.
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "NETFLIX COUNTDOWN: Terence Crawford SCARY Physique Ahead of Canelo Fight!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): NETFLIX COUNTDOWN: Terence Crawford SCARY Physique Ahead of Canelo Fight!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Top 10 Questions Young Sheldon Never Answered" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Top 10 Questions Young Sheldon Never Answered
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "review"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): The Ultimate Student Laptop: Samsung Galaxy Book 4 Review (2025)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Marvel’s Secret Wars: Dr Doom Explained" => score: 8
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (8 vs 30): Marvel’s Secret Wars: Dr Doom Explained
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Tom Aspinall: Road To Undisputed - The Documentary 🏆" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Tom Aspinall: Road To Undisputed - The Documentary 🏆
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Lec38: Hierarchical (Multilevel) Paging- Two level Paging Example" => score: 20
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (20 vs 30): Lec38: Hierarchical (Multilevel) Paging- Two level Paging Example
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "ufc"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Looks Can Be Deceiving! This Beautiful Girl Brutally MAULS Everyone in the UFC –
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Procedures in PL-SQL | Local Procedure vs Stored Procedure
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "When you ride on a SUNDAY in MUMBAI | Daily Observations #116" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): When you ride on a SUNDAY in MUMBAI | Daily Observations #116
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Robert Downey Jr. & Christopher Nolan Answer The Web's Most Searched Questions | WIRED" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Robert Downey Jr. & Christopher Nolan Answer The Web's Most Searched Questions |
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "ufc"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): 5 Reasons To Pick Islam Makhachev & 5 Reasons To Pick Jack Della Maddalena At UF
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Complete LCU Recap... Before Coolie!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Complete LCU Recap... Before Coolie!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Kat and Patrick's Iconic Love Story: From Enemies to Lovers | 10 Things I Hate About You | Freeform" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Kat and Patrick's Iconic Love Story: From Enemies to Lovers | 10 Things I Hate A
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "episode"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): UFC 321 Countdown - Full Episode
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "'Nurturing Hope in Prison a Risky Business': Umar Khalid Writes from Tihar Jail | The Quint" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): 'Nurturing Hope in Prison a Risky Business': Umar Khalid Writes from Tihar Jail 
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Backpatching Example 3 ( 1 D Array ) | Three Address Code | ICG | Compiler Design" => score: 38
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (38 vs 30): Backpatching Example 3 ( 1 D Array ) | Three Address Code | ICG | Compiler Desig
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Japanese Kickboxing | 5 Must Know Combos & Why They Work" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Japanese Kickboxing | 5 Must Know Combos & Why They Work
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Moon Knight Blade (Marvel Zombies) Scene Pack #blade #marvelzombies #mcu #scenepack" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Moon Knight Blade (Marvel Zombies) Scene Pack #blade #marvelzombies #mcu #scenep
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Bad Teacher (2011) - Recess is Over Scene (6/10) | Movieclips" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Bad Teacher (2011) - Recess is Over Scene (6/10) | Movieclips
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "L3. Longest Substring Without Repeating Characters | 2 Pointers and Sliding Window Playlist" => score: 8
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (8 vs 30): L3. Longest Substring Without Repeating Characters | 2 Pointers and Sliding Wind
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "COMEDIANS REACT TO INDIAS FUNNIEST KIDS" => score: 15
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (15 vs 30): COMEDIANS REACT TO INDIAS FUNNIEST KIDS
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "LSB Steganography - Demo" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): LSB Steganography - Demo
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "I Trained w/ Every Level of Natural Bodybuilding" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): I Trained w/ Every Level of Natural Bodybuilding
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "review"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Worried About LOQ Motherboard Dead Issue?LOQ  i7 13700HX RTX 5050 Review | Engli
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How Computers Work: What Makes a Computer, a Computer?" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): How Computers Work: What Makes a Computer, a Computer?
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "I Interviewed 300 People from Different Salary Brackets | What I Found" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): I Interviewed 300 People from Different Salary Brackets | What I Found
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Operating System (Complete Playlist)" => score: 33
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (33 vs 30): Operating System (Complete Playlist)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Computer Network | Computer Network Unit-5 One Shot | Computer Network aktu | Aktu Exams | CN Unit-5" => score: 43
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (43 vs 30): Computer Network | Computer Network Unit-5 One Shot | Computer Network aktu | Ak
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Address Binding in Operating Systems || Memory Management || Compile time || Load time || execution" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Address Binding in Operating Systems || Memory Management || Compile time || Loa
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "RICH MAN DRESSES UP AS A HOBO | @DramatizeMe" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): RICH MAN DRESSES UP AS A HOBO | @DramatizeMe
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "রাজজ্যোতিষির শিক্ষা | Fun Time With Gopal | Gopal Bhar" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): রাজজ্যোতিষির শিক্ষা | Fun Time With Gopal | Gopal Bhar
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How Computers Work" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): How Computers Work
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Purge Party goes wrong (duh) | The First Purge | CLIP" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Purge Party goes wrong (duh) | The First Purge | CLIP
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "100 Days to go for GATE 2026" => score: 55
+edutubeEngine.js:1131 [EduTube] ✓ Strong Educational (55): 100 Days to go for GATE 2026
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "CN35: Go-Back-N ARQ Protocol Solved Example | Flow Control - Go-Back-N ARQ Protocol" => score: 31
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (31 vs 30): CN35: Go-Back-N ARQ Protocol Solved Example | Flow Control - Go-Back-N ARQ Proto
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Mystery Of A Mosquito | CID | সিটি ই ডি | Unusual Investigations" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Mystery Of A Mosquito | CID | সিটি ই ডি | Unusual Investigations
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Quentin Tarantino, Jamie Foxx, and Samuel L. Jackson Talk “Django Unchained”" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Quentin Tarantino, Jamie Foxx, and Samuel L. Jackson Talk “Django Unchained”
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "vs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Thamma Ending Explained & details you missed - Stree 3, Thamma vs Bhediya
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Super Recap" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Super Recap
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Devotional" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Devotional
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "How to block internet access for specific apps in windows 11" => score: 2
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (2 vs 30): How to block internet access for specific apps in windows 11
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Inside Europe's Worst Economy | Ground Report by Dhruv Rathee" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Inside Europe's Worst Economy | Ground Report by Dhruv Rathee
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "song"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): HE DOYAL 2025 || SREE SREE THAKUR ANUKUL CHANDRA || JHUMUR SONG|| BY DHIREN & JY
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Best Moments of George and Mandy’s First Marriage" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Best Moments of George and Mandy’s First Marriage
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "India To Launch Heaviest Satellite For Naval Operations | Ankit Agrawal Study IQ" => score: 33
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (33 vs 30): India To Launch Heaviest Satellite For Naval Operations | Ankit Agrawal Study IQ
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "movie"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Choro Ko Pakdne Ke liye Tapu Sena Ne Kiya exercise! | FULL MOVIE | Taarak Mehta 
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "ufc"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): UFC Fighter GETS BEATEN UP on the street! Khamzat Chimaev FIRES BACK at UFC Figh
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "[Hindi] Genshin Impact 6.2 Banners Rerun & Pull Value 2025? (My Opinion)" => score: 15
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (15 vs 30): [Hindi] Genshin Impact 6.2 Banners Rerun & Pull Value 2025? (My Opinion)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Bihar STET 2025 | Mastering the Art of Teaching with All 150 PYQs of 2023 & 2024 | by Shubham Sir" => score: 23
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (23 vs 30): Bihar STET 2025 | Mastering the Art of Teaching with All 150 PYQs of 2023 & 2024
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Economy & Your Finance" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Economy & Your Finance
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Nadaan Parinde" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Nadaan Parinde
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "ufc"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): The Brand: 003 ft. Jack Della Maddalena at UFC 315
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "FINALLY ESCAPING THE PRISON LIKE A PRO | Prison Escape Simulator" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): FINALLY ESCAPING THE PRISON LIKE A PRO | Prison Escape Simulator
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Journey to Becoming a Codeforces Grandmaster | 2800+ Profile, IOI + ICPC + AI in CP ft. Dominater069" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Journey to Becoming a Codeforces Grandmaster | 2800+ Profile, IOI + ICPC + AI in
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "episode"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Episode 7 Will CHANGE EVERYTHING!! Final Predictions, Cameos & Stills Breakdown!
+edutubeEngine.js:918 [EduTube-BREAKDOWN] immediate non-edu match (context-checked): "songs"
+edutubeEngine.js:1140 [EduTube] ✗ Strong Non-Educational (-300): Priyanka Chopra Evolution Songs (2003-2019)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "UPPERROOM Monday Set" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): UPPERROOM Monday Set
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Outliers Podcast" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Outliers Podcast
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Peacemaker: The Official Podcast with James Gunn" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Peacemaker: The Official Podcast with James Gunn
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Podcasts" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Podcasts
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Ikaris’ Secret Mission: Why He Fought Zombie Captain Marvel for 5 Years" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Ikaris’ Secret Mission: Why He Fought Zombie Captain Marvel for 5 Years
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "Taming Strange!" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): Taming Strange!
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "L-1.4: Types of OS(Real Time OS, Distributed, Clustered & Embedded OS)" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): L-1.4: Types of OS(Real Time OS, Distributed, Clustered & Embedded OS)
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "L-7.4: Contiguous Allocation in Operating system | Advantages & Disadvantages" => score: 25
+edutubeEngine.js:1223 [EduTube] ⚙️ Adjusted fallback (Relaxed, API off, borderline)
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (25 vs 25): L-7.4: Contiguous Allocation in Operating system | Advantages & Disadvantages
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "L-3.6: Test and Set Instruction in OS | Process Synchronization" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): L-3.6: Test and Set Instruction in OS | Process Synchronization
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "L-5.11: Question Explanation on Paging | Memory Management | Operating System" => score: 33
+edutubeEngine.js:1232 [EduTube] ✓ Fallback (33 vs 30): L-5.11: Question Explanation on Paging | Memory Management | Operating System
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "The Prakhar Gupta Xperience" => score: 0
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (0 vs 30): The Prakhar Gupta Xperience
+edutubeEngine.js:1090 [EduTube-BREAKDOWN] "PAKISTAN IS TESTING NUCLEAR WEAPONS!! Trump Exposes Pakistan's Secret | By Prashant Dhawan" => score: -8
+edutubeEngine.js:1232 [EduTube] ✗ Fallback (-8 vs 30): PAKISTAN IS TESTING NUCLEAR WEAPONS!! Trump Exposes Pakistan's Secret | By Prash
+contentScript.js:174 [EduTube] Processed 298 videos: 17 shown, 281 hidden

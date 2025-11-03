@@ -450,11 +450,23 @@ class EduTubeEngine {
       "series",
       "episode",
       "season",
+      "clip",
+      "clips",
+      "scene",
+      "scenes",
+      "compilation",
       "behind the scenes",
       "celebrity",
       "hollywood",
       "bollywood",
       "tollywood",
+      // Pop-culture franchises (non-educational explainers)
+      "marvel",
+      "avengers",
+      "mcu",
+      "dc",
+      "dceu",
+      "superhero",
       "idol",
       "music video",
       "mv",
@@ -620,6 +632,13 @@ class EduTubeEngine {
       "race highlights",
       "sports news",
       "game highlights",
+      // Specific TV series/franchises commonly non-educational
+      "young sheldon",
+      "friends",
+      "the office",
+      "modern family",
+      "suits",
+      "seinfeld",
     ];
 
     // App/software tutorials (specific apps, not programming)
@@ -907,13 +926,19 @@ class EduTubeEngine {
 
     // --- Immediate rejects (context-aware strong non-edu) ---
     for (const indicator of this.strongNonEduIndicators) {
-      // only trigger if NOT clearly educational
-      if (
-        wordRegex(indicator).test(text) &&
-        !/lecture|course|tutorial|chapter|lesson|class|network|math|computer/i.test(
-          text
-        )
-      ) {
+      if (!wordRegex(indicator).test(text)) continue;
+
+      // Broader educational context detection
+      const eduContextRegex = /lecture|lec\b|course|tutorial|chapter|lesson|class|notes|mcq|gate\b|jee\b|neet\b|exam|computer|network|cn\b|operating\s*system|os\b|dbms\b|pl[-\s]*sql|sql\b|normal\s*form|paging|memory\s*management|algorithm|data\s*structure/i;
+      const hasEduContext = eduContextRegex.test(text);
+
+      // Loosen some indicators when educational context is present
+      if ((indicator === "vs" || indicator === "season" || indicator === "episode") && hasEduContext) {
+        continue; // don't immediate-reject educational comparisons or lecture series
+      }
+
+      // Default: only immediate-reject if no educational context
+      if (!hasEduContext) {
         if (DEBUG)
           console.debug(
             `[EduTube-BREAKDOWN] immediate non-edu match (context-checked): "${indicator}"`
@@ -979,6 +1004,40 @@ class EduTubeEngine {
           breakdown.push({ reason: `eduKw:${kw}`, delta: 8 });
         }
       }
+    }
+
+    // Targeted boosts for common lecture/course patterns often written tersely
+    if (/\blec\s*[-_.]??\s*\d+/i.test(title) || /\blec\b/i.test(title)) {
+      score += 12;
+      breakdown.push({ reason: "abbr_lecture_lec", delta: 12 });
+    }
+    if (/\b(one\s+shot|in\s+one\s+shot)\b/i.test(title)) {
+      score += 8;
+      breakdown.push({ reason: "one_shot_course", delta: 8 });
+    }
+    if (/\bdbms\b/i.test(text)) {
+      score += 12;
+      breakdown.push({ reason: "subject_dbms", delta: 12 });
+    }
+    if (/\boperating\s+system\b/i.test(text)) {
+      score += 10;
+      breakdown.push({ reason: "subject_os", delta: 10 });
+    }
+    if (/\b(1nf|2nf|3nf|normal\s+form)\b/i.test(text)) {
+      score += 10;
+      breakdown.push({ reason: "topic_normal_forms", delta: 10 });
+    }
+    if (/\b(memory\s+management|paging|segmentation|scheduling|synchronization)\b/i.test(text)) {
+      score += 10;
+      breakdown.push({ reason: "os_core_topics", delta: 10 });
+    }
+    if (/\b(computer\s+network|osi\s*model|arq\b|tcp\/?ip|routing|subnet|nat)\b/i.test(text)) {
+      score += 10;
+      breakdown.push({ reason: "cn_topics", delta: 10 });
+    }
+    if (/\bhow\s+\w+\s+works?\b/i.test(title)) {
+      score += 10;
+      breakdown.push({ reason: "how_it_works", delta: 10 });
     }
 
     // Structured/series bonuses
@@ -1101,10 +1160,22 @@ class EduTubeEngine {
     const score = this.scoreKeywords(videoInfo);
     this.stats.layerStats.keywords++;
 
-    // Adjusted thresholds:
-    // - Very strong educational -> >= 50
-    // - Strong non-educational -> <= 20
-    if (score >= 50) {
+    // Sensitivity-aware early thresholds
+    const sens = this.sensitivity ?? 50;
+    let strongEduCutoff = 50;
+    let strongNonEduCutoff = -20;
+    if (sens <= 35) {
+      // Relaxed: easier to pass, require worse score to hard-fail
+      strongEduCutoff = 40;
+      strongNonEduCutoff = -40;
+    } else if (sens >= 66) {
+      // Strict: harder to pass, easier to hard-fail
+      strongEduCutoff = 60;
+      strongNonEduCutoff = 0;
+    }
+
+    // Adjusted thresholds (sensitivity-aware):
+    if (score >= strongEduCutoff) {
       this.stats.layerStats.keywords++;
       console.debug(
         `[EduTube] ✓ Strong Educational (${score}):`,
@@ -1113,7 +1184,7 @@ class EduTubeEngine {
       return true;
     }
 
-    if (score <= 20) {
+    if (score <= strongNonEduCutoff) {
       this.stats.layerStats.keywords++;
       console.debug(
         `[EduTube] ✗ Strong Non-Educational (${score}):`,
@@ -1125,8 +1196,19 @@ class EduTubeEngine {
     // 🧩 4. YouTube API fallback (only if uncertain)
     // keep existing behavior but clearer: only when api enabled and uncertain
     // 🧠 Layer 4: YouTube API for uncertain or weakly scored videos
-    // 🧠 Use YouTube API for uncertain or weakly scored videos (-50 ≤ score < 60)
-    if (videoId && this.apiService?.enabled && score < 60 && score >= -50) {
+    // 🧠 Use YouTube API for uncertain or weakly scored videos, band depends on sensitivity
+    let apiUpper = 60;
+    let apiLower = -50;
+    if (sens <= 35) {
+      // Relaxed: widen API band to rescue borderline content
+      apiUpper = 70;
+      apiLower = -80;
+    } else if (sens >= 66) {
+      // Strict: narrow band to avoid rescuing marginal items
+      apiUpper = 50;
+      apiLower = -30;
+    }
+    if (videoId && this.apiService?.enabled && score < apiUpper && score >= apiLower) {
       try {
         const apiData = await this.apiService.fetchVideoDetails(videoId);
         if (apiData && apiData.categoryId) {
@@ -1178,28 +1260,34 @@ class EduTubeEngine {
     }
 
     // 🧩 5. Final fallback — adapt to sensitivity mapping
-    // Map user sensitivity to an effective threshold
-    // Keep user-configured numeric sensitivity but interpret sensibly:
-    // 0-35 => relaxed (~30), 36-65 => balanced (~50), 66-100 => strict (~70)
-    // 🧩 Adaptive fallback sensitivity tuning
+    // Map user sensitivity to documented thresholds:
+    // Relaxed = 30, Balanced = 50, Strict = 80
     let effectiveThreshold = this.sensitivity || 50;
 
-    // Gradual mapping: if user slider is numeric (0–100)
-    if (this.sensitivity <= 35)
-      effectiveThreshold = 40; // Relaxed → more forgiving
-    else if (this.sensitivity <= 65) effectiveThreshold = 50; // Balanced
-    else effectiveThreshold = 60; // Strict but not extreme (was 70)
+    // Map numeric slider (0–100) into three bands with slight intra-band scaling
+    if (this.sensitivity <= 35) {
+      // 10–35 maps to 20–35
+      const t = Math.max(10, this.sensitivity);
+      effectiveThreshold = Math.round(Math.min(35, 20 + (t - 10) * (15 / 25)));
+    } else if (this.sensitivity <= 65) {
+      // 36–65 maps to 45–55
+      effectiveThreshold = Math.round(45 + (this.sensitivity - 36) * (10 / 29));
+    } else {
+      // 66–100 maps to 65–85
+      effectiveThreshold = Math.round(65 + (this.sensitivity - 66) * (20 / 34));
+    }
 
-    // If API not enabled and score is borderline, lower threshold slightly
+    // If API not enabled and score is just below threshold, be slightly forgiving only for Relaxed
     if (
       !this.apiService?.enabled &&
-      effectiveThreshold > 40 &&
-      score >= effectiveThreshold - 10
+      effectiveThreshold === 30 &&
+      score >= 25 &&
+      score < 30
     ) {
       console.debug(
-        "[EduTube] ⚙️ Adjusted fallback threshold (API off, borderline case)"
+        "[EduTube] ⚙️ Adjusted fallback (Relaxed, API off, borderline)"
       );
-      effectiveThreshold -= 5;
+      effectiveThreshold = 25;
     }
 
     const decision = score >= effectiveThreshold;

@@ -387,6 +387,13 @@ function initEduTubeControls() {
       quotaResetEl.textContent = date.toLocaleTimeString();
     }
   }
+
+  // Live updates from content script
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.type === "edutubeStatsUpdate" && msg.stats) {
+      updateStats(msg.stats);
+    }
+  });
 }
 
 // Wait for DOM

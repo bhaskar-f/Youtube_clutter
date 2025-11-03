@@ -111,6 +111,10 @@ async function filterEducationalContent() {
   isFiltering = true;
   document.body.classList.add("declutter-edutube-active");
 
+  let processedCount = 0;
+  let hiddenCount = 0;
+  let shownCount = 0;
+
   try {
     const videoSelectors = [
       "ytd-video-renderer",
@@ -121,10 +125,6 @@ async function filterEducationalContent() {
       "ytm-rich-item-renderer",
       "ytm-grid-video-renderer",
     ];
-
-    let processedCount = 0;
-    let hiddenCount = 0;
-    let shownCount = 0;
 
     for (const selector of videoSelectors) {
       const elements = document.querySelectorAll(selector);
@@ -179,6 +179,30 @@ async function filterEducationalContent() {
     console.error("[EduTube] Filter error:", e);
   } finally {
     isFiltering = false;
+  }
+  // 🧩 Update EduTube stats and notify popup
+  try {
+    if (typeof edutubeEngine !== "undefined" && edutubeEngine.stats) {
+      edutubeEngine.stats.videosHidden += hiddenCount;
+      edutubeEngine.stats.videosShown += shownCount;
+      edutubeEngine.stats.sessionsFiltered =
+        (edutubeEngine.stats.sessionsFiltered || 0) + 1;
+
+      // Save to storage for persistence
+      if (typeof edutubeEngine.saveSettings === "function") {
+        await edutubeEngine.saveSettings();
+      }
+
+      // Send live stats to popup
+      chrome.runtime.sendMessage({
+        type: "edutubeStatsUpdate",
+        stats: edutubeEngine.getStats
+          ? edutubeEngine.getStats()
+          : edutubeEngine.stats,
+      });
+    }
+  } catch (err) {
+    console.warn("[EduTube] Stats update error:", err);
   }
 }
 
