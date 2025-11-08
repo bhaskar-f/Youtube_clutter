@@ -10,6 +10,11 @@ class EduTubeEngine {
     this.sensitivity = 50;
     this.whitelist = new Set();
     this.blacklist = new Set();
+    this.whitelistVideos = new Set();
+    this.blacklistVideos = new Set();
+    this.whitelistKeywords = new Set();
+    this.blacklistKeywords = new Set();
+
     this.stats = {
       videosHidden: 0,
       videosShown: 0,
@@ -676,7 +681,6 @@ class EduTubeEngine {
       "hidden truth",
     ];
 
-    // Educational channel patterns
     this.eduChannelPatterns = [
       "university",
       "academy",
@@ -705,6 +709,10 @@ class EduTubeEngine {
     this.sensitivity = data.edutubeSensitivity ?? 50;
     this.whitelist = new Set(data.edutubeWhitelist || []);
     this.blacklist = new Set(data.edutubeBlacklist || []);
+    this.whitelistVideos = new Set(data.edutubeWhitelistVideos || []);
+    this.blacklistVideos = new Set(data.edutubeBlacklistVideos || []);
+    this.whitelistKeywords = data.edutubeWhitelistKeywords || [];
+    this.blacklistKeywords = data.edutubeBlacklistKeywords || [];
     this.stats = data.edutubeStats || this.stats;
 
     if (typeof YouTubeAPIService !== "undefined") {
@@ -717,6 +725,8 @@ class EduTubeEngine {
       sensitivity: this.sensitivity,
       whitelist: this.whitelist.size,
       blacklist: this.blacklist.size,
+      whitelistVideos: this.whitelistVideos.size,
+      blacklistVideos: this.blacklistVideos.size,
     });
   }
 
@@ -733,6 +743,8 @@ class EduTubeEngine {
           "edutubeSensitivity",
           "edutubeWhitelist",
           "edutubeBlacklist",
+          "edutubeWhitelistVideos",
+          "edutubeBlacklistVideos",
           "edutubeStats",
         ],
         (data) => {
@@ -755,10 +767,21 @@ class EduTubeEngine {
 
     try {
       await chrome.storage.sync.set({
+        // Core EduTube configuration
         edutubeEnabled: this.enabled,
         edutubeSensitivity: this.sensitivity,
+
+        // Channel/video allow/block lists
         edutubeWhitelist: Array.from(this.whitelist),
         edutubeBlacklist: Array.from(this.blacklist),
+        edutubeWhitelistVideos: Array.from(this.whitelistVideos),
+        edutubeBlacklistVideos: Array.from(this.blacklistVideos),
+
+        // 🆕 Keyword-based filters (user-friendly)
+        edutubeWhitelistKeywords: Array.from(this.whitelistKeywords || []),
+        edutubeBlacklistKeywords: Array.from(this.blacklistKeywords || []),
+
+        // Stats
         edutubeStats: this.stats,
       });
     } catch (e) {
@@ -929,11 +952,17 @@ class EduTubeEngine {
       if (!wordRegex(indicator).test(text)) continue;
 
       // Broader educational context detection
-      const eduContextRegex = /lecture|lec\b|course|tutorial|chapter|lesson|class|notes|mcq|gate\b|jee\b|neet\b|exam|computer|network|cn\b|operating\s*system|os\b|dbms\b|pl[-\s]*sql|sql\b|normal\s*form|paging|memory\s*management|algorithm|data\s*structure/i;
+      const eduContextRegex =
+        /lecture|lec\b|course|tutorial|chapter|lesson|class|notes|mcq|gate\b|jee\b|neet\b|exam|computer|network|cn\b|operating\s*system|os\b|dbms\b|pl[-\s]*sql|sql\b|normal\s*form|paging|memory\s*management|algorithm|data\s*structure/i;
       const hasEduContext = eduContextRegex.test(text);
 
       // Loosen some indicators when educational context is present
-      if ((indicator === "vs" || indicator === "season" || indicator === "episode") && hasEduContext) {
+      if (
+        (indicator === "vs" ||
+          indicator === "season" ||
+          indicator === "episode") &&
+        hasEduContext
+      ) {
         continue; // don't immediate-reject educational comparisons or lecture series
       }
 
@@ -1006,8 +1035,10 @@ class EduTubeEngine {
       }
     }
 
-    // Targeted boosts for common lecture/course patterns often written tersely
-    if (/\blec\s*[-_.]??\s*\d+/i.test(title) || /\blec\b/i.test(title)) {
+    // Targeted boosts for lectures/courses
+    if (
+      /(?:lecture|lec|class|course|module|session)[\s\d#:-]*([\d]+)/i.test(text)
+    ) {
       score += 12;
       breakdown.push({ reason: "abbr_lecture_lec", delta: 12 });
     }
@@ -1027,11 +1058,19 @@ class EduTubeEngine {
       score += 10;
       breakdown.push({ reason: "topic_normal_forms", delta: 10 });
     }
-    if (/\b(memory\s+management|paging|segmentation|scheduling|synchronization)\b/i.test(text)) {
+    if (
+      /\b(memory\s+management|paging|segmentation|scheduling|synchronization)\b/i.test(
+        text
+      )
+    ) {
       score += 10;
       breakdown.push({ reason: "os_core_topics", delta: 10 });
     }
-    if (/\b(computer\s+network|osi\s*model|arq\b|tcp\/?ip|routing|subnet|nat)\b/i.test(text)) {
+    if (
+      /\b(computer\s+network|osi\s*model|arq\b|tcp\/?ip|routing|subnet|nat)\b/i.test(
+        text
+      )
+    ) {
       score += 10;
       breakdown.push({ reason: "cn_topics", delta: 10 });
     }
@@ -1056,7 +1095,29 @@ class EduTubeEngine {
       breakdown.push({ reason: "course_series", delta: 8 });
     }
 
-    // 🔍 Boost exam-related educational topics
+    // Boost for fitness content that explains science/form
+    if (
+      /(?:fitness|exercise|workout|gym|build|muscle|fat loss|training)/i.test(
+        text
+      ) &&
+      /(?:science|form|technique|mistakes|how to|guide|tutorial)/i.test(text)
+    ) {
+      score += 15;
+      breakdown.push({ reason: "edu_fitness", delta: 15 });
+    }
+
+    // Boost for educational comparisons
+    if (
+      /(?:vs|versus|comparison|difference)/i.test(text) &&
+      /(?:explained|analysis|showdown|which is better)/i.test(text)
+    ) {
+      score += 12;
+      breakdown.push({ reason: "edu_comparison", delta: 12 });
+    }
+
+    // Boost for exam-related educational topics
+    const examPattern =
+      /\b(jee|neet|upsc|gate|ias|ssc|ibps|cat|xat|gre|gmat|sat|ielts|toefl|prelims|mains|advanced|foundation|olympiad|ntse|kvpy|board exam|exam prep|exam strategy|study plan|revision|mock test|sample paper|previous year questions)\b/i;
     if (
       /\b(jee|neet|gate|ssc|upsc|board\s+exam|study|revision|notes|mcq|previous\s+year|exam\s+strategy)\b/i.test(
         title + " " + description
@@ -1075,39 +1136,43 @@ class EduTubeEngine {
     }
 
     const softNonEdu = [
-      "song",
-      "music",
-      "lyrics",
-      "trailer",
-      "movie",
-      "film",
-      "vlog",
-      "prank",
       "challenge",
       "haul",
-      "unboxing",
-      "review",
-      "reaction",
       "gaming",
       "gameplay",
-      "pov",
-      "travel",
-      "apartment",
+      "series",
+      "review",
+      "trailer",
+      "teaser",
+      "vlog",
+      "reaction",
+      "unboxing",
     ];
+
+    // Low-value, often clickbait
     for (const kw of softNonEdu) {
       if (wordRegex(kw).test(text)) {
-        score -= 25;
-        breakdown.push({ reason: `softNonEdu:${kw}`, delta: -25 });
+        score -= 35; // Increased penalty
+        breakdown.push({ reason: `softNonEdu:${kw}`, delta: -35 });
       }
     }
 
     if (/!!+|\?\?+/.test(title)) {
-      score -= 8;
-      breakdown.push({ reason: "excessPunct", delta: -8 });
+      score -= 15; // Increased penalty
+      breakdown.push({ reason: "excessPunct", delta: -15 });
     }
     if (title === title.toUpperCase() && title.length > 10) {
-      score -= 12;
-      breakdown.push({ reason: "allCaps", delta: -12 });
+      score -= 20; // Increased penalty
+      breakdown.push({ reason: "allCaps", delta: -20 });
+    }
+
+    // Penalize misleading "educational" clickbait
+    if (
+      /(\d+\s+)?(secrets|hacks|tricks|myths|facts)/i.test(title) &&
+      score < 40
+    ) {
+      score -= 25;
+      breakdown.push({ reason: "edu_clickbait", delta: -25 });
     }
 
     // "How to" without context penalty
@@ -1142,18 +1207,35 @@ class EduTubeEngine {
     const videoId = this.extractVideoId(element);
     const videoInfo = this.extractVideoInfo(element);
 
-    // 🧩 1. Whitelist check
-    if (channelId && this.whitelist.has(channelId)) {
+    // 🧩 0. Video-level blacklist/whitelist (blacklist priority)
+    if (videoId && this.blacklistVideos.has(videoId)) {
+      this.stats.layerStats.blacklist++;
+      console.debug(
+        "[EduTube] ✗ Video Blacklist:",
+        videoInfo.title.substring(0, 50)
+      );
+      return false;
+    }
+    if (videoId && this.whitelistVideos.has(videoId)) {
       this.stats.layerStats.whitelist++;
-      console.debug("[EduTube] ✓ Whitelist:", videoInfo.title.substring(0, 50));
+      console.debug(
+        "[EduTube] ✓ Video Whitelist:",
+        videoInfo.title.substring(0, 50)
+      );
       return true;
     }
 
-    // 🧩 2. Blacklist check
+    // 🧩 1. Channel blacklist (priority)
     if (channelId && this.blacklist.has(channelId)) {
       this.stats.layerStats.blacklist++;
       console.debug("[EduTube] ✗ Blacklist:", videoInfo.title.substring(0, 50));
       return false;
+    }
+    // 🧩 2. Channel whitelist
+    if (channelId && this.whitelist.has(channelId)) {
+      this.stats.layerStats.whitelist++;
+      console.debug("[EduTube] ✓ Whitelist:", videoInfo.title.substring(0, 50));
+      return true;
     }
 
     // 🧩 3. Keyword scoring
@@ -1162,15 +1244,15 @@ class EduTubeEngine {
 
     // Sensitivity-aware early thresholds
     const sens = this.sensitivity ?? 50;
-    let strongEduCutoff = 50;
-    let strongNonEduCutoff = -20;
+    let strongEduCutoff = 60; // Stricter default
+    let strongNonEduCutoff = -10; // Stricter default
     if (sens <= 35) {
       // Relaxed: easier to pass, require worse score to hard-fail
-      strongEduCutoff = 40;
-      strongNonEduCutoff = -40;
+      strongEduCutoff = 50;
+      strongNonEduCutoff = -30;
     } else if (sens >= 66) {
       // Strict: harder to pass, easier to hard-fail
-      strongEduCutoff = 60;
+      strongEduCutoff = 70;
       strongNonEduCutoff = 0;
     }
 
@@ -1208,7 +1290,12 @@ class EduTubeEngine {
       apiUpper = 50;
       apiLower = -30;
     }
-    if (videoId && this.apiService?.enabled && score < apiUpper && score >= apiLower) {
+    if (
+      videoId &&
+      this.apiService?.enabled &&
+      score < apiUpper &&
+      score >= apiLower
+    ) {
       try {
         const apiData = await this.apiService.fetchVideoDetails(videoId);
         if (apiData && apiData.categoryId) {
@@ -1317,6 +1404,50 @@ class EduTubeEngine {
     this.whitelist.delete(channelId);
     await this.saveSettings();
     console.log("[EduTube] Added to blacklist:", channelId);
+  }
+
+  async removeFromWhitelist(channelId) {
+    if (!channelId) return;
+    this.whitelist.delete(channelId);
+    await this.saveSettings();
+    console.log("[EduTube] Removed from whitelist:", channelId);
+  }
+
+  async removeFromBlacklist(channelId) {
+    if (!channelId) return;
+    this.blacklist.delete(channelId);
+    await this.saveSettings();
+    console.log("[EduTube] Removed from blacklist:", channelId);
+  }
+
+  async addVideoToWhitelist(videoId) {
+    if (!videoId) return;
+    this.whitelistVideos.add(videoId);
+    this.blacklistVideos.delete(videoId);
+    await this.saveSettings();
+    console.log("[EduTube] Added VIDEO to whitelist:", videoId);
+  }
+
+  async addVideoToBlacklist(videoId) {
+    if (!videoId) return;
+    this.blacklistVideos.add(videoId);
+    this.whitelistVideos.delete(videoId);
+    await this.saveSettings();
+    console.log("[EduTube] Added VIDEO to blacklist:", videoId);
+  }
+
+  async removeVideoFromWhitelist(videoId) {
+    if (!videoId) return;
+    this.whitelistVideos.delete(videoId);
+    await this.saveSettings();
+    console.log("[EduTube] Removed VIDEO from whitelist:", videoId);
+  }
+
+  async removeVideoFromBlacklist(videoId) {
+    if (!videoId) return;
+    this.blacklistVideos.delete(videoId);
+    await this.saveSettings();
+    console.log("[EduTube] Removed VIDEO from blacklist:", videoId);
   }
 
   async toggle(enabled) {

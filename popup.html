@@ -247,6 +247,45 @@
               </div>
             </div>
           </details>
+          
+          <!-- Whitelist / Blacklist Management -->
+          <div class="list-management">
+            <h3>Personalization</h3>
+            <div class="lists-container">
+              <div class="list-block">
+                <h4>✅ Whitelist <span id="wlCount" class="count-badge">0</span></h4>
+                <div class="add-row">
+                  <input type="text" id="wlInput" placeholder="Paste YouTube URL or ID" />
+                  <select id="wlKind">
+                    <option value="auto">Auto</option>
+                    <option value="channel">Channel</option>
+                    <option value="video">Video</option>
+                  </select>
+                  <button id="wlAddBtn">Add</button>
+                  <button id="wlAddCurrentVideo" title="Add current video">+ Current Video</button>
+                  <button id="wlAddCurrentChannel" title="Add current channel">+ Current Channel</button>
+                </div>
+                <small id="wlHint" class="hint" style="display:none"></small>
+                <ul id="wlList" class="id-list"></ul>
+              </div>
+              <div class="list-block">
+                <h4>🚫 Blacklist <span id="blCount" class="count-badge">0</span></h4>
+                <div class="add-row">
+                  <input type="text" id="blInput" placeholder="Paste YouTube URL or ID" />
+                  <select id="blKind">
+                    <option value="auto">Auto</option>
+                    <option value="channel">Channel</option>
+                    <option value="video">Video</option>
+                  </select>
+                  <button id="blAddBtn">Add</button>
+                  <button id="blAddCurrentVideo" title="Add current video">+ Current Video</button>
+                  <button id="blAddCurrentChannel" title="Add current channel">+ Current Channel</button>
+                </div>
+                <small id="blHint" class="hint" style="display:none"></small>
+                <ul id="blList" class="id-list"></ul>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>

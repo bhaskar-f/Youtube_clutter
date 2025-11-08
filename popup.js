@@ -389,11 +389,275 @@ function initEduTubeControls() {
   }
 
   // Live updates from content script
+  // 🧩 Live EduTube Stats Listener (real-time dynamic updates)
   chrome.runtime.onMessage.addListener((msg) => {
-    if (msg.type === "edutubeStatsUpdate" && msg.stats) {
-      updateStats(msg.stats);
-    }
+    if (!msg || msg.type !== "edutubeStatsUpdate" || !msg.stats) return;
+
+    const s = msg.stats || {};
+    console.debug("[Popup] Live stats update:", s);
+
+    // Update totals
+    if (videosHiddenEl)
+      videosHiddenEl.textContent = s.videosHidden ?? s.hidden ?? 0;
+    if (videosShownEl)
+      videosShownEl.textContent = s.videosShown ?? s.shown ?? 0;
+
+    // Update layer breakdown if available
+    const ls = s.layerStats || {};
+    const layerElements = {
+      whitelist: document.getElementById("layerWhitelist"),
+      blacklist: document.getElementById("layerBlacklist"),
+      keywords: document.getElementById("layerKeywords"),
+      api: document.getElementById("layerApi"),
+      fallback: document.getElementById("layerFallback"),
+    };
+
+    Object.entries(layerElements).forEach(([key, el]) => {
+      if (el) el.textContent = ls[key] ?? 0;
+    });
+
+    // Save new stats to storage for persistence
+    chrome.storage.sync.set({ edutubeStats: s });
   });
+
+  // --- Whitelist/Blacklist management ---
+  initListManagement();
+
+  function initListManagement() {
+    const wlInput = document.getElementById("wlInput");
+    const wlKind = document.getElementById("wlKind");
+    const wlAddBtn = document.getElementById("wlAddBtn");
+    const wlAddCurrentVideo = document.getElementById("wlAddCurrentVideo");
+    const wlAddCurrentChannel = document.getElementById("wlAddCurrentChannel");
+    const wlList = document.getElementById("wlList");
+    const wlHint = document.getElementById("wlHint");
+
+    const blInput = document.getElementById("blInput");
+    const blKind = document.getElementById("blKind");
+    const blAddBtn = document.getElementById("blAddBtn");
+    const blAddCurrentVideo = document.getElementById("blAddCurrentVideo");
+    const blAddCurrentChannel = document.getElementById("blAddCurrentChannel");
+    const blList = document.getElementById("blList");
+    const blHint = document.getElementById("blHint");
+
+    if (!wlList || !blList) return;
+
+    // Clear lists before loading to prevent duplicates
+    wlList.innerHTML = "";
+    blList.innerHTML = "";
+
+    // Load existing lists
+    chrome.storage.sync.get(
+      [
+        "edutubeWhitelist",
+        "edutubeBlacklist",
+        "edutubeWhitelistVideos",
+        "edutubeBlacklistVideos",
+      ],
+      (data) => {
+        renderList(wlList, data.edutubeWhitelist || [], "channel", "whitelist");
+        renderList(blList, data.edutubeBlacklist || [], "channel", "blacklist");
+        renderList(
+          wlList,
+          data.edutubeWhitelistVideos || [],
+          "video",
+          "whitelist"
+        );
+        renderList(
+          blList,
+          data.edutubeBlacklistVideos || [],
+          "video",
+          "blacklist"
+        );
+        updateCounts();
+      }
+    );
+
+    wlAddBtn?.addEventListener("click", () =>
+      handleAdd("whitelist", wlKind.value, wlInput.value.trim(), wlHint)
+    );
+    blAddBtn?.addEventListener("click", () =>
+      handleAdd("blacklist", blKind.value, blInput.value.trim(), blHint)
+    );
+
+    wlAddCurrentVideo?.addEventListener("click", () =>
+      handleAddCurrent("whitelist", "video", wlHint)
+    );
+    wlAddCurrentChannel?.addEventListener("click", () =>
+      handleAddCurrent("whitelist", "channel", wlHint)
+    );
+    blAddCurrentVideo?.addEventListener("click", () =>
+      handleAddCurrent("blacklist", "video", blHint)
+    );
+    blAddCurrentChannel?.addEventListener("click", () =>
+      handleAddCurrent("blacklist", "channel", blHint)
+    );
+
+    function handleAdd(list, idKind, raw, hintEl) {
+      if (!raw) return showHint(hintEl, "Enter a YouTube URL or ID", true);
+      const parsed = parseInput(raw);
+      const finalKind = idKind === "auto" ? parsed.kind : idKind;
+      const id = idKind === "auto" ? parsed.id : raw;
+      if (!finalKind || !id)
+        return showHint(
+          hintEl,
+          "Could not detect ID. Try selecting type.",
+          true
+        );
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs?.length) return;
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          {
+            type: "edutubeListUpdate",
+            list,
+            action: "add",
+            idKind: finalKind,
+            id,
+          },
+          () => {
+            // Update storage mirrors for popup rendering
+            const key = mapKey(list, finalKind);
+            chrome.storage.sync.get([key], (data) => {
+              const arr = new Set(data[key] || []);
+              arr.add(id);
+              chrome.storage.sync.set({ [key]: Array.from(arr) }, updateCounts);
+            });
+            addItemToList(
+              list === "whitelist" ? wlList : blList,
+              finalKind,
+              id,
+              list
+            );
+            showHint(hintEl, "Added.");
+            updateCounts();
+          }
+        );
+      });
+    }
+
+    function handleAddCurrent(list, idKind, hintEl) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs?.length) return;
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          { type: "edutubeGetCurrentIds" },
+          (res) => {
+            if (!res?.ok) return;
+            const id = idKind === "channel" ? res.channelId : res.videoId;
+            if (id) handleAdd(list, idKind, id, hintEl);
+            else
+              showHint(
+                hintEl,
+                `No current ${idKind} detected. Open a YouTube ${idKind} page.`,
+                true
+              );
+          }
+        );
+      });
+    }
+
+    function renderList(ul, items, idKind, list) {
+      items.forEach((id) => addItemToList(ul, idKind, id, list));
+    }
+
+    function addItemToList(ul, idKind, id, list) {
+      const li = document.createElement("li");
+      li.textContent = `${idKind === "channel" ? "CH" : "VID"}: ${id}`;
+      const btn = document.createElement("button");
+      btn.textContent = "✖";
+      btn.className = "remove-btn";
+      btn.addEventListener("click", () => removeItem(idKind, id, list, li));
+      li.appendChild(btn);
+      ul.appendChild(li);
+    }
+
+    function removeItem(idKind, id, list, li) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs?.length) return;
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          { type: "edutubeListUpdate", list, action: "remove", idKind, id },
+          () => {
+            const key = mapKey(list, idKind);
+            chrome.storage.sync.get([key], (data) => {
+              const arr = new Set(data[key] || []);
+              arr.delete(id);
+              chrome.storage.sync.set({ [key]: Array.from(arr) }, updateCounts);
+            });
+            li.remove();
+            updateCounts();
+          }
+        );
+      });
+    }
+
+    function mapKey(list, idKind) {
+      if (list === "whitelist" && idKind === "channel")
+        return "edutubeWhitelist";
+      if (list === "blacklist" && idKind === "channel")
+        return "edutubeBlacklist";
+      if (list === "whitelist" && idKind === "video")
+        return "edutubeWhitelistVideos";
+      return "edutubeBlacklistVideos";
+    }
+
+    function updateCounts() {
+      chrome.storage.sync.get(
+        [
+          "edutubeWhitelist",
+          "edutubeBlacklist",
+          "edutubeWhitelistVideos",
+          "edutubeBlacklistVideos",
+        ],
+        (d) => {
+          const wlCount =
+            (d.edutubeWhitelist?.length || 0) +
+            (d.edutubeWhitelistVideos?.length || 0);
+          const blCount =
+            (d.edutubeBlacklist?.length || 0) +
+            (d.edutubeBlacklistVideos?.length || 0);
+          const wlCountEl = document.getElementById("wlCount");
+          const blCountEl = document.getElementById("blCount");
+          if (wlCountEl) wlCountEl.textContent = wlCount;
+          if (blCountEl) blCountEl.textContent = blCount;
+        }
+      );
+    }
+
+    function parseInput(text) {
+      try {
+        const t = text.trim();
+        // Channel ID
+        const ch = t.match(/(?:channel\/|\bUC)[A-Za-z0-9_-]{20,}/i);
+        if (ch) {
+          const id = ch[0].includes("channel/")
+            ? ch[0].split("channel/")[1]
+            : ch[0];
+          return { kind: "channel", id };
+        }
+        // Video ID from URL or raw 11-char ID
+        const urlVid = t.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+        if (urlVid) return { kind: "video", id: urlVid[1] };
+        const shorts = t.match(/shorts\/([A-Za-z0-9_-]{11})/);
+        if (shorts) return { kind: "video", id: shorts[1] };
+        const youtu = t.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
+        if (youtu) return { kind: "video", id: youtu[1] };
+        if (/^[A-Za-z0-9_-]{11}$/.test(t)) return { kind: "video", id: t };
+        return { kind: null, id: null };
+      } catch {
+        return { kind: null, id: null };
+      }
+    }
+
+    function showHint(el, msg, isError = false) {
+      if (!el) return;
+      el.style.display = "block";
+      el.textContent = msg;
+      el.style.color = isError ? "#ff7676" : "#9ad17f";
+      setTimeout(() => (el.style.display = "none"), 2000);
+    }
+  }
 }
 
 // Wait for DOM
