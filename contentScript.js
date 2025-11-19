@@ -1,8 +1,8 @@
 // ======================================================
-// YouTube Declutter – FINAL Fixed Version
-// - Debounced filtering (no continuous loops)
-// - Improved scoring logic
-// - Single message listener
+// YouTube Declutter – CORRECTED VERSION
+// - Preserves all existing features
+// - Fixes broken EduTube filtering & global blacklist
+// - Adds watch page protection
 // ======================================================
 
 function fuzzyMatch(a, b) {
@@ -59,7 +59,7 @@ let isExtensionValid = true;
 let edutubeEngine = null;
 let edutubeFilterTimeout = null;
 let isEduTubeInitialized = false;
-let isFiltering = false; // Prevent overlapping filter runs
+let isFiltering = false;
 
 function log(...args) {
   if (DEBUG) console.log("[declutter]", ...args);
@@ -98,12 +98,33 @@ async function initEduTube() {
       scheduleFilter();
       console.log("[EduTube] Filtering enabled");
     }
+
+    // FIX: Check watch page blacklist globally
+    checkWatchPageGlobally();
   } catch (e) {
     console.error("[EduTube] Init failed:", e);
   }
 }
 
-// IMPROVED: Async filtering with proper await
+// NEW: Check watch page for blacklisted videos/channels
+function checkWatchPageGlobally() {
+  try {
+    if (!edutubeEngine?.enabled) return;
+    if (typeof edutubeEngine.checkWatchPageBlacklist !== "function") return;
+
+    // Check immediately
+    edutubeEngine.checkWatchPageBlacklist();
+
+    // Check again after page fully loads
+    setTimeout(() => {
+      edutubeEngine.checkWatchPageBlacklist();
+    }, 2000);
+  } catch (e) {
+    console.debug("[EduTube] Watch page check error:", e);
+  }
+}
+
+// Async filtering with proper await
 async function filterEducationalContent() {
   if (isFiltering) {
     log("[EduTube] Filter already running, skipping");
@@ -196,7 +217,7 @@ async function filterEducationalContent() {
           element.removeAttribute("data-edutube-hidden");
           shownCount++;
           edutubeEngine.stats.layerStats.keywords++;
-          continue; // skip normal AI/logic filtering
+          continue;
         }
         if (inBlacklistKeyword) {
           element.setAttribute("data-edutube-hidden", "true");
@@ -217,44 +238,9 @@ async function filterEducationalContent() {
         if (!isEdu) {
           element.setAttribute("data-edutube-hidden", "true");
           hiddenCount++;
-          // debug
-          try {
-            const t = (
-              element.innerText ||
-              element.querySelector("#video-title")?.innerText ||
-              "(no title)"
-            )
-              .trim()
-              .slice(0, 120);
-            console.debug("[EduTube] decision: HIDE", {
-              vid,
-              title: t,
-              hiddenCount,
-              shownCount,
-            });
-          } catch (e) {
-            console.debug("[EduTube] decision: HIDE (no title) ", vid);
-          }
         } else {
           element.removeAttribute("data-edutube-hidden");
           shownCount++;
-          try {
-            const t = (
-              element.innerText ||
-              element.querySelector("#video-title")?.innerText ||
-              "(no title)"
-            )
-              .trim()
-              .slice(0, 120);
-            console.debug("[EduTube] decision: SHOW", {
-              vid,
-              title: t,
-              hiddenCount,
-              shownCount,
-            });
-          } catch (e) {
-            console.debug("[EduTube] decision: SHOW (no title)", vid);
-          }
         }
       }
     }
@@ -269,6 +255,7 @@ async function filterEducationalContent() {
   } finally {
     isFiltering = false;
   }
+
   // === Robust stats update + standardized message ===
   try {
     if (!edutubeEngine) throw new Error("edutubeEngine missing for stats");
@@ -288,7 +275,7 @@ async function filterEducationalContent() {
     edutubeEngine.stats.videosShown += Number(shownCount || 0);
     edutubeEngine.stats.sessionsFiltered += 1;
 
-    // Persist (if available) but do not fail if saveSettings throws
+    // Persist
     try {
       if (typeof edutubeEngine.saveSettings === "function") {
         await edutubeEngine.saveSettings();
@@ -327,26 +314,23 @@ async function filterEducationalContent() {
   }
 }
 
-// DEBOUNCED scheduling - prevents continuous filtering
+// DEBOUNCED scheduling
 function scheduleFilter() {
   if (edutubeFilterTimeout) {
     clearTimeout(edutubeFilterTimeout);
   }
 
-  // Debounce to 1200ms (only runs 1.2s after last mutation)
   edutubeFilterTimeout = setTimeout(() => {
     filterEducationalContent();
   }, 1200);
 }
 
-// Remove setInterval entirely - use mutation observer only
 function stopEduTubeFilter() {
   if (edutubeFilterTimeout) {
     clearTimeout(edutubeFilterTimeout);
     edutubeFilterTimeout = null;
   }
 
-  // Restore all hidden videos
   document.querySelectorAll("[data-edutube-hidden]").forEach((el) => {
     el.removeAttribute("data-edutube-hidden");
     el.removeAttribute("data-edutube-processed");
@@ -441,6 +425,9 @@ const SHORTS_SELECTORS = [
   "tp-yt-paper-tab[tab-title='Shorts']",
   "ytd-guide-entry-renderer[title='Shorts']",
   "ytd-mini-guide-entry-renderer[aria-label='Shorts']",
+  "grid-shelf-view-model",
+  "ytm-shorts-lockup-view-model",
+  "ytm-shorts-lockup-view-model-v2",
 ];
 
 function removeShortsBlocks() {
@@ -459,6 +446,27 @@ function removeShortsBlocks() {
         });
       } catch (e) {}
     });
+
+    // Target individual Shorts videos (ytd-video-renderer)
+    try {
+      document.querySelectorAll("ytd-video-renderer").forEach((video) => {
+        const hasShortsOverlay = video.querySelector(
+          'ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"]'
+        );
+        const shortsLink = video.querySelector('a[href*="/shorts/"]');
+
+        if (hasShortsOverlay || shortsLink) {
+          if (!video.hasAttribute("data-declutter-shorts-hidden")) {
+            video.setAttribute(
+              "data-declutter-shorts-original-display",
+              video.style.display || ""
+            );
+            video.style.display = "none";
+            video.setAttribute("data-declutter-shorts-hidden", "true");
+          }
+        }
+      });
+    } catch (e) {}
   } catch (e) {
     console.warn("[declutter] removeShortsBlocks error:", e);
   }
@@ -577,7 +585,7 @@ function applyHiding() {
   }
 }
 
-// -------------------- Observer with debouncing --------------------
+// -------------------- Observer --------------------
 function attachObserverSafely() {
   if (!checkExtensionContext()) return;
 
@@ -594,8 +602,9 @@ function attachObserverSafely() {
       if (!checkExtensionContext()) return;
       applyHiding();
 
-      // Schedule EduTube filter (debounced)
+      // Check watch page on mutations
       if (edutubeEngine?.enabled) {
+        checkWatchPageGlobally();
         scheduleFilter();
       }
     });
@@ -607,9 +616,9 @@ function attachObserverSafely() {
 
     log("MutationObserver attached");
 
-    // Re-filter on navigation
     window.addEventListener("yt-navigate-finish", () => {
       if (edutubeEngine?.enabled) {
+        checkWatchPageGlobally();
         scheduleFilter();
       }
     });
@@ -618,13 +627,12 @@ function attachObserverSafely() {
   }
 }
 
-// --- Helper: normalize user input (URL, name, ID) ---
+// --- Input resolution helper ---
 async function resolveYouTubeInput(raw) {
   try {
     if (!raw || typeof raw !== "string") return { kind: null, id: null };
     const text = raw.trim();
 
-    // --- CHANNEL DETECTION ---
     const channelMatch = text.match(
       /(?:channel\/|\/c\/|@|UC)[A-Za-z0-9_-]{2,}/i
     );
@@ -641,7 +649,6 @@ async function resolveYouTubeInput(raw) {
       if (handle) return { kind: "channelName", id: handle[1].toLowerCase() };
     }
 
-    // --- VIDEO DETECTION ---
     const vidMatch =
       text.match(/[?&]v=([A-Za-z0-9_-]{11})/) ||
       text.match(/shorts\/([A-Za-z0-9_-]{11})/) ||
@@ -649,12 +656,10 @@ async function resolveYouTubeInput(raw) {
     if (vidMatch) return { kind: "video", id: vidMatch[1] };
     if (/^[A-Za-z0-9_-]{11}$/.test(text)) return { kind: "video", id: text };
 
-    // --- HANDLE channel names or text ---
     if (/^[a-zA-Z0-9\s]+$/.test(text)) {
       return { kind: "channelName", id: text.toLowerCase() };
     }
 
-    // --- Default to video title (fallback) ---
     return { kind: "videoTitle", id: text.toLowerCase() };
   } catch (e) {
     console.warn("[EduTube] resolveYouTubeInput error:", e);
@@ -662,7 +667,7 @@ async function resolveYouTubeInput(raw) {
   }
 }
 
-// -------------------- Single Message Listener --------------------
+// -------------------- Message Listener --------------------
 function setupMessageListener() {
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (!checkExtensionContext()) {
@@ -677,8 +682,12 @@ function setupMessageListener() {
           initEduTube().then(() => {
             if (edutubeEngine) {
               edutubeEngine.enabled = msg.enabled;
-              if (msg.enabled) scheduleFilter();
-              else stopEduTubeFilter();
+              if (msg.enabled) {
+                scheduleFilter();
+                checkWatchPageGlobally();
+              } else {
+                stopEduTubeFilter();
+              }
             }
             sendResponse({ ok: true });
           });
@@ -686,8 +695,12 @@ function setupMessageListener() {
         }
 
         edutubeEngine.toggle(msg.enabled).then(() => {
-          if (msg.enabled) scheduleFilter();
-          else stopEduTubeFilter();
+          if (msg.enabled) {
+            scheduleFilter();
+            checkWatchPageGlobally();
+          } else {
+            stopEduTubeFilter();
+          }
           sendResponse({ ok: true });
         });
         return true;
@@ -701,7 +714,6 @@ function setupMessageListener() {
         }
 
         edutubeEngine.setSensitivity(msg.value).then(() => {
-          // Clear processed flags to re-evaluate
           document
             .querySelectorAll("[data-edutube-processed]")
             .forEach((el) => {
@@ -713,153 +725,300 @@ function setupMessageListener() {
         return true;
       }
 
-      /**
-       * Resolve user input (URL, ID, or name) into a usable kind/id combo.
-       * Supports:
-       * - YouTube URLs (channel & video)
-       * - Plain video/channel IDs
-       * - Channel names (fallback)
-       * - Video titles (fallback)
-       *
-       * Returns { kind: "channel"|"video"|"channelName"|"videoTitle"|null, id: string|null }
-       */
-
-      // Whitelist/Blacklist management (channels/videos)
-      if (edutubeEngine && msg.type === "edutubeListUpdate") {
-        const { list, action, idKind, id } = msg; // list: 'whitelist'|'blacklist'; action: 'add'|'remove'; idKind: 'channel'|'video'
-
-        (async () => {
-          const parsed = await resolveYouTubeInput(id);
-          const resolvedKind = parsed.kind || idKind;
-          const resolvedId = parsed.id || id;
-
-          const doSchedule = () => {
-            document
-              .querySelectorAll("[data-edutube-processed]")
-              .forEach((el) => el.removeAttribute("data-edutube-processed"));
+      // NEW: Add non-educational channel
+      if (msg.type === "edutubeAddNonEduChannel") {
+        if (edutubeEngine) {
+          edutubeEngine.addNonEduChannel(msg.channelId).then(() => {
+            checkWatchPageGlobally();
             scheduleFilter();
-          };
+            sendResponse({ ok: true });
+          });
+          return true;
+        }
+      }
 
-          const ops = {
-            whitelist: {
-              add:
-                idKind === "channel"
-                  ? edutubeEngine.addToWhitelist.bind(edutubeEngine)
-                  : edutubeEngine.addVideoToWhitelist.bind(edutubeEngine),
-              remove:
-                idKind === "channel"
-                  ? edutubeEngine.removeFromWhitelist.bind(edutubeEngine)
-                  : edutubeEngine.removeVideoFromWhitelist.bind(edutubeEngine),
-            },
-            blacklist: {
-              add:
-                idKind === "channel"
-                  ? edutubeEngine.addToBlacklist.bind(edutubeEngine)
-                  : edutubeEngine.addVideoToBlacklist.bind(edutubeEngine),
-              remove:
-                idKind === "channel"
-                  ? edutubeEngine.removeFromBlacklist.bind(edutubeEngine)
-                  : edutubeEngine.removeVideoFromBlacklist.bind(edutubeEngine),
-            },
-          };
+      // NEW: Remove non-educational channel
+      if (msg.type === "edutubeRemoveNonEduChannel") {
+        if (edutubeEngine) {
+          edutubeEngine.removeNonEduChannel(msg.channelId).then(() => {
+            scheduleFilter();
+            sendResponse({ ok: true });
+          });
+          return true;
+        }
+      }
 
-          const fn = ops[list]?.[action];
-          if (typeof fn === "function") {
-            fn(id).then(async () => {
-              try {
-                // Immediate apply to current DOM without waiting for debounce
-                const selectors = [
-                  "ytd-video-renderer",
-                  "ytd-grid-video-renderer",
-                  "ytd-compact-video-renderer",
-                  "ytd-rich-item-renderer",
-                  "ytd-playlist-panel-video-renderer",
-                  "ytm-rich-item-renderer",
-                  "ytm-grid-video-renderer",
-                ];
-                const matchers = {
-                  channel: (el) => {
-                    try {
-                      const link = el.querySelector('a[href*="/channel/"]');
-                      if (!link) return null;
-                      const m = link.href.match(/\/channel\/([^/?#]+)/);
-                      return m ? m[1] : null;
-                    } catch (_) {
-                      return null;
-                    }
-                  },
-                  video: (el) => {
-                    try {
-                      const a = el.querySelector(
-                        'a[href*="/watch?v="] , a#thumbnail, a.yt-simple-endpoint'
-                      );
-                      const href = a?.getAttribute("href") || a?.href || "";
-                      const m =
-                        href.match(/[?&]v=([^&]+)/) ||
-                        href.match(/shorts\/([^/?#]+)/);
-                      return m ? m[1] : null;
-                    } catch (_) {
-                      return null;
-                    }
-                  },
-                };
+      // Whitelist/Blacklist management
+      if (edutubeEngine && msg.type === "edutubeListUpdate") {
+        const { list, action, idKind, id } = msg;
+        (async () => {
+          try {
+            const parsed = await resolveYouTubeInput(id);
+            const resolvedKind = parsed.kind || idKind;
+            const resolvedId = parsed.id || id;
 
-                for (const sel of selectors) {
-                  document.querySelectorAll(sel).forEach((el) => {
-                    const got = matchers[idKind]?.(el);
+            const doSchedule = () => {
+              document
+                .querySelectorAll("[data-edutube-processed]")
+                .forEach((el) => el.removeAttribute("data-edutube-processed"));
+              checkWatchPageGlobally();
+              scheduleFilter();
+            };
+
+            // Handle keyword-based lists
+            if (
+              resolvedKind === "channelName" ||
+              resolvedKind === "videoTitle"
+            ) {
+              const keyword = String(resolvedId || "").toLowerCase();
+              if (!keyword) {
+                sendResponse({ ok: false, error: "Could not parse input" });
+                return;
+              }
+
+              edutubeEngine.whitelistKeywords =
+                edutubeEngine.whitelistKeywords || new Set();
+              edutubeEngine.blacklistKeywords =
+                edutubeEngine.blacklistKeywords || new Set();
+
+              if (list === "whitelist") {
+                if (action === "add") {
+                  edutubeEngine.whitelistKeywords.add(keyword);
+                  edutubeEngine.blacklistKeywords.delete(keyword);
+                } else {
+                  edutubeEngine.whitelistKeywords.delete(keyword);
+                }
+              } else {
+                if (action === "add") {
+                  edutubeEngine.blacklistKeywords.add(keyword);
+                  edutubeEngine.whitelistKeywords.delete(keyword);
+                } else {
+                  edutubeEngine.blacklistKeywords.delete(keyword);
+                }
+              }
+
+              await edutubeEngine.saveSettings?.();
+
+              edutubeEngine.stats = edutubeEngine.stats || {};
+              edutubeEngine.stats.layerStats =
+                edutubeEngine.stats.layerStats || {};
+              const ls = edutubeEngine.stats.layerStats;
+              if (action === "add") ls[list] = (ls[list] || 0) + 1;
+              else if (action === "remove" && ls[list] > 0) ls[list] -= 1;
+
+              chrome.runtime.sendMessage({
+                type: "edutubeStatsUpdate",
+                stats: edutubeEngine.getStats
+                  ? edutubeEngine.getStats()
+                  : edutubeEngine.stats,
+              });
+              doSchedule();
+              sendResponse({ ok: true });
+              return;
+            }
+
+            if (!resolvedKind || !resolvedId) {
+              sendResponse({
+                ok: false,
+                error: "Could not determine ID kind or value",
+              });
+              return;
+            }
+
+            // Handle channel/video IDs
+            const engineOps = {
+              channel: {
+                add: edutubeEngine.addToWhitelist.bind(edutubeEngine),
+                remove: edutubeEngine.removeFromWhitelist.bind(edutubeEngine),
+              },
+              channel_black: {
+                add: edutubeEngine.addToBlacklist.bind(edutubeEngine),
+                remove: edutubeEngine.removeFromBlacklist.bind(edutubeEngine),
+              },
+              video: {
+                add: edutubeEngine.addVideoToWhitelist.bind(edutubeEngine),
+                remove:
+                  edutubeEngine.removeVideoFromWhitelist.bind(edutubeEngine),
+              },
+              video_black: {
+                add: edutubeEngine.addVideoToBlacklist.bind(edutubeEngine),
+                remove:
+                  edutubeEngine.removeVideoFromBlacklist.bind(edutubeEngine),
+              },
+            };
+
+            let fn = null;
+            if (list === "whitelist" && resolvedKind === "channel")
+              fn = engineOps.channel[action];
+            else if (list === "blacklist" && resolvedKind === "channel")
+              fn = engineOps.channel_black[action];
+            else if (list === "whitelist" && resolvedKind === "video")
+              fn = engineOps.video[action];
+            else if (list === "blacklist" && resolvedKind === "video")
+              fn = engineOps.video_black[action];
+
+            if (typeof fn !== "function") {
+              sendResponse({ ok: false, error: "Unsupported operation" });
+              return;
+            }
+
+            await fn(resolvedId);
+
+            // Immediate DOM apply
+            try {
+              const selectors = [
+                "ytd-video-renderer",
+                "ytd-grid-video-renderer",
+                "ytd-compact-video-renderer",
+                "ytd-rich-item-renderer",
+                "ytd-playlist-panel-video-renderer",
+                "ytm-rich-item-renderer",
+                "ytm-grid-video-renderer",
+              ];
+
+              const matchers = {
+                channel: (el) => {
+                  try {
+                    const link = el.querySelector(
+                      'a[href*="/channel/"], a[href*="/@"], a[href*="/c/"]'
+                    );
+                    if (!link) return null;
+                    const href = link.getAttribute("href") || link.href || "";
+                    let m = href.match(/\/channel\/([^/?#]+)/);
+                    if (m) return m[1];
+                    m = href.match(/@([^/?#]+)/);
+                    if (m) return `@${m[1]}`;
+                    m = href.match(/\/c\/([^/?#]+)/);
+                    if (m) return `c/${m[1]}`;
+                    return null;
+                  } catch (e) {
+                    return null;
+                  }
+                },
+                video: (el) => {
+                  try {
+                    const a = el.querySelector(
+                      'a[href*="/watch?v="], a#thumbnail, a.yt-simple-endpoint'
+                    );
+                    const href = a?.getAttribute("href") || a?.href || "";
+                    const m =
+                      href.match(/[?&]v=([^&]+)/) ||
+                      href.match(/shorts\/([^/?#]+)/) ||
+                      href.match(/youtu\.be\/([^/?#]+)/);
+                    return m ? m[1] : null;
+                  } catch (e) {
+                    return null;
+                  }
+                },
+              };
+
+              for (const sel of selectors) {
+                document.querySelectorAll(sel).forEach((el) => {
+                  try {
+                    const got = matchers[resolvedKind]?.(el);
                     if (!got) return;
-                    if (got !== id) return;
+                    if (got !== resolvedId) return;
 
                     if (list === "blacklist" && action === "add") {
                       el.setAttribute("data-edutube-hidden", "true");
                     } else if (list === "whitelist" && action === "add") {
                       el.removeAttribute("data-edutube-hidden");
                     } else if (action === "remove") {
-                      // Force re-evaluation for this element
                       el.removeAttribute("data-edutube-processed");
                     }
-                  });
-                }
-              } catch (_) {}
-              try {
-                if (
-                  edutubeEngine &&
-                  edutubeEngine.stats &&
-                  edutubeEngine.stats.layerStats
-                ) {
-                  const ls = edutubeEngine.stats.layerStats;
-
-                  // Increment or decrement counts based on user action
-                  if (action === "add") {
-                    ls[list] = (ls[list] || 0) + 1;
-                  } else if (action === "remove" && ls[list] > 0) {
-                    ls[list] -= 1;
-                  }
-
-                  // Save stats safely
-                  if (typeof edutubeEngine.saveSettings === "function") {
-                    await edutubeEngine.saveSettings();
-                  }
-
-                  // Notify popup of new stats (for live counter updates)
-                  chrome.runtime.sendMessage({
-                    type: "edutubeStatsUpdate",
-                    stats: edutubeEngine.getStats
-                      ? edutubeEngine.getStats()
-                      : edutubeEngine.stats,
-                  });
-
-                  console.debug(`[EduTube] Live ${action} → ${list}`, ls[list]);
-                }
-              } catch (err) {
-                console.warn("[EduTube] Live stats update failed:", err);
+                  } catch (_) {}
+                });
               }
-              doSchedule();
-              sendResponse({ ok: true });
+            } catch (_) {}
+
+            // Update layer stats
+            edutubeEngine.stats = edutubeEngine.stats || {};
+            edutubeEngine.stats.layerStats =
+              edutubeEngine.stats.layerStats || {};
+            const ls = edutubeEngine.stats.layerStats;
+            ls[list] =
+              (ls[list] || 0) +
+              (action === "add" ? 1 : action === "remove" ? -1 : 0);
+            if (ls[list] < 0) ls[list] = 0;
+
+            // Persist stats & lists
+            try {
+              await edutubeEngine.saveSettings?.();
+              chrome.storage.sync.set(
+                { edutubeStats: edutubeEngine.stats },
+                () => {}
+              );
+            } catch (saveErr) {
+              console.warn("[EduTube] saveSettings error:", saveErr);
+            }
+
+            // Send live stats update
+            chrome.runtime.sendMessage({
+              type: "edutubeStatsUpdate",
+              stats: edutubeEngine.getStats
+                ? edutubeEngine.getStats()
+                : edutubeEngine.stats,
             });
-            return true;
+
+            // If we blacklisted the current video/channel, redirect
+            try {
+              const url = new URL(location.href);
+              const currentVid =
+                url.searchParams.get("v") ||
+                (location.pathname.startsWith("/shorts/")
+                  ? location.pathname.split("/shorts/")[1]?.split(/[?#]/)[0]
+                  : null);
+              const currentChannelEl = document.querySelector(
+                'a[href*="/channel/"], a[href*="/@"]'
+              );
+              let currentChannel = null;
+              if (currentChannelEl) {
+                const chHref =
+                  currentChannelEl.getAttribute("href") ||
+                  currentChannelEl.href ||
+                  "";
+                const m =
+                  chHref.match(/\/channel\/([^/?#]+)/) ||
+                  chHref.match(/@([^/?#]+)/);
+                if (m)
+                  currentChannel = m[1]
+                    ? chHref.includes("@")
+                      ? `@${m[1]}`
+                      : m[1]
+                    : null;
+              }
+
+              if (list === "blacklist" && action === "add") {
+                let shouldRemove = false;
+                if (
+                  resolvedKind === "video" &&
+                  resolvedId &&
+                  currentVid === resolvedId
+                )
+                  shouldRemove = true;
+                if (
+                  resolvedKind === "channel" &&
+                  resolvedId &&
+                  currentChannel === resolvedId
+                )
+                  shouldRemove = true;
+                if (shouldRemove) {
+                  location.replace("/");
+                }
+              }
+            } catch (e) {}
+
+            doSchedule();
+            sendResponse({ ok: true });
+          } catch (err) {
+            console.error("[EduTube] edutubeListUpdate handler error:", err);
+            sendResponse({
+              ok: false,
+              error: err && err.message ? err.message : String(err),
+            });
           }
         })();
+        return true;
       }
 
       if (msg.type === "edutubeGetCurrentIds") {
@@ -913,7 +1072,6 @@ function safeInit() {
     return;
   }
 
-  // Register message listener first
   setupMessageListener();
 
   // Initialize EduTube after delay
