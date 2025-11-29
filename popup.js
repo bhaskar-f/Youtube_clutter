@@ -1,4 +1,4 @@
-// popup.js – Updated for new HTML structure
+// popup.js – Updated for new HTML structure + keyword support + suggestions
 
 function initPopup() {
   const checkboxes = [
@@ -54,6 +54,7 @@ function initPopup() {
   initThemeToggle();
   initEduTubeControls();
   initTabSwitching();
+  initSuggestions(); // 🔥 YouTube-style suggestions for wl/bl inputs
 }
 
 // Theme Toggle
@@ -104,11 +105,9 @@ function initTabSwitching() {
     button.addEventListener("click", () => {
       const targetTab = button.getAttribute("data-tab");
 
-      // Remove active class from all buttons and tabs
       tabButtons.forEach((btn) => btn.classList.remove("active"));
       tabs.forEach((tab) => tab.classList.remove("active"));
 
-      // Add active class to clicked button and target tab
       button.classList.add("active");
       document.getElementById(targetTab)?.classList.add("active");
     });
@@ -170,6 +169,8 @@ function initEduTubeControls() {
       if (enabled) {
         settingsContainer.style.display = "block";
         updateStats(stats);
+      } else {
+        settingsContainer.style.display = "none";
       }
 
       if (data.youtubeApiKey) {
@@ -182,6 +183,8 @@ function initEduTubeControls() {
           data.youtubeQuotaUsed || 0,
           data.youtubeQuotaResetTime
         );
+      } else {
+        updateApiStatus(false);
       }
     }
   );
@@ -191,37 +194,26 @@ function initEduTubeControls() {
     const enabled = enableToggle.checked;
     chrome.storage.sync.set({ edutubeEnabled: enabled });
 
-    if (enabled) {
-      settingsContainer.style.display = "block";
-    } else {
-      settingsContainer.style.display = "none";
-    }
+    settingsContainer.style.display = enabled ? "block" : "none";
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (!tabs?.length) return;
       chrome.tabs.sendMessage(
         tabs[0].id,
         { type: "edutubeToggle", enabled },
-        (response) => {
-          if (chrome.runtime.lastError) {
-            console.debug(
-              "[popup] EduTube toggle message failed:",
-              chrome.runtime.lastError.message
-            );
-          }
-        }
+        () => {}
       );
     });
   });
 
   // Sensitivity slider
   sensitivitySlider.addEventListener("input", () => {
-    const value = parseInt(sensitivitySlider.value);
+    const value = parseInt(sensitivitySlider.value, 10);
     updateSensitivityLabel(value);
   });
 
   sensitivitySlider.addEventListener("change", () => {
-    const value = parseInt(sensitivitySlider.value);
+    const value = parseInt(sensitivitySlider.value, 10);
     chrome.storage.sync.set({ edutubeSensitivity: value });
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -229,14 +221,7 @@ function initEduTubeControls() {
       chrome.tabs.sendMessage(
         tabs[0].id,
         { type: "edutubeSensitivity", value },
-        (response) => {
-          if (chrome.runtime.lastError) {
-            console.debug(
-              "[popup] Sensitivity update failed:",
-              chrome.runtime.lastError.message
-            );
-          }
-        }
+        () => {}
       );
     });
   });
@@ -287,7 +272,7 @@ function initEduTubeControls() {
     });
   }
 
-  // Update stats periodically
+  // Update stats periodically (to sync with background/content)
   setInterval(() => {
     chrome.storage.sync.get(
       [
@@ -381,7 +366,6 @@ function initEduTubeControls() {
     if (!msg || msg.type !== "edutubeStatsUpdate" || !msg.stats) return;
 
     const s = msg.stats || {};
-    console.debug("[Popup] Live stats update:", s);
 
     if (videosHiddenEl)
       videosHiddenEl.textContent = s.videosHidden ?? s.hidden ?? 0;
@@ -431,13 +415,15 @@ function initListManagement() {
   wlList.innerHTML = "";
   blList.innerHTML = "";
 
-  // Load existing lists
+  // Load existing lists (channels, videos, keywords)
   chrome.storage.sync.get(
     [
       "edutubeWhitelist",
       "edutubeBlacklist",
       "edutubeWhitelistVideos",
       "edutubeBlacklistVideos",
+      "edutubeWhitelistKeywords",
+      "edutubeBlacklistKeywords",
     ],
     (data) => {
       renderList(wlList, data.edutubeWhitelist || [], "channel", "whitelist");
@@ -452,6 +438,18 @@ function initListManagement() {
         blList,
         data.edutubeBlacklistVideos || [],
         "video",
+        "blacklist"
+      );
+      renderList(
+        wlList,
+        data.edutubeWhitelistKeywords || [],
+        "keyword",
+        "whitelist"
+      );
+      renderList(
+        blList,
+        data.edutubeBlacklistKeywords || [],
+        "keyword",
         "blacklist"
       );
       updateCounts();
@@ -478,14 +476,79 @@ function initListManagement() {
     handleAddCurrent("blacklist", "channel", blHint)
   );
 
-  function handleAdd(list, idKind, raw, hintEl) {
-    if (!raw) return showHint(hintEl, "Enter a YouTube URL or ID", true);
-    const parsed = parseInput(raw);
-    const finalKind = idKind === "auto" ? parsed.kind : idKind;
-    const id = idKind === "auto" ? parsed.id : raw;
-    if (!finalKind || !id)
-      return showHint(hintEl, "Could not detect ID. Try selecting type.", true);
+  // --------- Keyword Normalization (fuzzy equivalence) ----------
+  function normalizeKeyword(str) {
+    return str
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "") // remove spaces, punctuation, hyphens, underscores
+      .trim();
+  }
 
+  function handleAdd(list, idKind, raw, hintEl) {
+    if (!raw) return showHint(hintEl, "Enter a YouTube URL, ID, or name", true);
+
+    const parsed = parseInput(raw);
+    let finalKind = idKind === "auto" ? parsed.kind : idKind;
+    let id = idKind === "auto" ? parsed.id : raw.trim();
+
+    // Fallback → keyword rule when auto-detect fails
+    if (!finalKind || !id) {
+      finalKind = "keyword";
+      id = raw.trim();
+    }
+
+    // KEYWORD PATH (names/titles): normalize + dedupe immediately
+    if (finalKind === "keyword") {
+      const normalized = normalizeKeyword(id);
+      if (!normalized) return showHint(hintEl, "Invalid keyword", true);
+
+      const storageKey =
+        list === "whitelist"
+          ? "edutubeWhitelistKeywords"
+          : "edutubeBlacklistKeywords";
+
+      chrome.storage.sync.get([storageKey], (data) => {
+        const current = data[storageKey] || [];
+
+        const exists = current.some(
+          (item) => normalizeKeyword(item) === normalized
+        );
+        if (exists) {
+          return showHint(hintEl, "Already exists in this list", true);
+        }
+
+        const updated = [...current, normalized];
+
+        chrome.storage.sync.set({ [storageKey]: updated }, () => {
+          updateCounts();
+
+          // UI shows what user typed (id), but engine gets normalized version
+          addItemToList(
+            list === "whitelist" ? wlList : blList,
+            "keyword",
+            id,
+            list
+          );
+
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (!tabs?.length) return;
+            chrome.tabs.sendMessage(tabs[0].id, {
+              type: "edutubeListUpdate",
+              list,
+              action: "add",
+              idKind: "keyword",
+              id: normalized,
+            });
+          });
+
+          showHint(hintEl, "Added.");
+        });
+      });
+
+      return; // keyword path handled completely
+    }
+
+    // CHANNEL / VIDEO PATH (ID-based)
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (!tabs?.length) return;
       chrome.tabs.sendMessage(
@@ -544,10 +607,28 @@ function initListManagement() {
 
   function addItemToList(ul, idKind, id, list) {
     const li = document.createElement("li");
-    li.textContent = `${idKind === "channel" ? "CH" : "VID"}: ${id}`;
+
+    let prefix;
+    if (
+      idKind === "keyword" ||
+      idKind === "channelName" ||
+      idKind === "videoTitle"
+    ) {
+      prefix = "KW";
+    } else if (idKind === "channel") {
+      prefix = "CH";
+    } else {
+      prefix = "VID";
+    }
+
+    const textSpan = document.createElement("span");
+    textSpan.textContent = `${prefix}: ${id}`;
+
     const btn = document.createElement("button");
     btn.textContent = "✖";
     btn.addEventListener("click", () => removeItem(idKind, id, list, li));
+
+    li.appendChild(textSpan);
     li.appendChild(btn);
     ul.appendChild(li);
   }
@@ -560,11 +641,32 @@ function initListManagement() {
         { type: "edutubeListUpdate", list, action: "remove", idKind, id },
         () => {
           const key = mapKey(list, idKind);
-          chrome.storage.sync.get([key], (data) => {
-            const arr = new Set(data[key] || []);
-            arr.delete(id);
-            chrome.storage.sync.set({ [key]: Array.from(arr) }, updateCounts);
-          });
+
+          if (
+            idKind === "keyword" ||
+            idKind === "channelName" ||
+            idKind === "videoTitle"
+          ) {
+            // match against normalized form
+            const storageKey =
+              list === "whitelist"
+                ? "edutubeWhitelistKeywords"
+                : "edutubeBlacklistKeywords";
+            chrome.storage.sync.get([storageKey], (data) => {
+              const current = data[storageKey] || [];
+              const filtered = current.filter(
+                (item) => normalizeKeyword(item) !== normalizeKeyword(id)
+              );
+              chrome.storage.sync.set({ [storageKey]: filtered }, updateCounts);
+            });
+          } else {
+            chrome.storage.sync.get([key], (data) => {
+              const arr = new Set(data[key] || []);
+              arr.delete(id);
+              chrome.storage.sync.set({ [key]: Array.from(arr) }, updateCounts);
+            });
+          }
+
           li.remove();
           updateCounts();
         }
@@ -572,12 +674,21 @@ function initListManagement() {
     });
   }
 
-  function mapKey(list, idKind) {
-    if (list === "whitelist" && idKind === "channel") return "edutubeWhitelist";
-    if (list === "blacklist" && idKind === "channel") return "edutubeBlacklist";
-    if (list === "whitelist" && idKind === "video")
-      return "edutubeWhitelistVideos";
-    return "edutubeBlacklistVideos";
+  function mapKey(list, kind) {
+    if (kind === "keyword" || kind === "channelName" || kind === "videoTitle") {
+      return list === "whitelist"
+        ? "edutubeWhitelistKeywords"
+        : "edutubeBlacklistKeywords";
+    }
+
+    if (kind === "channel") {
+      return list === "whitelist" ? "edutubeWhitelist" : "edutubeBlacklist";
+    }
+
+    // default: video
+    return list === "whitelist"
+      ? "edutubeWhitelistVideos"
+      : "edutubeBlacklistVideos";
   }
 
   function updateCounts() {
@@ -587,14 +698,18 @@ function initListManagement() {
         "edutubeBlacklist",
         "edutubeWhitelistVideos",
         "edutubeBlacklistVideos",
+        "edutubeWhitelistKeywords",
+        "edutubeBlacklistKeywords",
       ],
       (d) => {
         const wlCount =
           (d.edutubeWhitelist?.length || 0) +
-          (d.edutubeWhitelistVideos?.length || 0);
+          (d.edutubeWhitelistVideos?.length || 0) +
+          (d.edutubeWhitelistKeywords?.length || 0);
         const blCount =
           (d.edutubeBlacklist?.length || 0) +
-          (d.edutubeBlacklistVideos?.length || 0);
+          (d.edutubeBlacklistVideos?.length || 0) +
+          (d.edutubeBlacklistKeywords?.length || 0);
         const wlCountEl = document.getElementById("wlCount");
         const blCountEl = document.getElementById("blCount");
         if (wlCountEl) wlCountEl.textContent = wlCount;
@@ -632,6 +747,152 @@ function initListManagement() {
     el.textContent = msg;
     el.style.color = isError ? "#ff7676" : "#9ad17f";
     setTimeout(() => (el.style.display = "none"), 2000);
+  }
+}
+
+// ===============================
+// YOUTUBE SEARCH SUGGESTIONS
+// ===============================
+
+function initSuggestions() {
+  const wlInput = document.getElementById("wlInput");
+  const blInput = document.getElementById("blInput");
+
+  setupSuggestionBox(wlInput);
+  setupSuggestionBox(blInput);
+}
+
+function setupSuggestionBox(inputEl) {
+  if (!inputEl) return;
+
+  // Parent is the flex input row (input + select + button)
+  const parent = inputEl.parentElement;
+  if (!parent) return;
+
+  // Ensure positioning so suggestion-box overlays below without breaking layout
+  if (!parent.style.position || parent.style.position === "static") {
+    parent.style.position = "relative";
+  }
+
+  // Create suggestion dropdown
+  const box = document.createElement("div");
+  box.className = "suggestion-box";
+  box.style.display = "none";
+
+  // Insert BELOW the input row, still visually under the input
+  parent.appendChild(box);
+
+  let currentIndex = -1;
+  let suggestions = [];
+  let debounceId = null;
+
+  inputEl.addEventListener("input", () => {
+    const q = inputEl.value.trim();
+
+    if (debounceId) clearTimeout(debounceId);
+
+    if (!q) {
+      box.style.display = "none";
+      suggestions = [];
+      return;
+    }
+
+    debounceId = setTimeout(async () => {
+      suggestions = await fetchYoutubeSuggestions(q);
+      renderSuggestions();
+    }, 200);
+  });
+
+  inputEl.addEventListener("keydown", (e) => {
+    if (box.style.display === "none" || !suggestions.length) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      currentIndex = (currentIndex + 1) % suggestions.length;
+      highlightSuggestion();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      currentIndex =
+        (currentIndex - 1 + suggestions.length) % suggestions.length;
+      highlightSuggestion();
+    } else if (e.key === "Enter") {
+      if (currentIndex >= 0) {
+        e.preventDefault();
+        selectSuggestion(suggestions[currentIndex]);
+      }
+    } else if (e.key === "Escape") {
+      box.style.display = "none";
+    }
+  });
+
+  // Hide suggestions on blur (with slight delay so click on item still works)
+  inputEl.addEventListener("blur", () => {
+    setTimeout(() => {
+      box.style.display = "none";
+    }, 150);
+  });
+
+  // Hide when clicking outside
+  document.addEventListener("click", (e) => {
+    if (e.target === inputEl) return;
+    if (!box.contains(e.target)) {
+      box.style.display = "none";
+    }
+  });
+
+  function renderSuggestions() {
+    box.innerHTML = "";
+    currentIndex = -1;
+
+    if (!suggestions.length) {
+      box.style.display = "none";
+      return;
+    }
+
+    suggestions.forEach((s) => {
+      const div = document.createElement("div");
+      div.className = "suggestion-item";
+      div.textContent = s;
+
+      // mousedown so it fires before blur hides box
+      div.addEventListener("mousedown", () => selectSuggestion(s));
+
+      box.appendChild(div);
+    });
+
+    box.style.display = "block";
+  }
+
+  function highlightSuggestion() {
+    Array.from(box.children).forEach((child, idx) => {
+      child.classList.toggle("active", idx === currentIndex);
+    });
+
+    if (currentIndex >= 0) {
+      inputEl.value = suggestions[currentIndex];
+    }
+  }
+
+  function selectSuggestion(text) {
+    inputEl.value = text;
+    box.style.display = "none";
+  }
+}
+
+// Fetch suggestions from YouTube (no API key needed)
+async function fetchYoutubeSuggestions(query) {
+  try {
+    const url =
+      "https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=" +
+      encodeURIComponent(query);
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    return data[1] || [];
+  } catch (e) {
+    console.error("[popup] Suggestion fetch error:", e);
+    return [];
   }
 }
 

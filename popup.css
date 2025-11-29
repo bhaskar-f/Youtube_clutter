@@ -8,6 +8,10 @@
   --border: #303030;
   --radius: 10px;
   --transition: 0.25s ease;
+
+  /* NEW: panel & accent colors used by suggestion dropdown */
+  --panel: #202020;
+  --accentSoft: rgba(255, 255, 255, 0.08);
 }
 
 /* =============================================
@@ -1095,4 +1099,64 @@ body.light-mode .layer-item {
 
 body.light-mode .layer-name {
   color: #666;
+}
+
+/* =============================================
+   SUGGESTION DROPDOWN (Autocomplete)
+   ============================================= */
+.suggestion-box {
+  position: absolute;
+  top: 40px; /* just below the input row */
+  left: 0;
+  width: 100%;
+  max-height: 180px;
+  overflow-y: auto;
+  background: var(--panel);
+  border-radius: 6px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.suggestion-item:hover,
+.suggestion-item.active {
+  background: var(--accentSoft);
+}
+
+/* Light mode suggestion styling */
+body.light-mode .suggestion-box {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.light-mode .suggestion-item {
+  color: #222;
+}
+
+body.light-mode .suggestion-item:hover,
+body.light-mode .suggestion-item.active {
+  background: rgba(0, 0, 0, 0.05);
+}
+/* FIX — make input container relative anchor */
+.input-row {
+  position: relative; /* <-- allows absolute suggestion-box inside */
+}
+
+/* FIX — allow input to be full width so suggestions align under it */
+.input-row input {
+  max-width: 100% !important; /* previously forced 50% */
+}
+
+/* FIX — suggestion-box alignment */
+.suggestion-box {
+  width: calc(100% - 0px); /* aligns exactly under input */
+  left: 0;
+  top: 38px; /* slightly below input */
+  z-index: 9999;
 }

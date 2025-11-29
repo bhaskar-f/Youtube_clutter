@@ -4,7 +4,10 @@
   "version": "5.0.0",
   "description": "Declutter YouTube and transform it into an educational platform with EduTube mode",
   "permissions": ["storage", "tabs", "contextMenus", "activeTab"],
-  "host_permissions": ["*://*.youtube.com/*"],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "https://suggestqueries.google.com/*"
+  ],
 
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
