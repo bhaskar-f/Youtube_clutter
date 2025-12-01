@@ -1150,7 +1150,7 @@ body.light-mode .suggestion-item.active {
 
 /* FIX — allow input to be full width so suggestions align under it */
 .input-row input {
-  max-width: 100% !important; /* previously forced 50% */
+  max-width: 50% !important; /* previously forced 50% */
 }
 
 /* FIX — suggestion-box alignment */
@@ -1159,4 +1159,605 @@ body.light-mode .suggestion-item.active {
   left: 0;
   top: 38px; /* slightly below input */
   z-index: 9999;
+}
+/* ============================================
+   API HELP / GUIDE SECTION (Modern & Themed)
+   ============================================ */
+
+.api-guide {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 10px;
+
+  /* Theme adaptive */
+  background: var(--guide-bg, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--guide-border, rgba(255, 255, 255, 0.12));
+
+  /* Subtle glow in dark mode for visibility */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  transition: background 0.25s, border-color 0.25s;
+}
+
+body.light-mode .api-guide {
+  background: var(--guide-bg-light, #f7f7f7);
+  border: 1px solid var(--guide-border-light, #e2e2e2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Title */
+.api-guide h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color, #fff);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.api-guide h3::before {
+  content: "💡";
+  font-size: 17px;
+}
+
+/* Steps list */
+.api-guide ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.api-guide li {
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--text-light, rgba(255, 255, 255, 0.85));
+}
+
+body.light-mode .api-guide li {
+  color: #333;
+}
+
+/* Links inside guide */
+.api-guide a {
+  color: #3ea6ff;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+body.light-mode .api-guide a {
+  color: #065fd4;
+}
+
+/* Footer note */
+.api-guide .note {
+  font-size: 12px;
+  margin-top: 10px;
+  opacity: 0.9;
+  line-height: 1.4;
+  color: var(--text-light, rgba(255, 255, 255, 0.7));
+}
+
+body.light-mode .api-guide .note {
+  color: #555;
+}
+body.light-mode .api-guide h3 {
+  color: #000;
+}
+
+/* Toggle summary */
+.api-help-summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-light, #ddd);
+}
+summary.api-help-summary #help-text,
+summary.api-help-summary #help-icon {
+  color: white;
+}
+
+body.light-mode .api-help-summary {
+  color: #444;
+}
+
+.api-help-details[open] .api-help-summary {
+  opacity: 0.8;
+  color: whitesmoke;
+}
+
+/* Spacing inside collapsible help */
+.api-help-details {
+  margin-top: 10px;
+}
+/* =======================================
+   API MANAGE MODE (after key saved)
+   ======================================= */
+
+#api-manage-mode {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+
+  /* theme-aware background */
+  background: var(--section-bg, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background 0.25s, border-color 0.25s;
+}
+
+body.light-mode #api-manage-mode {
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+}
+
+/* Key + quota lines */
+#api-manage-mode p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-light, rgba(255, 255, 255, 0.85));
+}
+body.light-mode #api-manage-mode p {
+  color: #333;
+}
+
+/* “API Key: ********” label */
+#api-manage-mode strong {
+  font-weight: 600;
+  color: var(--text-color, #fff);
+}
+body.light-mode #api-manage-mode strong {
+  color: #222;
+}
+
+/* Remove button — better visual alignment */
+#apiRemoveBtn {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+
+  background: #d9534f;
+  color: white;
+  border: none;
+  cursor: pointer;
+
+  transition: background 0.2s;
+}
+#apiRemoveBtn:hover {
+  background: #c9302c;
+}
+/* =======================================
+   API SECTION - MODERN REDESIGN
+   ======================================= */
+
+.api-section {
+  padding: 16px;
+  background: var(--section-bg, rgba(255, 255, 255, 0.04));
+  border-radius: 10px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: background 0.25s, border-color 0.25s;
+}
+
+body.light-mode .api-section {
+  background: #f7f7f7;
+  border-color: #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Header */
+.api-header {
+  margin-bottom: 14px;
+}
+
+.api-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color, #fff);
+}
+
+body.light-mode .api-title {
+  color: #222;
+}
+
+.api-title i {
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+/* Add Mode */
+#api-add-mode .api-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#api-add-mode .api-input-group input {
+  flex: 1;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-family: "Roboto Mono", monospace;
+  transition: all 0.2s;
+}
+
+body.light-mode #api-add-mode .api-input-group input {
+  background: #fff;
+  border-color: #ccc;
+  color: #333;
+}
+
+#api-add-mode .api-input-group input:focus {
+  outline: none;
+  border-color: var(--yt-red);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode #api-add-mode .api-input-group input:focus {
+  background: #fff;
+}
+
+.api-save-btn {
+  padding: 10px 20px;
+  background: var(--yt-red);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.api-save-btn:hover {
+  background: #cc0000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+}
+
+.api-status-text {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+body.light-mode .api-status-text {
+  color: #777;
+}
+
+/* Manage Mode Card */
+.api-manage-card {
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body.light-mode .api-manage-card {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: #e0e0e0;
+}
+
+/* API Key Display */
+.api-key-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+body.light-mode .api-key-display {
+  background: #f0f0f0;
+}
+
+.api-key-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+body.light-mode .api-key-label {
+  color: #666;
+}
+
+.api-key-value {
+  font-size: 13px;
+  font-family: "Roboto Mono", monospace;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+body.light-mode .api-key-value {
+  color: #333;
+}
+
+/* Quota Section */
+.api-quota-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quota-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quota-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+body.light-mode .quota-label {
+  color: #666;
+}
+
+.quota-percent {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4caf50;
+}
+
+body.light-mode .quota-percent {
+  color: #2e7d32;
+}
+
+.quota-bar-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+body.light-mode .quota-bar-container {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.quota-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  border-radius: 4px;
+  transition: width 0.4s ease, background 0.3s;
+}
+
+.quota-bar.warning {
+  background: linear-gradient(90deg, #ff9800, #ffc107);
+}
+
+.quota-bar.danger {
+  background: linear-gradient(90deg, #f44336, #ff5722);
+}
+
+.quota-status {
+  margin: 0;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-mode .quota-status {
+  color: #888;
+}
+
+/* Remove Button */
+.api-remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 6px;
+  color: #f44336;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+
+.api-remove-btn:hover {
+  background: rgba(244, 67, 54, 0.25);
+  border-color: #f44336;
+  transform: translateY(-1px);
+}
+
+body.light-mode .api-remove-btn {
+  background: rgba(244, 67, 54, 0.08);
+  border-color: rgba(244, 67, 54, 0.2);
+  color: #d32f2f;
+}
+
+body.light-mode .api-remove-btn:hover {
+  background: rgba(244, 67, 54, 0.15);
+  border-color: #d32f2f;
+}
+
+.api-remove-btn i {
+  font-size: 18px;
+}
+
+/* Help Section */
+.api-help-details {
+  margin-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 14px;
+}
+
+body.light-mode .api-help-details {
+  border-top-color: #e0e0e0;
+}
+
+.api-help-summary {
+  cursor: pointer;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s;
+  user-select: none;
+}
+
+body.light-mode .api-help-summary {
+  background: rgba(0, 0, 0, 0.03);
+  color: #555;
+}
+
+.api-help-summary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+body.light-mode .api-help-summary:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #222;
+}
+
+.api-help-summary i:first-child {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.api-help-summary span {
+  flex: 1;
+}
+
+.api-help-summary .chevron {
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+
+.api-help-details[open] .api-help-summary .chevron {
+  transform: rotate(180deg);
+}
+
+/* Guide Content */
+.api-guide {
+  padding: 16px 12px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+body.light-mode .api-guide {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.guide-intro {
+  margin: 0 0 14px 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+body.light-mode .guide-intro {
+  color: #555;
+}
+
+.guide-steps {
+  margin: 0;
+  padding-left: 20px;
+  list-style: decimal;
+}
+
+.guide-steps li {
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+body.light-mode .guide-steps li {
+  color: #444;
+}
+
+.guide-steps strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+body.light-mode .guide-steps strong {
+  color: #222;
+}
+
+.guide-steps a {
+  color: #3ea6ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.guide-steps a:hover {
+  text-decoration: underline;
+}
+
+body.light-mode .guide-steps a {
+  color: #065fd4;
+}
+
+/* Guide Note */
+.guide-note {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-left: 3px solid #667eea;
+  border-radius: 4px;
+  margin-top: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+body.light-mode .guide-note {
+  background: rgba(102, 126, 234, 0.08);
+  color: #444;
+}
+
+.guide-note i {
+  font-size: 18px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.guide-note strong {
+  color: #fff;
+}
+
+body.light-mode .guide-note strong {
+  color: #222;
 }

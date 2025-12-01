@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>YouTube Declutter</title>
+    <title>EduTube</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
 
@@ -153,8 +153,6 @@
           </div>
         </div>
 
-        <!-- <div class="separator" id="channel-separator"></div> -->
-
         <!-- ============================
            🔵 WHITELIST / BLACKLIST TABS
            ============================ -->
@@ -234,57 +232,142 @@
           <details>
             <summary id="advance-filter-text">Advanced Filtering (API)</summary>
 
+            <!-- ====== REPLACED API BLOCK START (Option C) ====== -->
+            <!-- ============================
+     🔵 ADVANCED FILTERING (API)
+     ============================ -->
             <div class="api-section">
               <div class="api-header">
                 <span class="api-title">
-                  <i class="material-icons-outlined">key</i>
-                  YouTube API (Optional)
+                  <i class="material-icons-outlined">vpn_key</i>
+                  YouTube API Key (Optional)
                 </span>
-                <button class="api-help-btn" id="apiHelpBtn">?</button>
               </div>
 
-              <div class="api-help" id="apiHelp" style="display: none">
-                <p><strong>Get FREE YouTube API Key:</strong></p>
-                <ol>
-                  <li>
-                    Go to
-                    <a href="https://console.cloud.google.com/"
-                      >Google Cloud Console</a
+              <!-- Add Key Mode -->
+              <div id="api-add-mode">
+                <div class="api-input-group">
+                  <input
+                    type="text"
+                    id="apiKeyInput"
+                    placeholder="Paste your API key here..."
+                    autocomplete="off"
+                  />
+                  <button id="apiSaveBtn" class="api-save-btn">Save</button>
+                </div>
+                <p class="api-status-text">No API key configured</p>
+              </div>
+
+              <!-- Manage Key Mode -->
+              <div id="api-manage-mode" style="display: none">
+                <div class="api-manage-card">
+                  <div class="api-key-display">
+                    <span class="api-key-label">API Key:</span>
+                    <span id="apiKeyMasked" class="api-key-value"
+                      >••••••••••••</span
                     >
-                  </li>
-                  <li>Create Project</li>
-                  <li>Enable YouTube API v3</li>
-                  <li>Create API Key</li>
-                </ol>
-              </div>
+                  </div>
 
-              <div class="api-input-group">
-                <input
-                  type="text"
-                  id="youtubeApiKey"
-                  placeholder="Enter YouTube API Key"
-                  autocomplete="off"
-                />
-                <button id="saveApiKey" class="api-save-btn">Save</button>
-              </div>
+                  <div class="api-quota-section">
+                    <div class="quota-header">
+                      <span class="quota-label">Quota Usage</span>
+                      <span id="apiQuotaPercent" class="quota-percent">--</span>
+                    </div>
+                    <div class="quota-bar-container">
+                      <div
+                        id="apiQuotaBar"
+                        class="quota-bar"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                    <p id="apiQuotaText" class="quota-status">
+                      Checking status...
+                    </p>
+                  </div>
 
-              <div class="api-status" id="apiStatus">
-                <span class="status-indicator" id="apiStatusIndicator">●</span>
-                <span id="apiStatusText">No API key set</span>
-              </div>
-
-              <div class="api-quota" id="apiQuota" style="display: none">
-                <div class="quota-bar-container">
-                  <div class="quota-bar" id="quotaBar" style="width: 0%"></div>
+                  <button id="apiRemoveBtn" class="api-remove-btn">
+                    <i class="material-icons-outlined">delete_outline</i>
+                    Remove API Key
+                  </button>
                 </div>
-                <div class="quota-text">
-                  <span id="quotaUsed">0</span> / 10,000 units used
-                  <span class="quota-reset"
-                    >Resets: <span id="quotaReset">--</span></span
+              </div>
+
+              <!-- Collapsible Help Section -->
+              <details class="api-help-details">
+                <summary class="api-help-summary">
+                  <i id="help-icon" class="material-icons-outlined"
+                    >help_outline</i
                   >
+                  <span id="help-text">How to get a YouTube API key</span>
+                  <i id="help-icon" class="material-icons-outlined chevron"
+                    >expand_more</i
+                  >
+                </summary>
+                <div class="api-guide">
+                  <p class="guide-intro">
+                    Get a free API key in ~5 minutes. No credit card needed.
+                  </p>
+
+                  <ol class="guide-steps">
+                    <li>
+                      <strong>Open Google Cloud Console</strong><br />
+                      Visit
+                      <a
+                        href="https://console.cloud.google.com/"
+                        target="_blank"
+                        >console.cloud.google.com</a
+                      >
+                      and sign in with your Google account.
+                    </li>
+
+                    <li>
+                      <strong>Create a new project</strong><br />
+                      Click the project selector at the top →
+                      <strong>New Project</strong> → name it (e.g., "EduTube") →
+                      <strong>Create</strong>.
+                    </li>
+
+                    <li>
+                      <strong>Enable YouTube Data API v3</strong><br />
+                      Go to <strong>APIs & Services → Library</strong> → search
+                      for <strong>YouTube Data API v3</strong> → click
+                      <strong>Enable</strong>.
+                    </li>
+
+                    <li>
+                      <strong>Create an API key</strong><br />
+                      Navigate to
+                      <strong>APIs & Services → Credentials</strong> →
+                      <strong>+ CREATE CREDENTIALS</strong> → select
+                      <strong>API key</strong>.
+                    </li>
+
+                    <li>
+                      <strong>Copy and save the key</strong><br />
+                      Copy the generated key and paste it into the field above.
+                      Click <strong>Save</strong>.
+                    </li>
+
+                    <li>
+                      <strong>Restrict your key (recommended)</strong><br />
+                      In Google Cloud, click <strong>Restrict key</strong> →
+                      select <strong>YouTube Data API v3</strong> only →
+                      <strong>Save</strong>.
+                    </li>
+                  </ol>
+
+                  <div class="guide-note">
+                    <i class="material-icons-outlined">info</i>
+                    <div>
+                      <strong>Privacy:</strong> EduTube only reads public video
+                      metadata (title, category, tags). It never posts, uploads,
+                      or modifies your account.
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </details>
             </div>
+            <!-- ====== REPLACED API BLOCK END ====== -->
           </details>
         </section>
 

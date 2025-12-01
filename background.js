@@ -1,31 +1,37 @@
-// background.js — Combined version
+// background.js — EduTube + Declutter (v12 compatible)
 // =======================================================
-// Original YouTube Declutter setup
+// Handles:
+// - Initial default settings
+// - Context menus for channel WL/BL
+// - Bridges context menu → contentScript via edutubeListUpdate
 // =======================================================
 
 chrome.runtime.onInstalled.addListener(async (details) => {
-  console.log("[YT Declutter] Extension installed/updated");
+  console.log("[EduTube] Extension installed/updated");
 
-  // Set default settings
-  await chrome.storage.sync.set({
-    hideHome: false,
-    hideSidebar: false,
-    hideComments: false,
-    hideShorts: false,
-    hideAds: true,
-  });
+  try {
+    // Set sane defaults for declutter-related settings
+    await chrome.storage.sync.set({
+      hideHome: false,
+      hideSidebar: false,
+      hideComments: false,
+      hideShorts: false,
+      hideAds: true, // legacy flag – kept for compatibility if used in popup/UI
+    });
+    console.log("[EduTube] Default settings applied");
+  } catch (e) {
+    console.warn("[EduTube] Failed to set default settings:", e);
+  }
 
-  console.log("[YT Declutter] Default settings applied");
-
-  // Show a notification that refresh is needed for open tabs
   if (details.reason === "update") {
-    console.log("[YT Declutter] Please refresh YouTube tabs to apply update");
+    console.log(
+      "[EduTube] Updated – You may need to refresh open YouTube tabs."
+    );
   }
 
   // =======================================================
-  // New EduTube Context Menu Initialization
+  // EduTube Context Menu Initialization
   // =======================================================
-
   try {
     chrome.contextMenus.create({
       id: "edutube_whitelist_channel",
@@ -48,48 +54,74 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 });
 
 // =======================================================
-// EduTube Context Menu Handler
+// Helper: extract channel ID/handle from a URL
+// =======================================================
+
+function extractChannelIdFromUrl(url) {
+  if (!url || typeof url !== "string") return null;
+  try {
+    const mChannel = url.match(/\/channel\/([^/?#]+)/);
+    if (mChannel) return mChannel[1];
+
+    const mHandle = url.match(/\/@([^/?#]+)/);
+    if (mHandle) return "@" + mHandle[1];
+
+    const mC = url.match(/\/c\/([^/?#]+)/);
+    if (mC) return "c/" + mC[1];
+
+    return null;
+  } catch (e) {
+    console.warn("[EduTube] extractChannelIdFromUrl error:", e);
+    return null;
+  }
+}
+
+// =======================================================
+// Context Menu Click Handler → edutubeListUpdate
 // =======================================================
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  // Extract channel ID from link or page
-  let channelId = null;
-  try {
-    const url = info.linkUrl || info.pageUrl || "";
-    if (url) {
-      const mChannel = url.match(/\/channel\/([^/?#]+)/);
-      const mHandle = url.match(/\/@([^/?#]+)/);
-      const mC = url.match(/\/c\/([^/?#]+)/);
-      if (mChannel) channelId = mChannel[1];
-      else if (mHandle) channelId = "@" + mHandle[1];
-      else if (mC) channelId = "c/" + mC[1];
-    }
-  } catch (e) {
-    console.warn("[EduTube] Background link parse failed:", e);
+  if (!tab || !tab.id) {
+    console.warn("[EduTube] No active tab for context menu action");
+    return;
   }
+
+  // Try to get channel ID from the clicked link or page URL
+  const url = info.linkUrl || info.pageUrl || tab.url || "";
+  let channelId = extractChannelIdFromUrl(url);
 
   if (!channelId) {
-    // Ask the page to extract the channel ID (if link parsing fails)
-    chrome.tabs.sendMessage(
-      tab.id,
-      { action: "edutube_extract_channel_for_context_menu", info },
-      (resp) => {
-        const id = resp?.channelId;
-        if (id) forwardMessage(info.menuItemId, id, tab.id);
-        else console.warn("[EduTube] Could not identify channel from page");
-      }
+    console.warn(
+      "[EduTube] Could not extract channelId from URL for context menu action"
     );
-  } else {
-    forwardMessage(info.menuItemId, channelId, tab.id);
+    return;
   }
-});
 
-function forwardMessage(menuItemId, channelId, tabId) {
-  const msgType =
-    menuItemId === "edutube_whitelist_channel"
-      ? "edutubeWhitelist"
-      : "edutubeBlacklist";
-  chrome.tabs.sendMessage(tabId, { type: msgType, channelId }, (resp) => {
-    console.log(`[EduTube] Sent ${msgType} for ${channelId}`, resp);
+  // Map menu item → whitelist/blacklist list
+  const list =
+    info.menuItemId === "edutube_whitelist_channel" ? "whitelist" : "blacklist";
+
+  // Use the unified list update message that contentScript.js already supports
+  const message = {
+    type: "edutubeListUpdate",
+    list, // "whitelist" | "blacklist"
+    action: "add", // from context menu we always add
+    idKind: "channel",
+    id: channelId,
+  };
+
+  chrome.tabs.sendMessage(tab.id, message, (resp) => {
+    const err = chrome.runtime.lastError;
+    if (err) {
+      console.warn(
+        "[EduTube] Failed to send context menu WL/BL update to tab:",
+        err.message
+      );
+    } else {
+      console.log(
+        `[EduTube] Context menu ${list} update for channel ${channelId}`,
+        resp
+      );
+    }
   });
-}
+});

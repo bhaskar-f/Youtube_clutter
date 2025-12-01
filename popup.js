@@ -1,4 +1,11 @@
-// popup.js – Updated for new HTML structure + keyword support + suggestions
+// popup.js – Optimized & synced with final popup.html + v12 engine
+// - Declutter toggles
+// - Theme toggle
+// - EduTube enable/sensitivity
+// - Stats
+// - Whitelist/Blacklist management
+// - YouTube API key (Option C: add/manage/remove)
+// - YouTube search suggestions
 
 function initPopup() {
   const checkboxes = [
@@ -17,6 +24,7 @@ function initPopup() {
     "hideMerchShelf",
   ];
 
+  // Generic declutter toggles
   checkboxes.forEach((id) => {
     const el = document.getElementById(id);
     if (!el) {
@@ -54,10 +62,12 @@ function initPopup() {
   initThemeToggle();
   initEduTubeControls();
   initTabSwitching();
-  initSuggestions(); // 🔥 YouTube-style suggestions for wl/bl inputs
+  initSuggestions(); // YouTube-style suggestions for wl/bl inputs
 }
 
+// ===============================
 // Theme Toggle
+// ===============================
 function initThemeToggle() {
   const body = document.body;
   const lightBtn = document.getElementById("lightMode");
@@ -96,7 +106,9 @@ function initThemeToggle() {
   }
 }
 
+// ===============================
 // Tab Switching for Whitelist/Blacklist
+// ===============================
 function initTabSwitching() {
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabs = document.querySelectorAll(".tab");
@@ -114,7 +126,9 @@ function initTabSwitching() {
   });
 }
 
-// EduTube Controls
+// ===============================
+// EduTube Controls + API UI
+// ===============================
 function initEduTubeControls() {
   const enableToggle = document.getElementById("edutubeEnabled");
   const sensitivitySlider = document.getElementById("edutubeSensitivity");
@@ -123,29 +137,29 @@ function initEduTubeControls() {
   const videosHiddenEl = document.getElementById("videosHidden");
   const videosShownEl = document.getElementById("videosShown");
 
-  const apiKeyInput = document.getElementById("youtubeApiKey");
-  const saveApiKeyBtn = document.getElementById("saveApiKey");
-  const apiHelpBtn = document.getElementById("apiHelpBtn");
-  const apiHelp = document.getElementById("apiHelp");
-  const apiStatusIndicator = document.getElementById("apiStatusIndicator");
+  // New API UI (Option C)
+  const apiAddMode = document.getElementById("api-add-mode");
+  const apiManageMode = document.getElementById("api-manage-mode");
+  const apiKeyInput = document.getElementById("apiKeyInput");
+  const apiSaveBtn = document.getElementById("apiSaveBtn");
+  const apiRemoveBtn = document.getElementById("apiRemoveBtn");
   const apiStatusText = document.getElementById("apiStatusText");
-  const apiQuota = document.getElementById("apiQuota");
+  const apiKeyMasked = document.getElementById("apiKeyMasked");
+  const apiQuotaText = document.getElementById("apiQuotaText");
 
   if (!enableToggle) {
     console.error("[popup] EduTube controls not found");
     return;
   }
 
-  // Load saved EduTube settings
+  // Load saved EduTube settings + API key
   chrome.storage.sync.get(
     [
       "edutubeEnabled",
       "edutubeSensitivity",
       "edutubeStats",
-      "youtubeApiKey",
-      "youtubeApiEnabled",
-      "youtubeQuotaUsed",
-      "youtubeQuotaResetTime",
+      "edutubeApiKey",
+      "youtubeApiKey", // old key name (for migration)
     ],
     (data) => {
       const enabled = data.edutubeEnabled ?? false;
@@ -162,29 +176,37 @@ function initEduTubeControls() {
         },
       };
 
+      // EduTube UI
       enableToggle.checked = enabled;
       sensitivitySlider.value = sensitivity;
-      updateSensitivityLabel(sensitivity);
+      updateSensitivityLabel(sensitivity, sensitivityValue);
 
       if (enabled) {
         settingsContainer.style.display = "block";
-        updateStats(stats);
+        updateStats(stats, videosHiddenEl, videosShownEl);
       } else {
         settingsContainer.style.display = "none";
       }
 
-      if (data.youtubeApiKey) {
-        const key = data.youtubeApiKey;
-        apiKeyInput.value =
-          key.substring(0, 8) + "..." + key.substring(key.length - 4);
-        apiKeyInput.dataset.fullKey = key;
-        updateApiStatus(
-          true,
-          data.youtubeQuotaUsed || 0,
-          data.youtubeQuotaResetTime
+      // API key (migrate from old youtubeApiKey if needed)
+      let key = data.edutubeApiKey || data.youtubeApiKey || "";
+
+      if (data.youtubeApiKey && !data.edutubeApiKey) {
+        chrome.storage.sync.set({ edutubeApiKey: data.youtubeApiKey });
+      }
+
+      if (key) {
+        showApiManageMode(
+          key,
+          apiAddMode,
+          apiManageMode,
+          apiKeyMasked,
+          apiStatusText,
+          apiQuotaText
         );
+        fetchApiHealth(key, apiQuotaText);
       } else {
-        updateApiStatus(false);
+        showApiAddMode(apiAddMode, apiManageMode, apiStatusText, apiKeyInput);
       }
     }
   );
@@ -209,7 +231,7 @@ function initEduTubeControls() {
   // Sensitivity slider
   sensitivitySlider.addEventListener("input", () => {
     const value = parseInt(sensitivitySlider.value, 10);
-    updateSensitivityLabel(value);
+    updateSensitivityLabel(value, sensitivityValue);
   });
 
   sensitivitySlider.addEventListener("change", () => {
@@ -226,151 +248,64 @@ function initEduTubeControls() {
     });
   });
 
-  // API Help toggle
-  if (apiHelpBtn && apiHelp) {
-    apiHelpBtn.addEventListener("click", () => {
-      apiHelp.style.display =
-        apiHelp.style.display === "none" ? "block" : "none";
-    });
-  }
-
-  // Save API Key
-  if (saveApiKeyBtn && apiKeyInput) {
-    apiKeyInput.addEventListener("focus", () => {
-      if (apiKeyInput.dataset.fullKey) {
-        apiKeyInput.value = apiKeyInput.dataset.fullKey;
-      }
-    });
-
-    saveApiKeyBtn.addEventListener("click", async () => {
-      const apiKey = apiKeyInput.value.trim();
-
-      if (!apiKey || apiKey.includes("...")) {
-        alert("Please enter a valid YouTube API key");
+  // Save API Key (Add Mode)
+  if (apiSaveBtn && apiKeyInput) {
+    apiSaveBtn.addEventListener("click", () => {
+      const key = apiKeyInput.value.trim();
+      if (!key) {
+        alert("Please enter a valid YouTube API key.");
         return;
       }
 
-      await chrome.storage.sync.set({
-        youtubeApiKey: apiKey,
-        youtubeApiEnabled: true,
-      });
+      chrome.storage.sync.set({ edutubeApiKey: key }, () => {
+        showApiManageMode(
+          key,
+          apiAddMode,
+          apiManageMode,
+          apiKeyMasked,
+          apiStatusText,
+          apiQuotaText
+        );
+        fetchApiHealth(key, apiQuotaText);
 
-      apiKeyInput.value =
-        apiKey.substring(0, 8) + "..." + apiKey.substring(apiKey.length - 4);
-      apiKeyInput.dataset.fullKey = apiKey;
-
-      updateApiStatus(true, 0, null);
-
-      alert(
-        "API key saved! EduTube will now use YouTube API for better accuracy."
-      );
-
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (!tabs?.length) return;
-        chrome.tabs.sendMessage(tabs[0].id, { type: "apiKeyUpdated" });
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (!tabs?.length) return;
+          chrome.tabs.sendMessage(tabs[0].id, { type: "apiKeyUpdated" });
+        });
       });
     });
   }
 
-  // Update stats periodically (to sync with background/content)
+  // Remove API Key (Manage Mode)
+  if (apiRemoveBtn) {
+    apiRemoveBtn.addEventListener("click", () => {
+      if (!confirm("Remove API Key?")) return;
+
+      chrome.storage.sync.set({ edutubeApiKey: "" }, () => {
+        showApiAddMode(apiAddMode, apiManageMode, apiStatusText, apiKeyInput);
+
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (!tabs?.length) return;
+          chrome.tabs.sendMessage(tabs[0].id, { type: "apiKeyUpdated" });
+        });
+      });
+    });
+  }
+
+  // Periodic stats refresh (in case only storage is updated)
   setInterval(() => {
-    chrome.storage.sync.get(
-      [
-        "edutubeStats",
-        "youtubeQuotaUsed",
-        "youtubeQuotaResetTime",
-        "youtubeApiEnabled",
-      ],
-      (data) => {
-        if (data.edutubeStats) {
-          updateStats(data.edutubeStats);
-        }
-        if (data.youtubeApiEnabled) {
-          updateQuotaDisplay(
-            data.youtubeQuotaUsed || 0,
-            data.youtubeQuotaResetTime
-          );
-        }
+    chrome.storage.sync.get(["edutubeStats"], (data) => {
+      if (data.edutubeStats) {
+        updateStats(data.edutubeStats, videosHiddenEl, videosShownEl);
       }
-    );
+    });
   }, 2000);
 
-  function updateSensitivityLabel(value) {
-    if (!sensitivityValue) return;
-
-    if (value <= 35) {
-      sensitivityValue.textContent = "Relaxed";
-    } else if (value >= 70) {
-      sensitivityValue.textContent = "Strict";
-    } else {
-      sensitivityValue.textContent = "Balanced";
-    }
-  }
-
-  function updateStats(stats) {
-    if (videosHiddenEl) videosHiddenEl.textContent = stats.videosHidden || 0;
-    if (videosShownEl) videosShownEl.textContent = stats.videosShown || 0;
-
-    const layerStats = stats.layerStats || {};
-    const layerElements = {
-      whitelist: document.getElementById("layerWhitelist"),
-      blacklist: document.getElementById("layerBlacklist"),
-      keywords: document.getElementById("layerKeywords"),
-      api: document.getElementById("layerApi"),
-      fallback: document.getElementById("layerFallback"),
-    };
-
-    Object.keys(layerElements).forEach((key) => {
-      if (layerElements[key]) {
-        layerElements[key].textContent = layerStats[key] || 0;
-      }
-    });
-  }
-
-  function updateApiStatus(enabled, quotaUsed = 0, resetTime = null) {
-    if (!apiStatusIndicator || !apiStatusText) return;
-
-    if (enabled) {
-      apiStatusIndicator.className = "status-indicator active";
-      apiStatusIndicator.textContent = "●";
-      apiStatusText.textContent = "API Active";
-      if (apiQuota) apiQuota.style.display = "block";
-      updateQuotaDisplay(quotaUsed, resetTime);
-    } else {
-      apiStatusIndicator.className = "status-indicator inactive";
-      apiStatusIndicator.textContent = "●";
-      apiStatusText.textContent = "No API key set";
-      if (apiQuota) apiQuota.style.display = "none";
-    }
-  }
-
-  function updateQuotaDisplay(used, resetTime) {
-    const quotaBar = document.getElementById("quotaBar");
-    const quotaUsedEl = document.getElementById("quotaUsed");
-    const quotaResetEl = document.getElementById("quotaReset");
-
-    if (quotaBar && quotaUsedEl) {
-      const percentage = ((used / 10000) * 100).toFixed(1);
-      quotaBar.style.width = percentage + "%";
-      quotaUsedEl.textContent = used.toLocaleString();
-    }
-
-    if (quotaResetEl && resetTime) {
-      const date = new Date(resetTime);
-      quotaResetEl.textContent = date.toLocaleTimeString();
-    }
-  }
-
-  // Live stats updates
+  // Live stats updates via message
   chrome.runtime.onMessage.addListener((msg) => {
     if (!msg || msg.type !== "edutubeStatsUpdate" || !msg.stats) return;
-
     const s = msg.stats || {};
-
-    if (videosHiddenEl)
-      videosHiddenEl.textContent = s.videosHidden ?? s.hidden ?? 0;
-    if (videosShownEl)
-      videosShownEl.textContent = s.videosShown ?? s.shown ?? 0;
+    updateStats(s, videosHiddenEl, videosShownEl);
 
     const ls = s.layerStats || {};
     const layerElements = {
@@ -388,11 +323,104 @@ function initEduTubeControls() {
     chrome.storage.sync.set({ edutubeStats: s });
   });
 
-  // Whitelist/Blacklist management
+  // WL/BL management
   initListManagement();
 }
 
+// --- Helpers for EduTube controls ---
+
+function updateSensitivityLabel(value, el) {
+  if (!el) return;
+
+  if (value <= 35) {
+    el.textContent = "Relaxed";
+  } else if (value >= 70) {
+    el.textContent = "Strict";
+  } else {
+    el.textContent = "Balanced";
+  }
+}
+
+function updateStats(stats, videosHiddenEl, videosShownEl) {
+  if (videosHiddenEl) videosHiddenEl.textContent = stats.videosHidden || 0;
+  if (videosShownEl) videosShownEl.textContent = stats.videosShown || 0;
+
+  const layerStats = stats.layerStats || {};
+  const layerElements = {
+    whitelist: document.getElementById("layerWhitelist"),
+    blacklist: document.getElementById("layerBlacklist"),
+    keywords: document.getElementById("layerKeywords"),
+    api: document.getElementById("layerApi"),
+    fallback: document.getElementById("layerFallback"),
+  };
+
+  Object.keys(layerElements).forEach((key) => {
+    if (layerElements[key]) {
+      layerElements[key].textContent = layerStats[key] || 0;
+    }
+  });
+}
+
+// Switch API UI to "Add" mode
+function showApiAddMode(apiAddMode, apiManageMode, apiStatusText, apiKeyInput) {
+  if (apiAddMode) apiAddMode.style.display = "block";
+  if (apiManageMode) apiManageMode.style.display = "none";
+  if (apiStatusText) apiStatusText.textContent = "No API key added.";
+  if (apiKeyInput) apiKeyInput.value = "";
+}
+
+// Switch API UI to "Manage" mode
+function showApiManageMode(
+  key,
+  apiAddMode,
+  apiManageMode,
+  apiKeyMasked,
+  apiStatusText,
+  apiQuotaText
+) {
+  if (apiAddMode) apiAddMode.style.display = "none";
+  if (apiManageMode) apiManageMode.style.display = "block";
+
+  // Mask the key (first 3 + last 3 chars)
+  if (apiKeyMasked) {
+    const masked =
+      key.length <= 6
+        ? "******"
+        : key.substring(0, 3) + "********" + key.substring(key.length - 3);
+    apiKeyMasked.textContent = masked;
+  }
+
+  if (apiStatusText) apiStatusText.textContent = "API key saved.";
+  if (apiQuotaText) apiQuotaText.textContent = "Checking…";
+}
+
+// Simple health check for API key (no quota math, just validity check)
+async function fetchApiHealth(apiKey, apiQuotaText) {
+  if (!apiKey || !apiQuotaText) return;
+
+  try {
+    apiQuotaText.textContent = "Checking…";
+
+    const url =
+      "https://www.googleapis.com/youtube/v3/videos?part=id&id=dummy&key=" +
+      encodeURIComponent(apiKey);
+
+    const res = await fetch(url);
+
+    if (res.status === 400 || res.status === 403) {
+      apiQuotaText.textContent = "Invalid API key";
+    } else {
+      apiQuotaText.textContent = "Active";
+    }
+  } catch (e) {
+    console.error("[popup] API health check failed:", e);
+    apiQuotaText.textContent = "Unable to check";
+  }
+}
+
+// ===============================
 // Whitelist/Blacklist Management
+// ===============================
 function initListManagement() {
   const wlInput = document.getElementById("wlInput");
   const wlKind = document.getElementById("wlKind");
@@ -457,34 +485,34 @@ function initListManagement() {
   );
 
   wlAddBtn?.addEventListener("click", () =>
-    handleAdd("whitelist", wlKind.value, wlInput.value.trim(), wlHint)
+    handleAdd("whitelist", wlKind.value, wlInput.value.trim(), wlHint, wlList)
   );
   blAddBtn?.addEventListener("click", () =>
-    handleAdd("blacklist", blKind.value, blInput.value.trim(), blHint)
+    handleAdd("blacklist", blKind.value, blInput.value.trim(), blHint, blList)
   );
 
   wlAddCurrentVideo?.addEventListener("click", () =>
-    handleAddCurrent("whitelist", "video", wlHint)
+    handleAddCurrent("whitelist", "video", wlHint, wlList)
   );
   wlAddCurrentChannel?.addEventListener("click", () =>
-    handleAddCurrent("whitelist", "channel", wlHint)
+    handleAddCurrent("whitelist", "channel", wlHint, wlList)
   );
   blAddCurrentVideo?.addEventListener("click", () =>
-    handleAddCurrent("blacklist", "video", blHint)
+    handleAddCurrent("blacklist", "video", blHint, blList)
   );
   blAddCurrentChannel?.addEventListener("click", () =>
-    handleAddCurrent("blacklist", "channel", blHint)
+    handleAddCurrent("blacklist", "channel", blHint, blList)
   );
 
   // --------- Keyword Normalization (fuzzy equivalence) ----------
   function normalizeKeyword(str) {
     return str
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "") // remove spaces, punctuation, hyphens, underscores
+      .replace(/[^a-z0-9]+/g, "")
       .trim();
   }
 
-  function handleAdd(list, idKind, raw, hintEl) {
+  function handleAdd(list, idKind, raw, hintEl, ul) {
     if (!raw) return showHint(hintEl, "Enter a YouTube URL, ID, or name", true);
 
     const parsed = parseInput(raw);
@@ -523,12 +551,7 @@ function initListManagement() {
           updateCounts();
 
           // UI shows what user typed (id), but engine gets normalized version
-          addItemToList(
-            list === "whitelist" ? wlList : blList,
-            "keyword",
-            id,
-            list
-          );
+          addItemToList(ul, "keyword", id, list);
 
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (!tabs?.length) return;
@@ -567,12 +590,7 @@ function initListManagement() {
             arr.add(id);
             chrome.storage.sync.set({ [key]: Array.from(arr) }, updateCounts);
           });
-          addItemToList(
-            list === "whitelist" ? wlList : blList,
-            finalKind,
-            id,
-            list
-          );
+          addItemToList(ul, finalKind, id, list);
           showHint(hintEl, "Added.");
           updateCounts();
         }
@@ -580,7 +598,7 @@ function initListManagement() {
     });
   }
 
-  function handleAddCurrent(list, idKind, hintEl) {
+  function handleAddCurrent(list, idKind, hintEl, ul) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (!tabs?.length) return;
       chrome.tabs.sendMessage(
@@ -589,7 +607,7 @@ function initListManagement() {
         (res) => {
           if (!res?.ok) return;
           const id = idKind === "channel" ? res.channelId : res.videoId;
-          if (id) handleAdd(list, idKind, id, hintEl);
+          if (id) handleAdd(list, idKind, id, hintEl, ul);
           else
             showHint(
               hintEl,
@@ -748,12 +766,18 @@ function initListManagement() {
     el.style.color = isError ? "#ff7676" : "#9ad17f";
     setTimeout(() => (el.style.display = "none"), 2000);
   }
+
+  function normalizeKeyword(str) {
+    return str
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "")
+      .trim();
+  }
 }
 
 // ===============================
 // YOUTUBE SEARCH SUGGESTIONS
 // ===============================
-
 function initSuggestions() {
   const wlInput = document.getElementById("wlInput");
   const blInput = document.getElementById("blInput");
@@ -765,7 +789,6 @@ function initSuggestions() {
 function setupSuggestionBox(inputEl) {
   if (!inputEl) return;
 
-  // Parent is the flex input row (input + select + button)
   const parent = inputEl.parentElement;
   if (!parent) return;
 
@@ -774,12 +797,9 @@ function setupSuggestionBox(inputEl) {
     parent.style.position = "relative";
   }
 
-  // Create suggestion dropdown
   const box = document.createElement("div");
   box.className = "suggestion-box";
   box.style.display = "none";
-
-  // Insert BELOW the input row, still visually under the input
   parent.appendChild(box);
 
   let currentIndex = -1;
@@ -825,14 +845,12 @@ function setupSuggestionBox(inputEl) {
     }
   });
 
-  // Hide suggestions on blur (with slight delay so click on item still works)
   inputEl.addEventListener("blur", () => {
     setTimeout(() => {
       box.style.display = "none";
     }, 150);
   });
 
-  // Hide when clicking outside
   document.addEventListener("click", (e) => {
     if (e.target === inputEl) return;
     if (!box.contains(e.target)) {
@@ -853,10 +871,7 @@ function setupSuggestionBox(inputEl) {
       const div = document.createElement("div");
       div.className = "suggestion-item";
       div.textContent = s;
-
-      // mousedown so it fires before blur hides box
       div.addEventListener("mousedown", () => selectSuggestion(s));
-
       box.appendChild(div);
     });
 
@@ -896,9 +911,126 @@ async function fetchYoutubeSuggestions(query) {
   }
 }
 
-// Wait for DOM
+// ===============================
+// DOM Ready
+// ===============================
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initPopup);
 } else {
   initPopup();
+}
+// ===============================
+// QUOTA BAR MANAGEMENT
+// ===============================
+
+/**
+ * Updates the quota bar visual display
+ * @param {number} percent - Percentage (0-100)
+ */
+function setQuotaBar(percent) {
+  const bar = document.getElementById("apiQuotaBar");
+  const percentText = document.getElementById("apiQuotaPercent");
+
+  if (!bar || !percentText) return;
+
+  // Clamp between 0-100
+  const clampedPercent = Math.max(0, Math.min(100, percent));
+
+  // Update bar width
+  bar.style.width = clampedPercent + "%";
+
+  // Update percent text
+  percentText.textContent = clampedPercent.toFixed(0) + "%";
+
+  // Update color based on usage
+  bar.classList.remove("warning", "danger");
+
+  if (clampedPercent >= 80) {
+    bar.classList.add("danger");
+    percentText.style.color = "#f44336";
+  } else if (clampedPercent >= 60) {
+    bar.classList.add("warning");
+    percentText.style.color = "#ff9800";
+  } else {
+    percentText.style.color = "#4caf50";
+  }
+}
+
+// ===============================
+// UPDATED API UI MODE SWITCHING
+// ===============================
+
+// Updated showApiAddMode function
+function showApiAddMode(apiAddMode, apiManageMode, apiStatusText, apiKeyInput) {
+  if (apiAddMode) apiAddMode.style.display = "block";
+  if (apiManageMode) apiManageMode.style.display = "none";
+  if (apiStatusText) apiStatusText.textContent = "No API key configured";
+  if (apiKeyInput) apiKeyInput.value = "";
+}
+
+// Updated showApiManageMode function
+function showApiManageMode(
+  key,
+  apiAddMode,
+  apiManageMode,
+  apiKeyMasked,
+  apiStatusText,
+  apiQuotaText
+) {
+  if (apiAddMode) apiAddMode.style.display = "none";
+  if (apiManageMode) apiManageMode.style.display = "block";
+
+  // Mask the key (first 4 + last 4 chars)
+  if (apiKeyMasked) {
+    const masked =
+      key.length <= 8
+        ? "••••••••••••"
+        : key.substring(0, 4) + "••••••••" + key.substring(key.length - 4);
+    apiKeyMasked.textContent = masked;
+  }
+
+  if (apiQuotaText) apiQuotaText.textContent = "Checking status...";
+
+  // Initialize quota bar at 0%
+  setQuotaBar(0);
+}
+
+// ===============================
+// UPDATED API HEALTH CHECK
+// ===============================
+
+async function fetchApiHealth(apiKey, apiQuotaText) {
+  if (!apiKey || !apiQuotaText) return;
+
+  try {
+    apiQuotaText.textContent = "Checking status...";
+    setQuotaBar(0);
+
+    const url =
+      "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=dQw4w9WgXcQ&key=" +
+      encodeURIComponent(apiKey);
+
+    const res = await fetch(url);
+
+    if (res.status === 400 || res.status === 403) {
+      apiQuotaText.textContent = "Invalid API key";
+      setQuotaBar(100); // Show full red bar for error
+      return;
+    }
+
+    if (res.ok) {
+      apiQuotaText.textContent = "Active • Free tier (10,000 units/day)";
+
+      // Simulate quota usage (you can replace this with actual quota API call)
+      // For now, show 15% usage as example
+      setQuotaBar(15);
+    } else {
+      apiQuotaText.textContent = "Unable to verify";
+      setQuotaBar(0);
+    }
+  } catch (e) {
+    console.error("[popup] API health check failed:", e);
+    apiQuotaText.textContent = "Connection error";
+    setQuotaBar(0);
+  }
 }
