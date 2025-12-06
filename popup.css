@@ -199,9 +199,9 @@ input[type="checkbox"]:checked::before {
 }
 
 /* =============================================
-   EDUTUBE SECTION
+   eduguard SECTION
    ============================================= */
-.edutube-section {
+.eduguard-section {
   background: linear-gradient(
     135deg,
     rgba(102, 126, 234, 0.1) 0%,
@@ -213,7 +213,7 @@ input[type="checkbox"]:checked::before {
   margin: 10px;
 }
 
-.edutube-info {
+.eduguard-info {
   background: rgba(255, 255, 255, 0.05);
   padding: 10px;
   border-radius: 6px;
@@ -221,38 +221,38 @@ input[type="checkbox"]:checked::before {
   border-left: 3px solid var(--yt-red);
 }
 
-.edutube-info p {
+.eduguard-info p {
   margin: 0;
   font-size: 0.8rem;
   color: #ccc;
   line-height: 1.4;
 }
 
-/* Main EduTube Toggle */
-.edutube-toggle {
+/* Main eduguard Toggle */
+.eduguard-toggle {
   margin-bottom: 12px;
 }
 
-.edutube-main-toggle {
+.eduguard-main-toggle {
   background: var(--yt-gray);
   padding: 12px !important;
   margin: 0 !important;
   border: 2px solid transparent;
 }
 
-.edutube-main-toggle:hover {
+.eduguard-main-toggle:hover {
   border-color: var(--yt-red);
 }
 
-/* EduTube Settings Container */
-.edutube-settings {
+/* eduguard Settings Container */
+.eduguard-settings {
   margin-top: 12px;
 }
 
 /* =============================================
    SENSITIVITY SLIDER
    ============================================= */
-.edutube-sensitivity {
+.eduguard-sensitivity {
   margin-bottom: 12px;
   padding: 12px;
   background: rgba(255, 255, 255, 0.03);
@@ -764,7 +764,7 @@ details[open] summary {
 #Statistics {
   padding: 14px 0;
 }
-.edutube-stats {
+.eduguard-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
@@ -919,7 +919,7 @@ body.light-mode input[type="range"] {
   background: #ddd;
 }
 
-body.light-mode .edutube-section {
+body.light-mode .eduguard-section {
   background: linear-gradient(
     135deg,
     rgba(102, 126, 234, 0.05) 0%,
@@ -928,24 +928,24 @@ body.light-mode .edutube-section {
   border-color: rgba(102, 126, 234, 0.2);
 }
 
-body.light-mode .edutube-info {
+body.light-mode .eduguard-info {
   background: rgba(0, 0, 0, 0.02);
 }
 
-body.light-mode .edutube-info p {
+body.light-mode .eduguard-info p {
   color: #666;
 }
 
-body.light-mode .edutube-main-toggle {
+body.light-mode .eduguard-main-toggle {
   background: #fff;
   border-color: #e0e0e0;
 }
 
-body.light-mode .edutube-main-toggle:hover {
+body.light-mode .eduguard-main-toggle:hover {
   border-color: var(--yt-red);
 }
 
-body.light-mode .edutube-sensitivity {
+body.light-mode .eduguard-sensitivity {
   background: rgba(0, 0, 0, 0.02);
 }
 

@@ -224,9 +224,9 @@ body.declutter-hide-explore a[href*="/feed/explore"] {
 }
 
 /* ======================================================
-   EduTube - Hide Non-Educational Videos
+   eduguard - Hide Non-Educational Videos
    ====================================================== */
-.declutter-edutube-active [data-edutube-hidden] {
+.declutter-eduguard-active [data-eduguard-hidden] {
   display: none !important;
   visibility: hidden !important;
 }

@@ -1,14 +1,15 @@
 // ======================================================
-// YouTube Declutter + EduTube – Stable Baseline (Hybrid v11.5)
+// YouTube Declutter + EduGuard – Stable Baseline (Hybrid v11.5)
 // - Preserves all existing features & selectors
 // - Keeps declutter-hide-* class names
-// - Aligned with popup.js + EduTubeEngine v11.5 hybrid
+// - Aligned with popup.js + EduGuardEngine v11.5 hybrid
 // - Whole-channel shelf hiding: WL/BL IDs + keywords only (no scoring)
 // - Keyword rules also match channel handles/rawChannelId (@ezsnippet etc.)
 // - Watch-page auto-block uses unified isEducational(info)
 // ======================================================
 
 const DEBUG = false;
+const DEV_MODE = false;
 function log(...args) {
   if (DEBUG) console.log("[declutter]", ...args);
 }
@@ -83,14 +84,14 @@ let shortsCleanerInterval = null;
 let mutationObserver = null;
 let isExtensionValid = true;
 
-let edutubeEngine = null;
-let isEduTubeInitialized = false;
-let edutubeFilterTimeout = null;
+let eduguardEngine = null;
+let isEduGuardInitialized = false;
+let eduguardFilterTimeout = null;
 let isFiltering = false; // throttle guard for MutationObserver
 let observerCooldown = false;
 
 // Blocked video IDs (per session) to avoid loops when bouncing back
-const blockedVideoIds = new Set();
+// const blockedVideoIds = new Set();
 
 // Inline preview CSS guard
 let inlinePreviewStyleInjected = false;
@@ -104,91 +105,94 @@ function checkExtensionContext() {
   return true;
 }
 
-/* ========== EduTube element helpers ========== */
+/* ========== eduguard element helpers ========== */
 
 function hideEduVideoElement(el) {
   if (!el) return;
-  if (!el.hasAttribute("data-edutube-original-display")) {
-    el.setAttribute("data-edutube-original-display", el.style.display || "");
+  if (!el.hasAttribute("data-eduguard-original-display")) {
+    el.setAttribute("data-eduguard-original-display", el.style.display || "");
   }
   el.style.display = "none";
-  el.setAttribute("data-edutube-hidden", "true");
+  el.setAttribute("data-eduguard-hidden", "true");
 }
 
 function showEduVideoElement(el) {
   if (!el) return;
-  const orig = el.getAttribute("data-edutube-original-display");
+  const orig = el.getAttribute("data-eduguard-original-display");
   if (orig !== null) {
     el.style.display = orig;
   } else {
     el.style.display = "";
   }
-  el.removeAttribute("data-edutube-original-display");
-  el.removeAttribute("data-edutube-hidden");
+  el.removeAttribute("data-eduguard-original-display");
+  el.removeAttribute("data-eduguard-hidden");
 }
 
-/* ========== EduTube init + watch-page check ========== */
+/* ========== eduguard init + watch-page check ========== */
 
-async function initEduTube() {
-  if (isEduTubeInitialized) {
-    log("[EduTube] Already initialized");
+async function initEduGuard() {
+  if (isEduGuardInitialized) {
+    log("[EduGuard] Already initialized");
     return;
   }
 
   try {
-    if (typeof EduTubeEngine === "undefined") {
-      console.error("[EduTube] EduTubeEngine class not found!");
+    if (typeof EduGuardEngine === "undefined") {
+      console.error("[EduGuard] EduGuardEngine class not found!");
       return;
     }
 
-    edutubeEngine = new EduTubeEngine();
-    await edutubeEngine.init();
+    eduguardEngine = new EduGuardEngine();
+    await eduguardEngine.init();
 
     // Properly wire up API service
-    if (typeof YouTubeAPIService !== "undefined" && !edutubeEngine.apiService) {
+    if (
+      typeof YouTubeAPIService !== "undefined" &&
+      !eduguardEngine.apiService
+    ) {
       const apiService = new YouTubeAPIService();
       await apiService.init();
-      edutubeEngine.setApiService(apiService);
-      console.log("[EduTube] API service connected:", apiService.enabled);
+      eduguardEngine.setApiService(apiService);
+      console.log("[EduGuard] API service connected:", apiService.enabled);
     }
 
-    isEduTubeInitialized = true;
+    isEduGuardInitialized = true;
     console.log(
-      "[EduTube] Engine initialized, enabled =",
-      edutubeEngine.enabled
+      "[EduGuard] Engine initialized, enabled =",
+      eduguardEngine.enabled
     );
 
-    if (edutubeEngine.enabled) {
+    if (eduguardEngine.enabled) {
       scheduleFilter();
       checkWatchPageGlobally();
     }
   } catch (e) {
-    console.error("[EduTube] Init failed:", e);
+    console.error("[EduGuard] Init failed:", e);
   }
 }
 
 function checkWatchPageGlobally() {
   try {
-    if (!edutubeEngine?.enabled) return;
+    if (!eduguardEngine?.enabled) return;
 
     // Explicit blacklist-based watch-page checks (if engine implements it)
-    if (typeof edutubeEngine.checkWatchPageBlacklist === "function") {
+    if (typeof eduguardEngine.checkWatchPageBlacklist === "function") {
       try {
-        edutubeEngine.checkWatchPageBlacklist();
+        eduguardEngine.checkWatchPageBlacklist();
         setTimeout(() => {
           try {
-            edutubeEngine.checkWatchPageBlacklist();
+            eduguardEngine.checkWatchPageBlacklist();
           } catch (_) {}
         }, 2000);
       } catch (e) {
-        console.debug("[EduTube] checkWatchPageBlacklist error:", e);
+        console.debug("[EduGuard] checkWatchPageBlacklist error:", e);
       }
     }
 
     // Scoring-aware guard for watch pages (non-educational auto-block)
     autoBlockCurrentWatchIfNeeded();
   } catch (e) {
-    console.debug("[EduTube] Watch page check error:", e);
+    console.debug("[EduGuard] Watch page check error:", e);
   }
 }
 
@@ -203,7 +207,7 @@ function disableInlinePreviews() {
     if (inlinePreviewStyleInjected) return;
     const root = document.documentElement || document;
     const style = document.createElement("style");
-    style.setAttribute("data-edutube-inline-preview-style", "true");
+    style.setAttribute("data-eduguard-inline-preview-style", "true");
     style.textContent = `
       ytd-thumbnail-overlay-inline-preview-renderer,
       ytd-inline-preview-renderer,
@@ -218,7 +222,7 @@ function disableInlinePreviews() {
     root.appendChild(style);
     inlinePreviewStyleInjected = true;
   } catch (e) {
-    console.debug("[EduTube] disableInlinePreviews error:", e);
+    console.debug("[EduGuard] disableInlinePreviews error:", e);
   }
 }
 
@@ -252,7 +256,7 @@ function hardStopWatchPlayer(hideVideo) {
       }
     } catch (_) {}
   } catch (e) {
-    console.debug("[EduTube] hardStopWatchPlayer error:", e);
+    console.debug("[EduGuard] hardStopWatchPlayer error:", e);
   }
 }
 
@@ -262,7 +266,7 @@ function hardStopWatchPlayer(hideVideo) {
  */
 function safeBounceFromBlockedVideo() {
   try {
-    showEduTubeBlockOverlay();
+    showEduGuardBlockOverlay();
     const ref = document.referrer || "";
     const isYouTubeRef =
       ref.includes("youtube.com") || ref.includes("youtu.be");
@@ -288,8 +292,22 @@ function safeBounceFromBlockedVideo() {
       setTimeout(() => location.replace("/"), 700);
     }
   } catch (e) {
-    console.debug("[EduTube] safeBounceFromBlockedVideo error:", e);
+    console.debug("[EduGuard] safeBounceFromBlockedVideo error:", e);
   }
+}
+function restoreWatchVideo() {
+  document.querySelectorAll("video").forEach((v) => {
+    try {
+      v.muted = false;
+      v.autoplay = true;
+
+      // Visibility restored
+      v.style.visibility = "";
+
+      // Try to start playback
+      v.play().catch(() => {});
+    } catch (_) {}
+  });
 }
 
 /**
@@ -316,12 +334,6 @@ async function autoBlockCurrentWatchIfNeeded() {
       return;
     }
     if (!videoId) return;
-
-    // If we already blocked this ID in this session, just bounce
-    if (blockedVideoIds.has(videoId)) {
-      safeBounceFromBlockedVideo();
-      return;
-    }
 
     // Pause/hide the player while we decide
     hardStopWatchPlayer(true);
@@ -353,7 +365,6 @@ async function autoBlockCurrentWatchIfNeeded() {
         ?.innerText?.trim() ||
       "";
 
-    // For now, treat longDescription as the same description (engine can still use it)
     const longDescription = description;
 
     // Hashtags/tags text from watch metadata & description
@@ -370,7 +381,6 @@ async function autoBlockCurrentWatchIfNeeded() {
       tagsText = "";
     }
 
-    // Channel description is not directly on watch page in most layouts
     const channelDescription = "";
 
     // --- Channel ID from link ---
@@ -386,7 +396,6 @@ async function autoBlockCurrentWatchIfNeeded() {
       else if (m2) channelId = `@${m2[1]}`;
     }
 
-    // Unified info object for engine (v11.5 expects these fields)
     const info = {
       title,
       description,
@@ -409,7 +418,6 @@ async function autoBlockCurrentWatchIfNeeded() {
 
     if (!isEdu) {
       console.log("[EduTube] Watch page BLOCK via engine:", title);
-      blockedVideoIds.add(videoId);
       showEduTubeBlockOverlay();
       safeBounceFromBlockedVideo();
       return;
@@ -418,17 +426,16 @@ async function autoBlockCurrentWatchIfNeeded() {
     // Allow video
     console.log("[EduTube] Watch page ALLOW via engine:", title);
     try {
-      document
-        .querySelectorAll("video")
-        .forEach((v) => (v.style.visibility = ""));
+      restoreWatchVideo();
     } catch (_) {}
   } catch (e) {
     console.debug("[EduTube] autoBlockCurrentWatchIfNeeded error", e);
-    // On error, fail-open (allow)
+    // On error, fail-open (allow) and restore full player behavior
     try {
       document
         .querySelectorAll("video")
         .forEach((v) => (v.style.visibility = ""));
+      restoreWatchVideo();
     } catch (_) {}
   }
 }
@@ -443,14 +450,17 @@ async function processVideoElement(element) {
   let channelId = null;
 
   try {
-    if (edutubeEngine && typeof edutubeEngine.extractVideoId === "function") {
-      videoId = edutubeEngine.extractVideoId(element);
+    if (eduguardEngine && typeof eduguardEngine.extractVideoId === "function") {
+      videoId = eduguardEngine.extractVideoId(element);
     }
   } catch (_) {}
 
   try {
-    if (edutubeEngine && typeof edutubeEngine.extractChannelId === "function") {
-      channelId = edutubeEngine.extractChannelId(element);
+    if (
+      eduguardEngine &&
+      typeof eduguardEngine.extractChannelId === "function"
+    ) {
+      channelId = eduguardEngine.extractChannelId(element);
     }
   } catch (_) {}
 
@@ -471,8 +481,11 @@ async function processVideoElement(element) {
     channelId,
   };
   try {
-    if (edutubeEngine && typeof edutubeEngine.extractVideoInfo === "function") {
-      const tmp = edutubeEngine.extractVideoInfo(element) || {};
+    if (
+      eduguardEngine &&
+      typeof eduguardEngine.extractVideoInfo === "function"
+    ) {
+      const tmp = eduguardEngine.extractVideoInfo(element) || {};
       info.title = tmp.title || "";
       info.description = tmp.description || "";
       info.channelName = tmp.channelName || "";
@@ -495,63 +508,63 @@ async function processVideoElement(element) {
       ).trim();
     }
   } catch (e) {
-    console.warn("[EduTube] extractVideoInfo error:", e);
+    console.warn("[EduGuard] extractVideoInfo error:", e);
   }
 
   const token = info.videoId || info.title || "noid";
 
   // Prevent double-processing
-  if (element.hasAttribute("data-edutube-processing")) {
+  if (element.hasAttribute("data-eduguard-processing")) {
     return { processed: false, reason: "already_processing" };
   }
-  element.setAttribute("data-edutube-processing", "1");
+  element.setAttribute("data-eduguard-processing", "1");
 
   try {
-    const prev = element.getAttribute("data-edutube-processed");
+    const prev = element.getAttribute("data-eduguard-processed");
 
     // Engine disabled → show everything
-    if (!edutubeEngine || edutubeEngine.enabled === false) {
-      element.removeAttribute("data-edutube-processing");
+    if (!eduguardEngine || eduguardEngine.enabled === false) {
+      element.removeAttribute("data-eduguard-processing");
       return { processed: false, reason: "engine_disabled" };
     }
 
     // Already processed with same token
     if (prev && prev === token) {
-      element.removeAttribute("data-edutube-processing");
+      element.removeAttribute("data-eduguard-processing");
       return { processed: false, reason: "already_processed" };
     }
 
     // === SINGLE SOURCE OF TRUTH ===
     let isEdu = true;
     try {
-      isEdu = await edutubeEngine.isEducational(info);
+      isEdu = await eduguardEngine.isEducational(info);
     } catch (err) {
-      console.warn("[EduTube] Engine decision error - failing open:", err);
+      console.warn("[EduGuard] Engine decision error - failing open:", err);
       isEdu = true; // fail-open → show
     }
 
     // Apply decision to DOM
     if (isEdu) {
       // SHOW
-      const orig = element.getAttribute("data-edutube-original-display");
+      const orig = element.getAttribute("data-eduguard-original-display");
       if (typeof orig === "string") element.style.display = orig;
       else element.style.display = "";
-      element.removeAttribute("data-edutube-hidden");
+      element.removeAttribute("data-eduguard-hidden");
     } else {
       // HIDE
-      if (!element.hasAttribute("data-edutube-original-display")) {
+      if (!element.hasAttribute("data-eduguard-original-display")) {
         const cs = window.getComputedStyle(element);
         element.setAttribute(
-          "data-edutube-original-display",
+          "data-eduguard-original-display",
           (cs && cs.display) || ""
         );
       }
       element.style.display = "none";
-      element.setAttribute("data-edutube-hidden", "1");
+      element.setAttribute("data-eduguard-hidden", "1");
     }
 
-    element.setAttribute("data-edutube-processed", token);
-    element.removeAttribute("data-edutube-processing");
+    element.setAttribute("data-eduguard-processed", token);
+    element.removeAttribute("data-eduguard-processing");
 
     return {
       processed: true,
@@ -560,15 +573,15 @@ async function processVideoElement(element) {
       channelId: info.channelId || null,
     };
   } catch (fatal) {
-    console.error("[EduTube] processVideoElement fatal:", fatal);
+    console.error("[EduGuard] processVideoElement fatal:", fatal);
     // Fail-open: restore visibility
     try {
-      const orig = element.getAttribute("data-edutube-original-display");
+      const orig = element.getAttribute("data-eduguard-original-display");
       if (typeof orig === "string") element.style.display = orig;
       else element.style.display = "";
-      element.removeAttribute("data-edutube-hidden");
-      element.removeAttribute("data-edutube-processed");
-      element.removeAttribute("data-edutube-processing");
+      element.removeAttribute("data-eduguard-hidden");
+      element.removeAttribute("data-eduguard-processed");
+      element.removeAttribute("data-eduguard-processing");
     } catch (_) {}
     return { processed: false, error: fatal?.message || String(fatal) };
   }
@@ -620,7 +633,7 @@ async function runFullFiltering() {
           stats.byLayer.error++;
         }
       } catch (err) {
-        console.warn("[EduTube] Element processing error:", err);
+        console.warn("[EduGuard] Element processing error:", err);
         stats.byLayer.error++;
       }
     }
@@ -628,16 +641,16 @@ async function runFullFiltering() {
     // Send stats update (debounced)
     sendStatsUpdate(stats);
   } catch (e) {
-    console.error("[EduTube] runFullFiltering fatal:", e);
+    console.error("[EduGuard] runFullFiltering fatal:", e);
     // Best-effort restore on catastrophic failure
     try {
-      document.querySelectorAll("[data-edutube-hidden]").forEach((el) => {
+      document.querySelectorAll("[data-eduguard-hidden]").forEach((el) => {
         try {
-          const orig = el.getAttribute("data-edutube-original-display");
+          const orig = el.getAttribute("data-eduguard-original-display");
           if (typeof orig === "string") el.style.display = orig;
           else el.style.display = "";
-          el.removeAttribute("data-edutube-hidden");
-          el.removeAttribute("data-edutube-processed");
+          el.removeAttribute("data-eduguard-hidden");
+          el.removeAttribute("data-eduguard-processed");
         } catch (_) {}
       });
     } catch (_) {}
@@ -647,6 +660,20 @@ async function runFullFiltering() {
 // Debounced stats sender
 let statsUpdateTimer = null;
 let pendingStats = null;
+async function safeSaveStats() {
+  try {
+    if (window.__EDUGUARD_UNLOADING__) return;
+    if (!chrome?.runtime?.id || !chrome?.storage?.sync) return;
+    if (!eduguardEngine || typeof eduguardEngine.saveSettings !== "function")
+      return;
+
+    await eduguardEngine.saveSettings();
+  } catch (err) {
+    if (DEV_MODE) {
+      console.warn("[EduGuard] safeSaveStats skipped:", err);
+    }
+  }
+}
 
 function sendStatsUpdate(newStats) {
   // Accumulate stats
@@ -679,24 +706,30 @@ function sendStatsUpdate(newStats) {
         }
       });
 
-      if (typeof edutubeEngine.saveSettings === "function") {
-        edutubeEngine.saveSettings().catch((err) => {
-          console.warn("[EduTube] Stats save error:", err);
-        });
-      }
+      // safer stats saving (prevents "extension context invalidated")
+      safeSaveStats();
 
-      chrome.runtime.sendMessage({
-        type: "edutubeStatsUpdate",
-        stats: {
-          ...pendingStats,
-          videosShown: edutubeEngine.stats.videosShown,
-          videosHidden: edutubeEngine.stats.videosHidden,
-          layerStats: edutubeEngine.stats.layerStats,
-          aggregate: edutubeEngine.getStats
-            ? edutubeEngine.getStats()
-            : edutubeEngine.stats,
-        },
-      });
+      // --- Safe message dispatch (prevents "extension context invalidated") ---
+      try {
+        if (chrome?.runtime?.id) {
+          chrome.runtime.sendMessage({
+            type: "edutubeStatsUpdate",
+            stats: {
+              ...pendingStats,
+              videosShown: edutubeEngine.stats.videosShown,
+              videosHidden: edutubeEngine.stats.videosHidden,
+              layerStats: edutubeEngine.stats.layerStats,
+              aggregate: edutubeEngine.getStats
+                ? edutubeEngine.getStats()
+                : edutubeEngine.stats,
+            },
+          });
+        }
+      } catch (err) {
+        if (DEV_MODE) {
+          console.warn("[EduTube] Stats message skipped:", err);
+        }
+      }
 
       pendingStats = null;
     } catch (err) {
@@ -705,100 +738,100 @@ function sendStatsUpdate(newStats) {
   }, 1000);
 }
 
-/* ========== MAIN EduTube FILTER ========== */
+/* ========== MAIN eduguard FILTER ========== */
 
 async function filterEducationalContent() {
   if (isFiltering) {
-    log("[EduTube] Filter already running, skipping");
+    log("[EduGuard] Filter already running, skipping");
     return;
   }
-  if (!edutubeEngine) {
-    log("[EduTube] Engine not initialized");
+  if (!eduguardEngine) {
+    log("[EduGuard] Engine not initialized");
     return;
   }
-  if (!edutubeEngine.enabled) {
-    log("[EduTube] Disabled – skipping filter");
-    document.body.classList.remove("declutter-edutube-active");
-    document.querySelectorAll("[data-edutube-hidden]").forEach((el) => {
+  if (!eduguardEngine.enabled) {
+    log("[EduGuard] Disabled – skipping filter");
+    document.body.classList.remove("declutter-eduguard-active");
+    document.querySelectorAll("[data-eduguard-hidden]").forEach((el) => {
       showEduVideoElement(el);
-      el.removeAttribute("data-edutube-processed");
+      el.removeAttribute("data-eduguard-processed");
     });
     return;
   }
 
   isFiltering = true;
-  document.body.classList.add("declutter-edutube-active");
+  document.body.classList.add("declutter-eduguard-active");
 
   try {
     await runFullFiltering();
   } catch (e) {
-    console.error("[EduTube] Filter error:", e);
+    console.error("[EduGuard] Filter error:", e);
   } finally {
     isFiltering = false;
   }
 
   setTimeout(() => {
     filterChannelShelves().catch((e) =>
-      console.warn("[EduTube] filterChannelShelves error:", e)
+      console.warn("[EduGuard] filterChannelShelves error:", e)
     );
   }, 200);
 }
 
 function scheduleFilter() {
-  if (edutubeFilterTimeout) clearTimeout(edutubeFilterTimeout);
-  edutubeFilterTimeout = setTimeout(() => {
+  if (eduguardFilterTimeout) clearTimeout(eduguardFilterTimeout);
+  eduguardFilterTimeout = setTimeout(() => {
     filterEducationalContent();
   }, 250);
 }
 
-function stopEduTubeFilter() {
-  if (edutubeFilterTimeout) {
-    clearTimeout(edutubeFilterTimeout);
-    edutubeFilterTimeout = null;
+function stopEduGuardFilter() {
+  if (eduguardFilterTimeout) {
+    clearTimeout(eduguardFilterTimeout);
+    eduguardFilterTimeout = null;
   }
-  document.querySelectorAll("[data-edutube-hidden]").forEach((el) => {
+  document.querySelectorAll("[data-eduguard-hidden]").forEach((el) => {
     showEduVideoElement(el);
-    el.removeAttribute("data-edutube-processed");
+    el.removeAttribute("data-eduguard-processed");
   });
 
-  document.querySelectorAll("[data-edutube-shelf-hidden]").forEach((shelf) => {
-    const orig = shelf.getAttribute("data-edutube-shelf-original-display");
+  document.querySelectorAll("[data-eduguard-shelf-hidden]").forEach((shelf) => {
+    const orig = shelf.getAttribute("data-eduguard-shelf-original-display");
     shelf.style.display = orig === null ? "" : orig;
-    shelf.removeAttribute("data-edutube-shelf-original-display");
-    shelf.removeAttribute("data-edutube-shelf-hidden");
+    shelf.removeAttribute("data-eduguard-shelf-original-display");
+    shelf.removeAttribute("data-eduguard-shelf-hidden");
   });
 
-  document.body.classList.remove("declutter-edutube-active");
-  console.log("[EduTube] Filter stopped");
+  document.body.classList.remove("declutter-eduguard-active");
+  console.log("[EduGuard] Filter stopped");
 }
 
 /* ========== Whole-channel shelf hiding (WL/BL IDs + keywords only) ========== */
 
 async function filterChannelShelves() {
   try {
-    if (!edutubeEngine || !edutubeEngine.enabled) {
+    if (!eduguardEngine || !eduguardEngine.enabled) {
       document
-        .querySelectorAll("[data-edutube-shelf-hidden]")
+        .querySelectorAll("[data-eduguard-shelf-hidden]")
         .forEach((shelf) => {
           const orig = shelf.getAttribute(
-            "data-edutube-shelf-original-display"
+            "data-eduguard-shelf-original-display"
           );
           shelf.style.display = orig === null ? "" : orig;
-          shelf.removeAttribute("data-edutube-shelf-original-display");
-          shelf.removeAttribute("data-edutube-shelf-hidden");
+          shelf.removeAttribute("data-eduguard-shelf-original-display");
+          shelf.removeAttribute("data-eduguard-shelf-hidden");
         });
       return;
     }
 
-    const wlChRaw = edutubeEngine.whitelist || new Set();
-    const blChRaw = edutubeEngine.blacklist || new Set();
+    const wlChRaw = eduguardEngine.whitelist || new Set();
+    const blChRaw = eduguardEngine.blacklist || new Set();
     const whitelistChannels =
       wlChRaw instanceof Set ? wlChRaw : new Set(wlChRaw || []);
     const blacklistChannels =
       blChRaw instanceof Set ? blChRaw : new Set(blChRaw || []);
 
-    const whitelistKw = edutubeEngine.whitelistKeywords || [];
-    const blacklistKw = edutubeEngine.blacklistKeywords || [];
+    const whitelistKw = eduguardEngine.whitelistKeywords || [];
+    const blacklistKw = eduguardEngine.blacklistKeywords || [];
 
     const selectors = [
       "ytd-rich-section-renderer",
@@ -876,27 +909,27 @@ async function filterChannelShelves() {
           }
 
           if (!isEducational) {
-            if (!shelf.hasAttribute("data-edutube-shelf-original-display")) {
+            if (!shelf.hasAttribute("data-eduguard-shelf-original-display")) {
               shelf.setAttribute(
-                "data-edutube-shelf-original-display",
+                "data-eduguard-shelf-original-display",
                 shelf.style.display || ""
               );
             }
             shelf.style.display = "none";
-            shelf.setAttribute("data-edutube-shelf-hidden", "true");
+            shelf.setAttribute("data-eduguard-shelf-hidden", "true");
           } else {
-            if (shelf.hasAttribute("data-edutube-shelf-hidden")) {
+            if (shelf.hasAttribute("data-eduguard-shelf-hidden")) {
               const orig = shelf.getAttribute(
-                "data-edutube-shelf-original-display"
+                "data-eduguard-shelf-original-display"
               );
               shelf.style.display = orig === null ? "" : orig;
-              shelf.removeAttribute("data-edutube-shelf-original-display");
-              shelf.removeAttribute("data-edutube-shelf-hidden");
+              shelf.removeAttribute("data-eduguard-shelf-original-display");
+              shelf.removeAttribute("data-eduguard-shelf-hidden");
             }
           }
         } catch (err) {
           console.warn(
-            "[EduTube] filterChannelShelves shelf error:",
+            "[EduGuard] filterChannelShelves shelf error:",
             err && err.message ? err.message : err
           );
         }
@@ -904,7 +937,7 @@ async function filterChannelShelves() {
     }
   } catch (err) {
     console.warn(
-      "[EduTube] filterChannelShelves fatal:",
+      "[EduGuard] filterChannelShelves fatal:",
       err && err.message ? err.message : err
     );
   }
@@ -921,9 +954,9 @@ function cleanup() {
     clearInterval(shortsCleanerInterval);
     shortsCleanerInterval = null;
   }
-  if (edutubeFilterTimeout) {
-    clearTimeout(edutubeFilterTimeout);
-    edutubeFilterTimeout = null;
+  if (eduguardFilterTimeout) {
+    clearTimeout(eduguardFilterTimeout);
+    eduguardFilterTimeout = null;
   }
 }
 
@@ -988,11 +1021,11 @@ function restoreExploreElements() {
 // Show it's blocked video
 function injectBlockOverlayCSS() {
   try {
-    if (document.getElementById("edutube-block-overlay-style")) return;
+    if (document.getElementById("eduguard-block-overlay-style")) return;
     const style = document.createElement("style");
-    style.id = "edutube-block-overlay-style";
+    style.id = "eduguard-block-overlay-style";
     style.textContent = `
-      #edutube-block-overlay {
+      #eduguard-block-overlay {
         position: fixed;
         inset: 0;
         background: rgba(0,0,0,0.7);
@@ -1005,11 +1038,11 @@ function injectBlockOverlayCSS() {
         pointer-events: none;
         transition: opacity 0.25s ease-out;
       }
-      #edutube-block-overlay.show {
+      #eduguard-block-overlay.show {
         opacity: 1;
         pointer-events: auto;
       }
-      #edutube-block-overlay .card {
+      #eduguard-block-overlay .card {
         background: #111;
         color: #fff;
         border-radius: 12px;
@@ -1021,19 +1054,19 @@ function injectBlockOverlayCSS() {
         transform: scale(0.92);
         transition: transform 0.25s ease-out;
       }
-      #edutube-block-overlay.show .card {
+      #eduguard-block-overlay.show .card {
         transform: scale(1);
       }
-      #edutube-block-overlay .title {
+      #eduguard-block-overlay .title {
         font-size: 16px;
         font-weight: 600;
         margin-bottom: 6px;
       }
-      #edutube-block-overlay .subtitle {
+      #eduguard-block-overlay .subtitle {
         font-size: 12px;
         opacity: 0.8;
       }
-      #edutube-block-overlay .icon {
+      #eduguard-block-overlay .icon {
         width: 42px;
         height: 42px;
         margin-bottom: 10px;
@@ -1044,23 +1077,23 @@ function injectBlockOverlayCSS() {
   } catch (_) {}
 }
 
-function showEduTubeBlockOverlay() {
+function showEduGuardBlockOverlay() {
   try {
     injectBlockOverlayCSS();
-    let overlay = document.getElementById("edutube-block-overlay");
+    let overlay = document.getElementById("eduguard-block-overlay");
     if (overlay) {
       overlay.classList.add("show");
       return;
     }
     overlay = document.createElement("div");
-    overlay.id = "edutube-block-overlay";
+    overlay.id = "eduguard-block-overlay";
     overlay.innerHTML = `
       <div class="card">
         <svg class="icon" viewBox="0 0 24 24">
           <path fill="currentColor"
             d="M12 2L2 20h20L12 2zm0 4.8L18.2 18H5.8L12 6.8zM11 10v4h2v-4h-2zm0 6v2h2v-2z" />
         </svg>
-        <div class="title">Blocked by EduTube</div>
+        <div class="title">Blocked by EduGuard</div>
         <div class="subtitle">This video looks non-educational based on your settings.</div>
       </div>
     `;
@@ -1072,11 +1105,11 @@ function showEduTubeBlockOverlay() {
 // MAIN EXECUTION & MESSAGE LISTENERS (PATCH)
 // ======================================================
 
-// 1. Initialize EduTube on load
+// 1. Initialize EduGuard on load
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initEduTube);
+  document.addEventListener("DOMContentLoaded", initEduGuard);
 } else {
-  initEduTube();
+  initEduGuard();
 }
 
 // 2. Listen for messages from Popup & Background
@@ -1103,7 +1136,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           scheduleFilter();
           checkWatchPageGlobally();
         } else {
+          // Turned OFF → restore everything to normal YouTube
           stopEduTubeFilter();
+          try {
+            restoreWatchVideo();
+          } catch (_) {}
         }
       });
     }
@@ -1111,19 +1148,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   // Handle Sensitivity Update
-  if (message.type === "edutubeSensitivity") {
-    if (edutubeEngine) {
-      edutubeEngine.setSensitivity(message.value).then(() => {
+  if (message.type === "eduguardSensitivity") {
+    if (eduguardEngine) {
+      eduguardEngine.setSensitivity(message.value).then(() => {
         // Re-run filter with new sensitivity
-        if (edutubeEngine.enabled) scheduleFilter();
+        if (eduguardEngine.enabled) scheduleFilter();
       });
     }
     return;
   }
 
   // Handle WL/BL Updates (from Popup or Context Menu)
-  if (message.type === "edutubeListUpdate") {
-    if (!edutubeEngine) return;
+  if (message.type === "eduguardListUpdate") {
+    if (!eduguardEngine) return;
 
     const { list, action, idKind, id } = message;
     const isWhitelist = list === "whitelist";
@@ -1133,38 +1170,38 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (idKind === "channel") {
         if (isWhitelist) {
           return action === "add"
-            ? edutubeEngine.addToWhitelist(id)
-            : edutubeEngine.removeFromWhitelist(id);
+            ? eduguardEngine.addToWhitelist(id)
+            : eduguardEngine.removeFromWhitelist(id);
         } else {
           return action === "add"
-            ? edutubeEngine.addToBlacklist(id)
-            : edutubeEngine.removeFromBlacklist(id);
+            ? eduguardEngine.addToBlacklist(id)
+            : eduguardEngine.removeFromBlacklist(id);
         }
       } else if (idKind === "video") {
         if (isWhitelist) {
           return action === "add"
-            ? edutubeEngine.addVideoToWhitelist(id)
-            : edutubeEngine.removeVideoFromWhitelist(id);
+            ? eduguardEngine.addVideoToWhitelist(id)
+            : eduguardEngine.removeVideoFromWhitelist(id);
         } else {
           return action === "add"
-            ? edutubeEngine.addVideoToBlacklist(id)
-            : edutubeEngine.removeVideoFromBlacklist(id);
+            ? eduguardEngine.addVideoToBlacklist(id)
+            : eduguardEngine.removeVideoFromBlacklist(id);
         }
       } else if (idKind === "keyword") {
         if (isWhitelist) {
           return action === "add"
-            ? edutubeEngine.addWhitelistKeyword(id)
-            : edutubeEngine.removeWhitelistKeyword(id);
+            ? eduguardEngine.addWhitelistKeyword(id)
+            : eduguardEngine.removeWhitelistKeyword(id);
         } else {
           return action === "add"
-            ? edutubeEngine.addBlacklistKeyword(id)
-            : edutubeEngine.removeBlacklistKeyword(id);
+            ? eduguardEngine.addBlacklistKeyword(id)
+            : eduguardEngine.removeBlacklistKeyword(id);
         }
       }
     };
 
     updateEngine().then(() => {
-      if (edutubeEngine.enabled) scheduleFilter();
+      if (eduguardEngine.enabled) scheduleFilter();
       sendResponse({ success: true });
     });
 
@@ -1173,9 +1210,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   // Handle API Key Updates
   if (message.type === "apiKeyUpdated") {
-    if (edutubeEngine && edutubeEngine.apiService) {
-      edutubeEngine.apiService.init().then(() => {
-        console.log("[EduTube] API Key re-initialized via message");
+    if (eduguardEngine && eduguardEngine.apiService) {
+      eduguardEngine.apiService.init().then(() => {
+        console.log("[EduGuard] API Key re-initialized via message");
       });
     }
   }
@@ -1183,7 +1220,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // 3. Global Mutation Observer (Auto-run on page changes)
 mutationObserver = new MutationObserver((mutations) => {
-  if (!edutubeEngine || !edutubeEngine.enabled) return;
+  if (!eduguardEngine || !eduguardEngine.enabled) return;
 
   // Throttle observer to prevent performance kill
   if (observerCooldown) return;
@@ -1206,7 +1243,7 @@ if (target) {
     subtree: true,
   });
 } else {
-  console.warn("[EduTube] MutationObserver target not ready, retrying...");
+  console.warn("[EduGuard] MutationObserver target not ready, retrying...");
   const retry = setInterval(() => {
     const t = document.body || document.documentElement;
     if (t) {

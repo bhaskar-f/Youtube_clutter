@@ -35,7 +35,8 @@ class YouTubeAPIService {
   async init() {
     // Load API key and settings
     const data = await this.loadSettings();
-    this.apiKey = data.youtubeApiKey || data.edutubeApiKey || data.apiKey || "";
+    this.apiKey =
+      data.youtubeApiKey || data.eduguardApiKey || data.apiKey || "";
 
     this.enabled =
       data.youtubeApiEnabled !== undefined
@@ -67,18 +68,18 @@ class YouTubeAPIService {
     return new Promise((resolve) => {
       chrome.storage.sync.get(
         [
-          "edutubeApiKey", // Primary key
-          "edutubeApiEnabled",
-          "edutubeQuotaUsed",
-          "edutubeQuotaResetTime",
+          "eduguardApiKey", // Primary key
+          "eduguardApiEnabled",
+          "eduguardQuotaUsed",
+          "eduguardQuotaResetTime",
         ],
         (data) => {
           resolve({
-            youtubeApiKey: data.edutubeApiKey || "", // Map to consistent naming
-            youtubeApiEnabled: data.edutubeApiEnabled ?? false,
-            youtubeQuotaUsed: data.edutubeQuotaUsed || 0,
+            youtubeApiKey: data.eduguardApiKey || "", // Map to consistent naming
+            youtubeApiEnabled: data.eduguardApiEnabled ?? false,
+            youtubeQuotaUsed: data.eduguardQuotaUsed || 0,
             youtubeQuotaResetTime:
-              data.edutubeQuotaResetTime || this.getNextResetTime(),
+              data.eduguardQuotaResetTime || this.getNextResetTime(),
           });
         }
       );
@@ -89,10 +90,10 @@ class YouTubeAPIService {
     if (!chrome?.storage) return;
 
     const payload = {
-      edutubeApiKey: this.apiKey, // Single source of truth
-      edutubeApiEnabled: this.enabled,
-      edutubeQuotaUsed: this.quotaUsed,
-      edutubeQuotaResetTime: this.quotaResetTime,
+      eduguardApiKey: this.apiKey, // Single source of truth
+      eduguardApiEnabled: this.enabled,
+      eduguardQuotaUsed: this.quotaUsed,
+      eduguardQuotaResetTime: this.quotaResetTime,
     };
 
     // Save to both sync and local for redundancy
@@ -112,7 +113,7 @@ class YouTubeAPIService {
   // Initialize IndexedDB for caching
   async initCache() {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("EduTubeCache", 1);
+      const request = indexedDB.open("EduGuardCache", 1);
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {

@@ -1,5 +1,5 @@
 // ======================================================
-// EduTube Hybrid Engine v11.5
+// EduGuard Hybrid Engine v11.5
 // - v12-style architecture (modular pipeline + caching + overrides)
 // - v11-style intelligence (scoring, types, modes, hard entertainment)
 // - WL/BL: channels + videos + keywords
@@ -9,7 +9,7 @@
 
 const DEV_MODE = true; // keep ON while debugging
 
-class EduTubeEngine {
+class EduGuardEngine {
   constructor(opts = {}) {
     // Core state
     this.enabled = false;
@@ -556,41 +556,41 @@ class EduTubeEngine {
 
   async init() {
     const data = await this._getStorage([
-      "edutubeEnabled",
-      "edutubeSensitivity",
-      "edutubeWhitelist",
-      "edutubeBlacklist",
-      "edutubeWhitelistVideos",
-      "edutubeBlacklistVideos",
-      "edutubeWhitelistKeywords",
-      "edutubeBlacklistKeywords",
-      "edutubeStats",
+      "eduguardEnabled",
+      "eduguardSensitivity",
+      "eduguardWhitelist",
+      "eduguardBlacklist",
+      "eduguardWhitelistVideos",
+      "eduguardBlacklistVideos",
+      "eduguardWhitelistKeywords",
+      "eduguardBlacklistKeywords",
+      "eduguardStats",
     ]);
 
-    this.enabled = !!data.edutubeEnabled;
-    this.sensitivity = Number.isFinite(data.edutubeSensitivity)
-      ? data.edutubeSensitivity
+    this.enabled = !!data.eduguardEnabled;
+    this.sensitivity = Number.isFinite(data.eduguardSensitivity)
+      ? data.eduguardSensitivity
       : 50;
 
-    this.whitelist = new Set(data.edutubeWhitelist || []);
-    this.blacklist = new Set(data.edutubeBlacklist || []);
-    this.whitelistVideos = new Set(data.edutubeWhitelistVideos || []);
-    this.blacklistVideos = new Set(data.edutubeBlacklistVideos || []);
+    this.whitelist = new Set(data.eduguardWhitelist || []);
+    this.blacklist = new Set(data.eduguardBlacklist || []);
+    this.whitelistVideos = new Set(data.eduguardWhitelistVideos || []);
+    this.blacklistVideos = new Set(data.eduguardBlacklistVideos || []);
 
-    this.whitelistKeywords = Array.isArray(data.edutubeWhitelistKeywords)
-      ? data.edutubeWhitelistKeywords
+    this.whitelistKeywords = Array.isArray(data.eduguardWhitelistKeywords)
+      ? data.eduguardWhitelistKeywords
       : [];
-    this.blacklistKeywords = Array.isArray(data.edutubeBlacklistKeywords)
-      ? data.edutubeBlacklistKeywords
+    this.blacklistKeywords = Array.isArray(data.eduguardBlacklistKeywords)
+      ? data.eduguardBlacklistKeywords
       : [];
 
-    if (data.edutubeStats && typeof data.edutubeStats === "object") {
+    if (data.eduguardStats && typeof data.eduguardStats === "object") {
       this.stats = {
         ...this.stats,
-        ...data.edutubeStats,
+        ...data.eduguardStats,
         layerStats: {
           ...this.stats.layerStats,
-          ...(data.edutubeStats.layerStats || {}),
+          ...(data.eduguardStats.layerStats || {}),
         },
       };
     }
@@ -601,7 +601,7 @@ class EduTubeEngine {
     }
 
     if (DEV_MODE) {
-      console.log("[EduTubeEngine v11.5] init", {
+      console.log("[EduGuardEngine v12] init", {
         enabled: this.enabled,
         sensitivity: this.sensitivity,
         wlChannels: this.whitelist.size,
@@ -623,7 +623,7 @@ class EduTubeEngine {
           if (chrome.runtime.lastError) {
             if (DEV_MODE) {
               console.warn(
-                "[EduTubeEngine] storage error:",
+                "[EduGuardEngine] storage error:",
                 chrome.runtime.lastError.message
               );
             }
@@ -639,22 +639,34 @@ class EduTubeEngine {
   }
 
   async saveSettings() {
-    if (!chrome?.storage?.sync) return;
     try {
-      await chrome.storage.sync.set({
-        edutubeEnabled: this.enabled,
-        edutubeSensitivity: this.sensitivity,
-        edutubeWhitelist: Array.from(this.whitelist),
-        edutubeBlacklist: Array.from(this.blacklist),
-        edutubeWhitelistVideos: Array.from(this.whitelistVideos),
-        edutubeBlacklistVideos: Array.from(this.blacklistVideos),
-        edutubeWhitelistKeywords: this.whitelistKeywords,
-        edutubeBlacklistKeywords: this.blacklistKeywords,
-        edutubeStats: this.stats,
-      });
+      // Extension got unloaded (SPA navigation)
+      if (!chrome?.runtime?.id || !chrome?.storage?.sync) return;
+
+      chrome.storage.sync.set(
+        {
+          eduguardEnabled: this.enabled,
+          eduguardSensitivity: this.sensitivity,
+          eduguardWhitelist: Array.from(this.whitelist),
+          eduguardBlacklist: Array.from(this.blacklist),
+          eduguardWhitelistVideos: Array.from(this.whitelistVideos),
+          eduguardBlacklistVideos: Array.from(this.blacklistVideos),
+          eduguardWhitelistKeywords: this.whitelistKeywords,
+          eduguardBlacklistKeywords: this.blacklistKeywords,
+          eduguardStats: this.stats,
+        },
+        () => {
+          if (chrome.runtime.lastError && DEV_MODE) {
+            console.warn(
+              "[EduGuardEngine] safe saveSettings warning:",
+              chrome.runtime.lastError.message
+            );
+          }
+        }
+      );
     } catch (e) {
       if (DEV_MODE) {
-        console.error("[EduTubeEngine] saveSettings error:", e);
+        console.warn("[EduGuardEngine] saveSettings skipped:", e);
       }
     }
   }
@@ -842,8 +854,8 @@ class EduTubeEngine {
         channelDescription = "";
       }
 
-      const longDescription = element.dataset?.edutubeLongDescription || "";
-      const tagsText = element.dataset?.edutubeTags || "";
+      const longDescription = element.dataset?.eduguardLongDescription || "";
+      const tagsText = element.dataset?.eduguardTags || "";
 
       return {
         title,
@@ -1290,7 +1302,7 @@ class EduTubeEngine {
 
     if (DEV_MODE) {
       console.groupCollapsed(
-        `[EduTube-BREAKDOWN v11.5] "${rawTitle}" => score=${score}, type=${type}, edu=${eduScore}, nonEdu=${nonEduScore}`
+        `[EduGuard-BREAKDOWN v11.5] "${rawTitle}" => score=${score}, type=${type}, edu=${eduScore}, nonEdu=${nonEduScore}`
       );
       console.table(breakdown);
       console.groupEnd();
@@ -1407,7 +1419,7 @@ class EduTubeEngine {
         if (typeof cached === "boolean") {
           if (DEV_MODE) {
             console.log(
-              `[EduTube] CACHE ${cached ? "ALLOW" : "BLOCK"}:`,
+              `[EduGuard] CACHE ${cached ? "ALLOW" : "BLOCK"}:`,
               info.title
             );
           }
@@ -1420,28 +1432,28 @@ class EduTubeEngine {
         this.stats.layerStats.whitelist++;
         this._cacheSet(videoId || channelId, true);
         if (DEV_MODE)
-          console.log("[EduTube] WHITELIST ALLOW (channel):", info.title);
+          console.log("[EduGuard] WHITELIST ALLOW (channel):", info.title);
         return true;
       }
       if (channelId && this.blacklist.has(channelId)) {
         this.stats.layerStats.blacklist++;
         this._cacheSet(videoId || channelId, false);
         if (DEV_MODE)
-          console.log("[EduTube] BLACKLIST BLOCK (channel):", info.title);
+          console.log("[EduGuard] BLACKLIST BLOCK (channel):", info.title);
         return false;
       }
       if (videoId && this.whitelistVideos.has(videoId)) {
         this.stats.layerStats.whitelist++;
         this._cacheSet(videoId, true);
         if (DEV_MODE)
-          console.log("[EduTube] WHITELIST ALLOW (video):", info.title);
+          console.log("[EduGuard] WHITELIST ALLOW (video):", info.title);
         return true;
       }
       if (videoId && this.blacklistVideos.has(videoId)) {
         this.stats.layerStats.blacklist++;
         this._cacheSet(videoId, false);
         if (DEV_MODE)
-          console.log("[EduTube] BLACKLIST BLOCK (video):", info.title);
+          console.log("[EduGuard] BLACKLIST BLOCK (video):", info.title);
         return false;
       }
 
@@ -1454,7 +1466,7 @@ class EduTubeEngine {
           this.stats.layerStats.keywords++;
           this._cacheSet(videoId, true);
           if (DEV_MODE)
-            console.log("[EduTube] KEYWORD WHITELIST ALLOW:", info.title);
+            console.log("[EduGuard] KEYWORD WHITELIST ALLOW:", info.title);
           return true;
         }
       }
@@ -1463,7 +1475,7 @@ class EduTubeEngine {
           this.stats.layerStats.keywords++;
           this._cacheSet(videoId, false);
           if (DEV_MODE)
-            console.log("[EduTube] KEYWORD BLACKLIST BLOCK:", info.title);
+            console.log("[EduGuard] KEYWORD BLACKLIST BLOCK:", info.title);
           return false;
         }
       }
@@ -1478,7 +1490,7 @@ class EduTubeEngine {
             apiCategory = String(apiData.categoryId);
           }
         } catch (e) {
-          if (DEV_MODE) console.warn("[EduTube] API error:", e);
+          if (DEV_MODE) console.warn("[EduGuard] API error:", e);
         }
       }
 
@@ -1498,7 +1510,7 @@ class EduTubeEngine {
           this._cacheSet(videoId || apiCategory, false);
           if (DEV_MODE)
             console.log(
-              "[EduTube] API HARD BLOCK (category):",
+              "[EduGuard] API HARD BLOCK (category):",
               apiCategory,
               info.title
             );
@@ -1510,7 +1522,7 @@ class EduTubeEngine {
           this._cacheSet(videoId || apiCategory, true);
           if (DEV_MODE)
             console.log(
-              "[EduTube] API HARD ALLOW (category):",
+              "[EduGuard] API HARD ALLOW (category):",
               apiCategory,
               info.title
             );
@@ -1520,7 +1532,7 @@ class EduTubeEngine {
         // You can optionally add more category-specific tweaks here if needed.
         if (DEV_MODE) {
           console.log(
-            "[EduTube] API soft category (no hard override):",
+            "[EduGuard] API soft category (no hard override):",
             apiCategory,
             info.title
           );
@@ -1533,7 +1545,7 @@ class EduTubeEngine {
       this.stats.layerStats.keywords++;
 
       if (DEV_MODE) {
-        console.log("[EduTube] SCORE_RESULT v11.5", {
+        console.log("[EduGuard] SCORE_RESULT v11.5", {
           title: info.title,
           score,
           mode,
@@ -1548,7 +1560,7 @@ class EduTubeEngine {
       // 4a) Unknown type = blocked in all modes
       if (meta.type === "unknown") {
         if (DEV_MODE) {
-          console.log("[EduTube] BLOCK_UNKNOWN_TYPE:", info.title);
+          console.log("[EduGuard] BLOCK_UNKNOWN_TYPE:", info.title);
         }
         this.stats.layerStats.fallback++;
         this._cacheSet(videoId, false);
@@ -1559,7 +1571,7 @@ class EduTubeEngine {
       if (meta.hardEntertainment && !meta.trustedChannel) {
         if (DEV_MODE) {
           console.log(
-            "[EduTube] HARD_ENTERTAINMENT_BLOCK:",
+            "[EduGuard] HARD_ENTERTAINMENT_BLOCK:",
             info.title,
             "score=",
             score
@@ -1578,7 +1590,7 @@ class EduTubeEngine {
       ) {
         if (DEV_MODE) {
           console.log(
-            "[EduTube] STRONG_ENTERTAINMENT_BLOCK:",
+            "[EduGuard] STRONG_ENTERTAINMENT_BLOCK:",
             info.title,
             "score=",
             score
@@ -1635,7 +1647,7 @@ class EduTubeEngine {
 
       if (!allowedByMode) {
         if (DEV_MODE) {
-          console.log("[EduTube] MODE_BLOCK:", {
+          console.log("[EduGuard] MODE_BLOCK:", {
             mode,
             title: info.title,
             type: meta.type,
@@ -1649,7 +1661,7 @@ class EduTubeEngine {
       // 4e) Strict trusted override
       if (mode === "strict" && meta.trustedChannel) {
         if (DEV_MODE) {
-          console.log("[EduTube] STRICT_TRUSTED_ALLOW:", info.title);
+          console.log("[EduGuard] STRICT_TRUSTED_ALLOW:", info.title);
         }
         this.stats.layerStats.fallback++;
         this._cacheSet(videoId, true);
@@ -1667,7 +1679,7 @@ class EduTubeEngine {
         score >= strongEduCutoff
       ) {
         if (DEV_MODE) {
-          console.log("[EduTube] STRONG_EDU_ALLOW:", info.title, score);
+          console.log("[EduGuard] STRONG_EDU_ALLOW:", info.title, score);
         }
         this.stats.layerStats.fallback++;
         this._cacheSet(videoId, true);
@@ -1703,7 +1715,7 @@ class EduTubeEngine {
         if (apiSoftDecision === true) {
           this.stats.layerStats.api++;
           if (DEV_MODE) {
-            console.log("[EduTube] API_BORDERLINE_ALLOW:", {
+            console.log("[EduGuard] API_BORDERLINE_ALLOW:", {
               videoId,
               category: apiCategory,
               score,
@@ -1715,7 +1727,7 @@ class EduTubeEngine {
         if (apiSoftDecision === false) {
           this.stats.layerStats.api++;
           if (DEV_MODE) {
-            console.log("[EduTube] API_BORDERLINE_BLOCK:", {
+            console.log("[EduGuard] API_BORDERLINE_BLOCK:", {
               videoId,
               category: apiCategory,
               score,
@@ -1735,7 +1747,7 @@ class EduTubeEngine {
       ) {
         effectiveThreshold -= 5;
         if (DEV_MODE) {
-          console.log("[EduTube] RELAXED_BORDERLINE_ADJUST:", {
+          console.log("[EduGuard] RELAXED_BORDERLINE_ADJUST:", {
             newThreshold: effectiveThreshold,
           });
         }
@@ -1746,7 +1758,7 @@ class EduTubeEngine {
       this._cacheSet(videoId, decision);
 
       if (DEV_MODE) {
-        console.log("[EduTube] FINAL_DECISION v11.5", {
+        console.log("[EduGuard] FINAL_DECISION v11.5", {
           decision: decision ? "ALLOW" : "BLOCK",
           score,
           threshold: effectiveThreshold,
@@ -1758,7 +1770,7 @@ class EduTubeEngine {
 
       return decision;
     } catch (e) {
-      console.error("[EduTube] isEducational error:", e);
+      console.error("[EduGuard] isEducational error:", e);
       return true; // fail-open
     }
   }
@@ -1766,6 +1778,9 @@ class EduTubeEngine {
   // ------------------------------------------------------
   // Public helpers for popup/contentScript
   // ------------------------------------------------------
+  setApiService(service) {
+    this.apiService = service;
+  }
 
   getStats() {
     return this.stats;
@@ -1781,7 +1796,7 @@ class EduTubeEngine {
     this.sensitivity = Number(value) || this.sensitivity;
     if (Math.abs(oldValue - this.sensitivity) >= 10) {
       console.log(
-        "[EduTube] Clearing decision cache due to sensitivity change"
+        "[EduGuard] Clearing decision cache due to sensitivity change"
       );
       this.decisionCache.clear();
     }
@@ -1892,4 +1907,4 @@ class EduTubeEngine {
 }
 
 // Expose globally
-window.EduTubeEngine = EduTubeEngine;
+window.EduGuardEngine = EduGuardEngine;

@@ -1,6 +1,5 @@
 // =========================================================
-// EduTube Background Script (Zarvis Optimized v11.5)
-// Highly clean, consistent, production-grade version
+// eduguard Background Script (Zarvis Optimized v11.5)
 // - Initializes default settings
 // - Manages WL/BL via right-click context menus
 // - Forwards WL/BL and sensitivity changes to content scripts
@@ -14,8 +13,8 @@
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get(null, (data) => {
     const defaults = {
-      edutubeEnabled: true,
-      edutubeSensitivity: 50,
+      eduguardEnabled: true,
+      eduguardSensitivity: 50,
       whitelist: [],
       blacklist: [],
       whitelistVideos: [],
@@ -43,21 +42,21 @@ chrome.runtime.onInstalled.addListener(() => {
 function setupContextMenus() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
-      id: "edutubeRoot",
-      title: "EduTube",
+      id: "eduguardRoot",
+      title: "EduGuard",
       contexts: ["selection", "link", "page"],
     });
 
     chrome.contextMenus.create({
       id: "wlChannel",
-      parentId: "edutubeRoot",
+      parentId: "eduguardRoot",
       title: "Whitelist Channel",
       contexts: ["selection", "link"],
     });
 
     chrome.contextMenus.create({
       id: "blChannel",
-      parentId: "edutubeRoot",
+      parentId: "eduguardRoot",
       title: "Blacklist Channel",
       contexts: ["selection", "link"],
     });
@@ -94,7 +93,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     null;
 
   if (!channelId) {
-    console.warn("[EduTube BG] No channelId could be extracted");
+    console.warn("[EduGuard BG] No channelId could be extracted");
     return;
   }
 
@@ -102,7 +101,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   if (info.menuItemId === "wlChannel") {
     payload = {
-      type: "edutubeListUpdate",
+      type: "eduguardListUpdate",
       list: "whitelist",
       action: "add",
       idKind: "channel",
@@ -112,7 +111,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   if (info.menuItemId === "blChannel") {
     payload = {
-      type: "edutubeListUpdate",
+      type: "eduguardListUpdate",
       list: "blacklist",
       action: "add",
       idKind: "channel",
@@ -126,7 +125,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     const err = chrome.runtime.lastError;
     if (err) {
       // Happens when tab has no content script (non-YouTube pages)
-      console.debug("[EduTube BG] No receiver:", err.message);
+      console.debug("[EduGuard BG] No receiver:", err.message);
     }
   });
 });
@@ -157,4 +156,4 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 // ---------------------------------------------
 // Debug (optional)
 // ---------------------------------------------
-console.log("[EduTube] background.js loaded (optimized)");
+console.log("[EduGuard] background.js loaded (optimized)");

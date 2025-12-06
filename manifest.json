@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Declutter + EduTube",
-  "version": "5.0.0",
-  "description": "Declutter YouTube and transform it into an educational platform with EduTube mode",
+  "name": "EduGuard",
+  "version": "1.0.0",
+  "description": "Declutter YouTube and transform it into an educational platform with Education mode",
   "permissions": ["storage", "tabs", "contextMenus", "activeTab"],
   "host_permissions": [
     "*://*.youtube.com/*",
@@ -20,6 +20,7 @@
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
+    "64": "icons/icon64.png",
     "128": "icons/icon128.png"
   },
 
@@ -28,6 +29,7 @@
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
+      "64": "icons/icon64.png",
       "128": "icons/icon128.png"
     }
   },
@@ -35,7 +37,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": ["youtubeAPIService.js", "edutubeEngine.js", "contentScript.js"],
+      "js": ["youtubeAPIService.js", "eduguardEngine.js", "contentScript.js"],
       "css": ["instantHide.css"],
       "run_at": "document_start"
     }
@@ -43,7 +45,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["youtubeAPIService.js", "edutubeEngine.js"],
+      "resources": ["youtubeAPIService.js", "eduguardEngine.js"],
       "matches": ["*://*.youtube.com/*"]
     }
   ]

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>EduTube</title>
+    <title>EduGuard</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
 
@@ -13,7 +13,7 @@
     <header class="popup-header">
       <img src="icons/icon48.png" class="logo" />
 
-      <h1><span class="yt-red">Edu</span>Tube</h1>
+      <h1><span class="yt-red">Edu</span>Guard</h1>
 
       <div class="theme-buttons">
         <button id="lightMode" class="theme-btn" title="Light Mode">
@@ -111,27 +111,31 @@
     <div class="separator"></div>
 
     <!-- ============================
-       🔵 EDUTUBE FILTER MODE
+       🔵EduGuard FILTER MODE
        ============================ -->
-    <section class="edutube-section">
-      <h2>🎓 EduTube Mode</h2>
-      <div class="edutube-info">
+    <section class="eduguard-section">
+      <h2>🎓 EduGuard Mode</h2>
+      <div class="eduguard-info">
         <p>
           Transform YouTube into an educational platform. Uses hybrid filtering:
           Whitelist → Keywords → YouTube API → Fallback.
         </p>
       </div>
 
-      <div class="edutube-toggle">
-        <label class="edutube-main-toggle">
+      <div class="eduguard-toggle">
+        <label class="eduguard-main-toggle">
           <i class="material-icons-outlined">school</i>
-          <span>Enable EduTube Mode</span>
-          <input type="checkbox" id="edutubeEnabled" />
+          <span>Enable EduGuard Mode</span>
+          <input type="checkbox" id="eduguardEnabled" />
         </label>
       </div>
 
-      <div class="edutube-settings" id="edutubeSettings" style="display: none">
-        <div class="edutube-sensitivity">
+      <div
+        class="eduguard-settings"
+        id="eduguardSettings"
+        style="display: none"
+      >
+        <div class="eduguard-sensitivity">
           <label class="sensitivity-label">
             <span>Filter Sensitivity</span>
             <span id="sensitivityValue">Balanced</span>
@@ -139,7 +143,7 @@
 
           <input
             type="range"
-            id="edutubeSensitivity"
+            id="eduguardSensitivity"
             min="0"
             max="100"
             value="50"
@@ -326,8 +330,8 @@
                     <li>
                       <strong>Create a new project</strong><br />
                       Click the project selector at the top →
-                      <strong>New Project</strong> → name it (e.g., "EduTube") →
-                      <strong>Create</strong>.
+                      <strong>New Project</strong> → name it (e.g., "eduguard")
+                      → <strong>Create</strong>.
                     </li>
 
                     <li>
@@ -362,7 +366,7 @@
                   <div class="guide-note">
                     <i class="material-icons-outlined">info</i>
                     <div>
-                      <strong>Privacy:</strong> EduTube only reads public video
+                      <strong>Privacy:</strong> eduguard only reads public video
                       metadata (title, category, tags). It never posts, uploads,
                       or modifies your account.
                     </div>
@@ -380,7 +384,7 @@
            🔵 STATISTICS
            ============================ -->
         <section id="Statistics">
-          <div class="edutube-stats">
+          <div class="eduguard-stats">
             <div class="stat-item">
               <span class="stat-value" id="videosHidden">0</span>
               <span class="stat-label">Videos Hidden</span>

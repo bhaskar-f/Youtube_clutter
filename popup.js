@@ -1,7 +1,7 @@
 // popup.js – Optimized & synced with final popup.html + v12 engine
 // - Declutter toggles
 // - Theme toggle
-// - EduTube enable/sensitivity
+// - EduGuard enable/sensitivity
 // - Stats
 // - Whitelist/Blacklist management
 // - YouTube API key (Option C: add/manage/remove)
@@ -60,7 +60,7 @@ function initPopup() {
   });
 
   initThemeToggle();
-  initEduTubeControls();
+  initEduGuardControls();
   initTabSwitching();
   initSuggestions(); // YouTube-style suggestions for wl/bl inputs
 }
@@ -127,13 +127,13 @@ function initTabSwitching() {
 }
 
 // ===============================
-// EduTube Controls + API UI
+// EduGuard Controls + API UI
 // ===============================
-function initEduTubeControls() {
-  const enableToggle = document.getElementById("edutubeEnabled");
-  const sensitivitySlider = document.getElementById("edutubeSensitivity");
+function initEduGuardControls() {
+  const enableToggle = document.getElementById("eduguardEnabled");
+  const sensitivitySlider = document.getElementById("eduguardSensitivity");
   const sensitivityValue = document.getElementById("sensitivityValue");
-  const settingsContainer = document.getElementById("edutubeSettings");
+  const settingsContainer = document.getElementById("eduguardSettings");
   const videosHiddenEl = document.getElementById("videosHidden");
   const videosShownEl = document.getElementById("videosShown");
 
@@ -148,23 +148,23 @@ function initEduTubeControls() {
   const apiQuotaText = document.getElementById("apiQuotaText");
 
   if (!enableToggle) {
-    console.error("[popup] EduTube controls not found");
+    console.error("[popup] EduGuard controls not found");
     return;
   }
 
-  // Load saved EduTube settings + API key
+  // Load saved EduGuard settings + API key
   chrome.storage.sync.get(
     [
-      "edutubeEnabled",
-      "edutubeSensitivity",
-      "edutubeStats",
-      "edutubeApiKey",
+      "eduguardEnabled",
+      "eduguardSensitivity",
+      "eduguardStats",
+      "eduguardApiKey",
       "youtubeApiKey", // old key name (for migration)
     ],
     (data) => {
-      const enabled = data.edutubeEnabled ?? false;
-      const sensitivity = data.edutubeSensitivity ?? 50;
-      const stats = data.edutubeStats || {
+      const enabled = data.eduguardEnabled ?? false;
+      const sensitivity = data.eduguardSensitivity ?? 50;
+      const stats = data.eduguardStats || {
         videosHidden: 0,
         videosShown: 0,
         layerStats: {
@@ -176,7 +176,7 @@ function initEduTubeControls() {
         },
       };
 
-      // EduTube UI
+      // EduGuard UI
       enableToggle.checked = enabled;
       sensitivitySlider.value = sensitivity;
       updateSensitivityLabel(sensitivity, sensitivityValue);
@@ -189,10 +189,10 @@ function initEduTubeControls() {
       }
 
       // API key (migrate from old youtubeApiKey if needed)
-      let key = data.edutubeApiKey || data.youtubeApiKey || "";
+      let key = data.eduguardApiKey || data.youtubeApiKey || "";
 
-      if (data.youtubeApiKey && !data.edutubeApiKey) {
-        chrome.storage.sync.set({ edutubeApiKey: data.youtubeApiKey });
+      if (data.youtubeApiKey && !data.eduguardApiKey) {
+        chrome.storage.sync.set({ eduguardApiKey: data.youtubeApiKey });
       }
 
       if (key) {
@@ -214,7 +214,7 @@ function initEduTubeControls() {
   // Enable/disable toggle
   enableToggle.addEventListener("change", () => {
     const enabled = enableToggle.checked;
-    chrome.storage.sync.set({ edutubeEnabled: enabled });
+    chrome.storage.sync.set({ eduguardEnabled: enabled });
 
     settingsContainer.style.display = enabled ? "block" : "none";
 
@@ -222,16 +222,9 @@ function initEduTubeControls() {
       if (!tabs?.length) return;
       chrome.tabs.sendMessage(
         tabs[0].id,
-        { type: "edutubeToggle", enabled },
+        { type: "eduguardToggle", enabled },
         () => {}
       );
-    });
-  });
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (!tabs?.length) return;
-    chrome.tabs.sendMessage(tabs[0].id, {
-      action: "rerunFiltering",
-      reason: "apiModeChanged",
     });
   });
 
@@ -247,12 +240,12 @@ function initEduTubeControls() {
 
     // ⏳ Only trigger refilter after user stops moving slider
     sliderDebounceTimer = setTimeout(() => {
-      chrome.storage.sync.set({ edutubeSensitivity: value });
+      chrome.storage.sync.set({ eduguardSensitivity: value });
 
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (!tabs?.length) return;
         chrome.tabs.sendMessage(tabs[0].id, {
-          type: "edutubeSensitivity",
+          type: "eduguardSensitivity",
           value,
         });
       });
@@ -270,7 +263,7 @@ function initEduTubeControls() {
         return;
       }
 
-      chrome.storage.sync.set({ edutubeApiKey: key }, () => {
+      chrome.storage.sync.set({ eduguardApiKey: key }, () => {
         showApiManageMode(
           key,
           apiAddMode,
@@ -300,10 +293,10 @@ function initEduTubeControls() {
         "youtubeQuotaUsed",
         "youtubeQuotaResetTime",
 
-        "edutubeApiKey",
-        "edutubeApiEnabled",
-        "edutubeQuotaUsed",
-        "edutubeQuotaResetTime",
+        "eduguardApiKey",
+        "eduguardApiEnabled",
+        "eduguardQuotaUsed",
+        "eduguardQuotaResetTime",
 
         "apiKey",
       ];
@@ -320,7 +313,7 @@ function initEduTubeControls() {
             }
           });
 
-          console.log("[EduTube] API removed completely.");
+          console.log("[EduGuard] API removed completely.");
         });
       });
     });
@@ -328,9 +321,9 @@ function initEduTubeControls() {
 
   // Periodic stats refresh (in case only storage is updated)
   setInterval(() => {
-    chrome.storage.sync.get(["edutubeStats"], (data) => {
-      if (data.edutubeStats) {
-        updateStats(data.edutubeStats, videosHiddenEl, videosShownEl);
+    chrome.storage.sync.get(["eduguardStats"], (data) => {
+      if (data.eduguardStats) {
+        updateStats(data.eduguardStats, videosHiddenEl, videosShownEl);
       }
     });
   }, 2000);
@@ -340,18 +333,18 @@ function initEduTubeControls() {
       [
         "youtubeApiEnabled",
         "youtubeQuotaUsed",
-        "edutubeQuotaUsed",
+        "eduguardQuotaUsed",
         "youtubeQuotaResetTime",
-        "edutubeQuotaResetTime",
+        "eduguardQuotaResetTime",
       ],
       (data) => {
         if (!data.youtubeApiEnabled) return;
 
         // Accept both storage formats
-        const used = data.youtubeQuotaUsed ?? data.edutubeQuotaUsed ?? 0;
+        const used = data.youtubeQuotaUsed ?? data.eduguardQuotaUsed ?? 0;
 
         const resetTime =
-          data.youtubeQuotaResetTime ?? data.edutubeQuotaResetTime ?? null;
+          data.youtubeQuotaResetTime ?? data.eduguardQuotaResetTime ?? null;
 
         // Update the UI text
         updateQuotaDisplay(used, 10000, apiQuotaText);
@@ -365,7 +358,7 @@ function initEduTubeControls() {
 
   // Live stats updates via message
   chrome.runtime.onMessage.addListener((msg) => {
-    if (!msg || msg.type !== "edutubeStatsUpdate" || !msg.stats) return;
+    if (!msg || msg.type !== "eduguardStatsUpdate" || !msg.stats) return;
     const s = msg.stats || {};
     updateStats(s, videosHiddenEl, videosShownEl);
 
@@ -382,14 +375,22 @@ function initEduTubeControls() {
       if (el) el.textContent = ls[key] ?? 0;
     });
 
-    chrome.storage.sync.set({ edutubeStats: s });
+    chrome.storage.sync.set({ eduguardStats: s });
   });
 
   // WL/BL management
   initListManagement();
 }
+// function sendEduListUpdate() {
+//   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//     if (!tabs?.length) return;
+//     chrome.tabs.sendMessage(tabs[0].id, {
+//       type: "eduguardListUpdate",
+//     });
+//   });
+// }
 
-// --- Helpers for EduTube controls ---
+// --- Helpers for EduGuard controls ---
 
 function updateSensitivityLabel(value, el) {
   if (!el) return;
@@ -535,37 +536,37 @@ function initListManagement() {
   // Load existing lists (channels, videos, keywords)
   chrome.storage.sync.get(
     [
-      "edutubeWhitelist",
-      "edutubeBlacklist",
-      "edutubeWhitelistVideos",
-      "edutubeBlacklistVideos",
-      "edutubeWhitelistKeywords",
-      "edutubeBlacklistKeywords",
+      "eduguardWhitelist",
+      "eduguardBlacklist",
+      "eduguardWhitelistVideos",
+      "eduguardBlacklistVideos",
+      "eduguardWhitelistKeywords",
+      "eduguardBlacklistKeywords",
     ],
     (data) => {
-      renderList(wlList, data.edutubeWhitelist || [], "channel", "whitelist");
-      renderList(blList, data.edutubeBlacklist || [], "channel", "blacklist");
+      renderList(wlList, data.eduguardWhitelist || [], "channel", "whitelist");
+      renderList(blList, data.eduguardBlacklist || [], "channel", "blacklist");
       renderList(
         wlList,
-        data.edutubeWhitelistVideos || [],
+        data.eduguardWhitelistVideos || [],
         "video",
         "whitelist"
       );
       renderList(
         blList,
-        data.edutubeBlacklistVideos || [],
+        data.eduguardBlacklistVideos || [],
         "video",
         "blacklist"
       );
       renderList(
         wlList,
-        data.edutubeWhitelistKeywords || [],
+        data.eduguardWhitelistKeywords || [],
         "keyword",
         "whitelist"
       );
       renderList(
         blList,
-        data.edutubeBlacklistKeywords || [],
+        data.eduguardBlacklistKeywords || [],
         "keyword",
         "blacklist"
       );
@@ -623,8 +624,8 @@ function initListManagement() {
 
       const storageKey =
         list === "whitelist"
-          ? "edutubeWhitelistKeywords"
-          : "edutubeBlacklistKeywords";
+          ? "eduguardWhitelistKeywords"
+          : "eduguardBlacklistKeywords";
 
       chrome.storage.sync.get([storageKey], (data) => {
         const current = data[storageKey] || [];
@@ -647,7 +648,7 @@ function initListManagement() {
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (!tabs?.length) return;
             chrome.tabs.sendMessage(tabs[0].id, {
-              type: "edutubeListUpdate",
+              type: "eduguardListUpdate",
               list,
               action: "add",
               idKind: "keyword",
@@ -657,6 +658,7 @@ function initListManagement() {
 
           showHint(hintEl, "Added.");
         });
+        // sendEduListUpdate();
       });
 
       return; // keyword path handled completely
@@ -668,7 +670,7 @@ function initListManagement() {
       chrome.tabs.sendMessage(
         tabs[0].id,
         {
-          type: "edutubeListUpdate",
+          type: "eduguardListUpdate",
           list,
           action: "add",
           idKind: finalKind,
@@ -694,7 +696,7 @@ function initListManagement() {
       if (!tabs?.length) return;
       chrome.tabs.sendMessage(
         tabs[0].id,
-        { type: "edutubeGetCurrentIds" },
+        { type: "eduguardGetCurrentIds" },
         (res) => {
           if (!res?.ok) return;
           const id = idKind === "channel" ? res.channelId : res.videoId;
@@ -747,7 +749,7 @@ function initListManagement() {
       if (!tabs?.length) return;
       chrome.tabs.sendMessage(
         tabs[0].id,
-        { type: "edutubeListUpdate", list, action: "remove", idKind, id },
+        { type: "eduguardListUpdate", list, action: "remove", idKind, id },
         () => {
           const key = mapKey(list, idKind);
 
@@ -759,14 +761,15 @@ function initListManagement() {
             // match against normalized form
             const storageKey =
               list === "whitelist"
-                ? "edutubeWhitelistKeywords"
-                : "edutubeBlacklistKeywords";
+                ? "eduguardWhitelistKeywords"
+                : "eduguardBlacklistKeywords";
             chrome.storage.sync.get([storageKey], (data) => {
               const current = data[storageKey] || [];
               const filtered = current.filter(
                 (item) => normalizeKeyword(item) !== normalizeKeyword(id)
               );
               chrome.storage.sync.set({ [storageKey]: filtered }, updateCounts);
+              // sendEduListUpdate();
             });
           } else {
             chrome.storage.sync.get([key], (data) => {
@@ -786,39 +789,39 @@ function initListManagement() {
   function mapKey(list, kind) {
     if (kind === "keyword" || kind === "channelName" || kind === "videoTitle") {
       return list === "whitelist"
-        ? "edutubeWhitelistKeywords"
-        : "edutubeBlacklistKeywords";
+        ? "eduguardWhitelistKeywords"
+        : "eduguardBlacklistKeywords";
     }
 
     if (kind === "channel") {
-      return list === "whitelist" ? "edutubeWhitelist" : "edutubeBlacklist";
+      return list === "whitelist" ? "eduguardWhitelist" : "eduguardBlacklist";
     }
 
     // default: video
     return list === "whitelist"
-      ? "edutubeWhitelistVideos"
-      : "edutubeBlacklistVideos";
+      ? "eduguardWhitelistVideos"
+      : "eduguardBlacklistVideos";
   }
 
   function updateCounts() {
     chrome.storage.sync.get(
       [
-        "edutubeWhitelist",
-        "edutubeBlacklist",
-        "edutubeWhitelistVideos",
-        "edutubeBlacklistVideos",
-        "edutubeWhitelistKeywords",
-        "edutubeBlacklistKeywords",
+        "eduguardWhitelist",
+        "eduguardBlacklist",
+        "eduguardWhitelistVideos",
+        "eduguardBlacklistVideos",
+        "eduguardWhitelistKeywords",
+        "eduguardBlacklistKeywords",
       ],
       (d) => {
         const wlCount =
-          (d.edutubeWhitelist?.length || 0) +
-          (d.edutubeWhitelistVideos?.length || 0) +
-          (d.edutubeWhitelistKeywords?.length || 0);
+          (d.eduguardWhitelist?.length || 0) +
+          (d.eduguardWhitelistVideos?.length || 0) +
+          (d.eduguardWhitelistKeywords?.length || 0);
         const blCount =
-          (d.edutubeBlacklist?.length || 0) +
-          (d.edutubeBlacklistVideos?.length || 0) +
-          (d.edutubeBlacklistKeywords?.length || 0);
+          (d.eduguardBlacklist?.length || 0) +
+          (d.eduguardBlacklistVideos?.length || 0) +
+          (d.eduguardBlacklistKeywords?.length || 0);
         const wlCountEl = document.getElementById("wlCount");
         const blCountEl = document.getElementById("blCount");
         if (wlCountEl) wlCountEl.textContent = wlCount;
