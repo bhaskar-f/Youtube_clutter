@@ -227,26 +227,39 @@ function initEduTubeControls() {
       );
     });
   });
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (!tabs?.length) return;
+    chrome.tabs.sendMessage(tabs[0].id, {
+      action: "rerunFiltering",
+      reason: "apiModeChanged",
+    });
+  });
 
-  // Sensitivity slider
+  let sliderDebounceTimer = null;
+  const SLIDER_DEBOUNCE_MS = 500; // Wait 500ms after user stops sliding
+
   sensitivitySlider.addEventListener("input", () => {
     const value = parseInt(sensitivitySlider.value, 10);
     updateSensitivityLabel(value, sensitivityValue);
+
+    // ✅ Clear existing timer
+    if (sliderDebounceTimer) clearTimeout(sliderDebounceTimer);
+
+    // ⏳ Only trigger refilter after user stops moving slider
+    sliderDebounceTimer = setTimeout(() => {
+      chrome.storage.sync.set({ edutubeSensitivity: value });
+
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs?.length) return;
+        chrome.tabs.sendMessage(tabs[0].id, {
+          type: "edutubeSensitivity",
+          value,
+        });
+      });
+    }, SLIDER_DEBOUNCE_MS);
   });
 
-  sensitivitySlider.addEventListener("change", () => {
-    const value = parseInt(sensitivitySlider.value, 10);
-    chrome.storage.sync.set({ edutubeSensitivity: value });
-
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (!tabs?.length) return;
-      chrome.tabs.sendMessage(
-        tabs[0].id,
-        { type: "edutubeSensitivity", value },
-        () => {}
-      );
-    });
-  });
+  // ✅ Remove the separate 'change' listener - it's redundant
 
   // Save API Key (Add Mode)
   if (apiSaveBtn && apiKeyInput) {
@@ -281,12 +294,33 @@ function initEduTubeControls() {
     apiRemoveBtn.addEventListener("click", () => {
       if (!confirm("Remove API Key?")) return;
 
-      chrome.storage.sync.set({ edutubeApiKey: "" }, () => {
-        showApiAddMode(apiAddMode, apiManageMode, apiStatusText, apiKeyInput);
+      const keysToRemove = [
+        "youtubeApiKey",
+        "youtubeApiEnabled",
+        "youtubeQuotaUsed",
+        "youtubeQuotaResetTime",
 
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          if (!tabs?.length) return;
-          chrome.tabs.sendMessage(tabs[0].id, { type: "apiKeyUpdated" });
+        "edutubeApiKey",
+        "edutubeApiEnabled",
+        "edutubeQuotaUsed",
+        "edutubeQuotaResetTime",
+
+        "apiKey",
+      ];
+
+      chrome.storage.sync.remove(keysToRemove, () => {
+        chrome.storage.local.remove(keysToRemove, () => {
+          // Update UI to "no API"
+          showApiAddMode(apiAddMode, apiManageMode, apiStatusText, apiKeyInput);
+
+          // Notify contentScript to erase internal API key
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs && tabs[0]) {
+              chrome.tabs.sendMessage(tabs[0].id, { type: "apiKeyUpdated" });
+            }
+          });
+
+          console.log("[EduTube] API removed completely.");
         });
       });
     });
@@ -300,6 +334,34 @@ function initEduTubeControls() {
       }
     });
   }, 2000);
+  // Periodic YouTube API quota refresh
+  setInterval(() => {
+    chrome.storage.sync.get(
+      [
+        "youtubeApiEnabled",
+        "youtubeQuotaUsed",
+        "edutubeQuotaUsed",
+        "youtubeQuotaResetTime",
+        "edutubeQuotaResetTime",
+      ],
+      (data) => {
+        if (!data.youtubeApiEnabled) return;
+
+        // Accept both storage formats
+        const used = data.youtubeQuotaUsed ?? data.edutubeQuotaUsed ?? 0;
+
+        const resetTime =
+          data.youtubeQuotaResetTime ?? data.edutubeQuotaResetTime ?? null;
+
+        // Update the UI text
+        updateQuotaDisplay(used, 10000, apiQuotaText);
+
+        // Update the UI bar
+        const percent = (used / 10000) * 100;
+        setQuotaBar(percent);
+      }
+    );
+  }, 1200);
 
   // Live stats updates via message
   chrome.runtime.onMessage.addListener((msg) => {
@@ -399,22 +461,49 @@ async function fetchApiHealth(apiKey, apiQuotaText) {
   if (!apiKey || !apiQuotaText) return;
 
   try {
-    apiQuotaText.textContent = "Checking…";
+    apiQuotaText.textContent = "Checking status...";
+    setQuotaBar(0);
 
+    // Use a cheaper endpoint that costs only 1 unit
     const url =
-      "https://www.googleapis.com/youtube/v3/videos?part=id&id=dummy&key=" +
+      "https://www.googleapis.com/youtube/v3/videos?part=id&id=dQw4w9WgXcQ&maxResults=1&key=" +
       encodeURIComponent(apiKey);
 
     const res = await fetch(url);
 
     if (res.status === 400 || res.status === 403) {
       apiQuotaText.textContent = "Invalid API key";
+      setQuotaBar(100);
+      return;
+    }
+
+    if (res.ok) {
+      // ✅ Track this health check cost (1 unit)
+      chrome.storage.local.get(["apiQuotaUsed", "apiQuotaReset"], (data) => {
+        const DAILY_LIMIT = 10000;
+        const used = (data.apiQuotaUsed || 0) + 1; // +1 for this check
+        const resetTime = data.apiQuotaReset || getNextMidnightPST();
+
+        // Check if quota should reset
+        if (Date.now() >= resetTime) {
+          chrome.storage.local.set({
+            apiQuotaUsed: 1, // This check only
+            apiQuotaReset: getNextMidnightPST(),
+          });
+          updateQuotaDisplay(1, DAILY_LIMIT, apiQuotaText);
+        } else {
+          chrome.storage.local.set({ apiQuotaUsed: used });
+          updateQuotaDisplay(used, DAILY_LIMIT, apiQuotaText);
+        }
+      });
     } else {
-      apiQuotaText.textContent = "Active";
+      apiQuotaText.textContent = "Unable to verify";
+      setQuotaBar(0);
     }
   } catch (e) {
     console.error("[popup] API health check failed:", e);
-    apiQuotaText.textContent = "Unable to check";
+    apiQuotaText.textContent = "Connection error";
+    setQuotaBar(0);
   }
 }
 
@@ -506,9 +595,11 @@ function initListManagement() {
 
   // --------- Keyword Normalization (fuzzy equivalence) ----------
   function normalizeKeyword(str) {
+    // Match engine normalization exactly
     return str
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "")
+      .replace(/[^\w\s@]/g, " ")
+      .replace(/\s+/g, " ")
       .trim();
   }
 
@@ -768,9 +859,11 @@ function initListManagement() {
   }
 
   function normalizeKeyword(str) {
+    // Match engine normalization exactly
     return str
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "")
+      .replace(/[^\w\s@]/g, " ")
+      .replace(/\s+/g, " ")
       .trim();
   }
 }
@@ -1019,11 +1112,23 @@ async function fetchApiHealth(apiKey, apiQuotaText) {
     }
 
     if (res.ok) {
-      apiQuotaText.textContent = "Active • Free tier (10,000 units/day)";
+      // Fetch actual quota usage from storage
+      chrome.storage.local.get(["apiQuotaUsed", "apiQuotaReset"], (data) => {
+        const DAILY_LIMIT = 10000;
+        const used = data.apiQuotaUsed || 0;
+        const resetTime = data.apiQuotaReset || Date.now();
 
-      // Simulate quota usage (you can replace this with actual quota API call)
-      // For now, show 15% usage as example
-      setQuotaBar(15);
+        // Check if quota should reset (new day)
+        if (Date.now() >= resetTime) {
+          chrome.storage.local.set({
+            apiQuotaUsed: 0,
+            apiQuotaReset: getNextMidnightPST(),
+          });
+          updateQuotaDisplay(0, DAILY_LIMIT, apiQuotaText);
+        } else {
+          updateQuotaDisplay(used, DAILY_LIMIT, apiQuotaText);
+        }
+      });
     } else {
       apiQuotaText.textContent = "Unable to verify";
       setQuotaBar(0);
@@ -1033,4 +1138,26 @@ async function fetchApiHealth(apiKey, apiQuotaText) {
     apiQuotaText.textContent = "Connection error";
     setQuotaBar(0);
   }
+}
+
+// Helper to calculate next midnight PST (YouTube quota resets at midnight PST)
+function getNextMidnightPST() {
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+
+  // Convert to PST (UTC-8)
+  const pstOffset = -8 * 60 * 60 * 1000;
+  return tomorrow.getTime() + pstOffset;
+}
+
+// Update quota display with accurate numbers
+function updateQuotaDisplay(used, total, apiQuotaText) {
+  const percent = (used / total) * 100;
+  const remaining = total - used;
+
+  setQuotaBar(percent);
+
+  apiQuotaText.textContent = `${used.toLocaleString()} / ${total.toLocaleString()} units/day • ${remaining.toLocaleString()} left`;
 }

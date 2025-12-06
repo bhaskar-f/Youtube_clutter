@@ -1,127 +1,160 @@
-// background.js — EduTube + Declutter (v12 compatible)
-// =======================================================
-// Handles:
-// - Initial default settings
-// - Context menus for channel WL/BL
-// - Bridges context menu → contentScript via edutubeListUpdate
-// =======================================================
+// =========================================================
+// EduTube Background Script (Zarvis Optimized v11.5)
+// Highly clean, consistent, production-grade version
+// - Initializes default settings
+// - Manages WL/BL via right-click context menus
+// - Forwards WL/BL and sensitivity changes to content scripts
+// - Handles popup → tab messaging reliably
+// - Fully MV3-safe
+// =========================================================
 
-chrome.runtime.onInstalled.addListener(async (details) => {
-  console.log("[EduTube] Extension installed/updated");
+// ---------------------------------------------
+// Default settings bootstrap
+// ---------------------------------------------
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.get(null, (data) => {
+    const defaults = {
+      edutubeEnabled: true,
+      edutubeSensitivity: 50,
+      whitelist: [],
+      blacklist: [],
+      whitelistVideos: [],
+      blacklistVideos: [],
+      whitelistKeywords: [],
+      blacklistKeywords: [],
+    };
 
-  try {
-    // Set sane defaults for declutter-related settings
-    await chrome.storage.sync.set({
-      hideHome: false,
-      hideSidebar: false,
-      hideComments: false,
-      hideShorts: false,
-      hideAds: true, // legacy flag – kept for compatibility if used in popup/UI
-    });
-    console.log("[EduTube] Default settings applied");
-  } catch (e) {
-    console.warn("[EduTube] Failed to set default settings:", e);
-  }
+    const toSet = {};
+    for (const key in defaults) {
+      if (data[key] === undefined) toSet[key] = defaults[key];
+    }
 
-  if (details.reason === "update") {
-    console.log(
-      "[EduTube] Updated – You may need to refresh open YouTube tabs."
-    );
-  }
+    if (Object.keys(toSet).length > 0) {
+      chrome.storage.sync.set(toSet);
+    }
+  });
 
-  // =======================================================
-  // EduTube Context Menu Initialization
-  // =======================================================
-  try {
-    chrome.contextMenus.create({
-      id: "edutube_whitelist_channel",
-      title: "EduTube: Always show videos from this channel (Whitelist)",
-      contexts: ["link", "page", "video"],
-      documentUrlPatterns: ["*://www.youtube.com/*"],
-    });
-
-    chrome.contextMenus.create({
-      id: "edutube_blacklist_channel",
-      title: "EduTube: Hide all videos from this channel (Blacklist)",
-      contexts: ["link", "page", "video"],
-      documentUrlPatterns: ["*://www.youtube.com/*"],
-    });
-
-    console.log("[EduTube] Context menus created successfully");
-  } catch (e) {
-    console.warn("[EduTube] Context menu setup error:", e);
-  }
+  setupContextMenus();
 });
 
-// =======================================================
-// Helper: extract channel ID/handle from a URL
-// =======================================================
+// ---------------------------------------------
+// Context Menus (Right-Click Support)
+// ---------------------------------------------
+function setupContextMenus() {
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: "edutubeRoot",
+      title: "EduTube",
+      contexts: ["selection", "link", "page"],
+    });
 
-function extractChannelIdFromUrl(url) {
-  if (!url || typeof url !== "string") return null;
-  try {
-    const mChannel = url.match(/\/channel\/([^/?#]+)/);
-    if (mChannel) return mChannel[1];
+    chrome.contextMenus.create({
+      id: "wlChannel",
+      parentId: "edutubeRoot",
+      title: "Whitelist Channel",
+      contexts: ["selection", "link"],
+    });
 
-    const mHandle = url.match(/\/@([^/?#]+)/);
-    if (mHandle) return "@" + mHandle[1];
-
-    const mC = url.match(/\/c\/([^/?#]+)/);
-    if (mC) return "c/" + mC[1];
-
-    return null;
-  } catch (e) {
-    console.warn("[EduTube] extractChannelIdFromUrl error:", e);
-    return null;
-  }
+    chrome.contextMenus.create({
+      id: "blChannel",
+      parentId: "edutubeRoot",
+      title: "Blacklist Channel",
+      contexts: ["selection", "link"],
+    });
+  });
 }
 
-// =======================================================
-// Context Menu Click Handler → edutubeListUpdate
-// =======================================================
+// Best-case consistent channel extractor
+function extractChannelId(input) {
+  if (!input) return null;
 
+  // Full channel URL
+  let m = input.match(/\/channel\/([^/?]+)/);
+  if (m) return m[1];
+
+  // Handle-style @channelname
+  m = input.match(/@([^/?]+)/);
+  if (m) return "@" + m[1];
+
+  return null;
+}
+
+// ---------------------------------------------
+// Context Menu Handler
+// ---------------------------------------------
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (!tab || !tab.id) {
-    console.warn("[EduTube] No active tab for context menu action");
-    return;
-  }
+  if (!tab || !tab.id) return;
 
-  // Try to get channel ID from the clicked link or page URL
-  const url = info.linkUrl || info.pageUrl || tab.url || "";
-  let channelId = extractChannelIdFromUrl(url);
+  let channelId = null;
+
+  // Extract from link, selection, or fall back
+  channelId =
+    extractChannelId(info.linkUrl) ||
+    extractChannelId(info.selectionText) ||
+    null;
 
   if (!channelId) {
-    console.warn(
-      "[EduTube] Could not extract channelId from URL for context menu action"
-    );
+    console.warn("[EduTube BG] No channelId could be extracted");
     return;
   }
 
-  // Map menu item → whitelist/blacklist list
-  const list =
-    info.menuItemId === "edutube_whitelist_channel" ? "whitelist" : "blacklist";
+  let payload = null;
 
-  // Use the unified list update message that contentScript.js already supports
-  const message = {
-    type: "edutubeListUpdate",
-    list, // "whitelist" | "blacklist"
-    action: "add", // from context menu we always add
-    idKind: "channel",
-    id: channelId,
-  };
+  if (info.menuItemId === "wlChannel") {
+    payload = {
+      type: "edutubeListUpdate",
+      list: "whitelist",
+      action: "add",
+      idKind: "channel",
+      id: channelId,
+    };
+  }
 
-  chrome.tabs.sendMessage(tab.id, message, (resp) => {
+  if (info.menuItemId === "blChannel") {
+    payload = {
+      type: "edutubeListUpdate",
+      list: "blacklist",
+      action: "add",
+      idKind: "channel",
+      id: channelId,
+    };
+  }
+
+  if (!payload) return;
+
+  chrome.tabs.sendMessage(tab.id, payload, (resp) => {
     const err = chrome.runtime.lastError;
     if (err) {
-      console.warn(
-        "[EduTube] Failed to send context menu WL/BL update to tab:",
-        err.message
-      );
-    } else {
-      console.log(
-        `[EduTube] Context menu ${list} update for channel ${channelId}`,
-        resp
-      );
+      // Happens when tab has no content script (non-YouTube pages)
+      console.debug("[EduTube BG] No receiver:", err.message);
     }
   });
 });
+
+// ---------------------------------------------
+// Popup → ContentScript Messaging Proxy
+// ---------------------------------------------
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  // Popup wants to forward message to active tab
+  if (msg?.type === "popupForward") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (!tabs.length) return;
+
+      chrome.tabs.sendMessage(tabs[0].id, msg.payload, (resp) => {
+        const err = chrome.runtime.lastError;
+        if (err) {
+          sendResponse({ ok: false });
+        } else {
+          sendResponse({ ok: true, resp });
+        }
+      });
+    });
+
+    return true; // async
+  }
+});
+
+// ---------------------------------------------
+// Debug (optional)
+// ---------------------------------------------
+console.log("[EduTube] background.js loaded (optimized)");

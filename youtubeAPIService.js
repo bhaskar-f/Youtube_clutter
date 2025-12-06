@@ -35,8 +35,13 @@ class YouTubeAPIService {
   async init() {
     // Load API key and settings
     const data = await this.loadSettings();
-    this.apiKey = data.youtubeApiKey || "";
-    this.enabled = data.youtubeApiEnabled ?? false;
+    this.apiKey = data.youtubeApiKey || data.edutubeApiKey || data.apiKey || "";
+
+    this.enabled =
+      data.youtubeApiEnabled !== undefined
+        ? data.youtubeApiEnabled
+        : !!this.apiKey;
+
     this.quotaUsed = data.youtubeQuotaUsed || 0;
     this.quotaResetTime = data.youtubeQuotaResetTime || this.getNextResetTime();
 
@@ -60,32 +65,41 @@ class YouTubeAPIService {
 
   async loadSettings() {
     return new Promise((resolve) => {
-      if (!chrome?.storage?.sync) {
-        resolve({});
-        return;
-      }
-
       chrome.storage.sync.get(
         [
-          "youtubeApiKey",
-          "youtubeApiEnabled",
-          "youtubeQuotaUsed",
-          "youtubeQuotaResetTime",
+          "edutubeApiKey", // Primary key
+          "edutubeApiEnabled",
+          "edutubeQuotaUsed",
+          "edutubeQuotaResetTime",
         ],
-        resolve
+        (data) => {
+          resolve({
+            youtubeApiKey: data.edutubeApiKey || "", // Map to consistent naming
+            youtubeApiEnabled: data.edutubeApiEnabled ?? false,
+            youtubeQuotaUsed: data.edutubeQuotaUsed || 0,
+            youtubeQuotaResetTime:
+              data.edutubeQuotaResetTime || this.getNextResetTime(),
+          });
+        }
       );
     });
   }
 
   async saveSettings() {
-    if (!chrome?.storage?.sync) return;
+    if (!chrome?.storage) return;
 
-    await chrome.storage.sync.set({
-      youtubeApiKey: this.apiKey,
-      youtubeApiEnabled: this.enabled,
-      youtubeQuotaUsed: this.quotaUsed,
-      youtubeQuotaResetTime: this.quotaResetTime,
-    });
+    const payload = {
+      edutubeApiKey: this.apiKey, // Single source of truth
+      edutubeApiEnabled: this.enabled,
+      edutubeQuotaUsed: this.quotaUsed,
+      edutubeQuotaResetTime: this.quotaResetTime,
+    };
+
+    // Save to both sync and local for redundancy
+    await Promise.all([
+      chrome.storage.sync.set(payload),
+      chrome.storage.local.set(payload),
+    ]);
   }
 
   getNextResetTime() {
